@@ -15,7 +15,7 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 <meta property="og:description" content="本篇文章讲述了如何使用Jenkins搭建iOS的自动化构建环境。
 iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Server以及Xcode Bots去实现, 但是系统依赖和版本依赖过于严重, 并且需要在Xcode中配置Target的Shared属性, 耦合性太强, 因此不建议使用。
 为什么客户端需要自动化构建个人觉得最主要的原因是需要提高编码效率, 其次是方便测试与集成">
-<meta property="og:updated_time" content="2015-07-27T08:48:52.000Z">
+<meta property="og:updated_time" content="2015-07-27T08:55:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS开发必备 - 搭建自动化构建服务">
 <meta name="twitter:description" content="本篇文章讲述了如何使用Jenkins搭建iOS的自动化构建环境。
@@ -320,7 +320,7 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 <li><p>自建平台: 自建平台比较麻烦, 需要产生对应的plist文件以及下载页面, 但是在很多高保密的企业下是不允许使用第三方平台的, 个人建议为公司搭建一个简易版本的fir.im, 方便以后使用。</p>
 <ul>
 <li>构建平台主要是承担的工作是企业证书下载环境的搭建以及历史版本的维护。企业证书下载环境最关键的部分是plist描述文件的生产以及https服务的支持<strong>(iOS7以后的items-service服务需要ssl且不接受伪造证书)</strong>。</li>
-<li>Bryce Zhange的博文里面有一篇教大家使用Apache和PHP搭建一个服务器的博文<a href="http://www.cnblogs.com/brycezhang/p/4097487.html" target="_blank" rel="external">《iOS自动化编译》</a>, 大家可以参考。该博文包含了如何使用Bruce(heyuan110)的编译脚本以及如何采用cat &amp; EOF &amp; &gt;&gt; 去动态生成plist文件。<br><br>PS: 个人不建议采用Apache搭建服务器, 可以试试Ngnix~ 其实最好是不要自己搭建了~</li>
+<li>Bryce Zhange的博文里面有一篇教大家使用Apache和PHP搭建一个服务器的博文<a href="http://www.cnblogs.com/brycezhang/p/4097487.html" target="_blank" rel="external">《iOS自动化编译》</a>, 大家可以参考。该博文包含了如何使用Bruce(heyuan110)的编译脚本以及如何采用<code>cat</code>&amp;<code>EOF</code>&amp;<code>&gt;&gt;</code>去动态生成plist文件。<br><br>PS: 个人不建议采用Apache搭建服务器, 可以试试Ngnix~ 其实最好是不要自己搭建了~</li>
 </ul>
 </li>
 </ol>
