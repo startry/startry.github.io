@@ -262,7 +262,7 @@
 <p>sign签名脚本示例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcrun -sdk iphoneos PackageApplication -v <span class="string">"demo.app"</span> -o <span class="string">"demo.ipa"</span></span><br></pre></td></tr></table></figure></p>
 <p>xcrun命令可以将app文件打包成ipa文件, 主要依赖xcodebuild命令中指定的证书, 如果没有有效证书的话, 只能在越狱的环境中安装ipa。</p>
 <p><strong>大家可以尝试填充这个脚本, 来进行本地编译, 如果本地编译不通过, 那放在Jenkins上是肯定通过不了的。</strong></p>
-<p>具体的脚本内容每个人各不相同, Github上有个叫<strong>BashShell</strong>的项目里包含一个脚本示例<a href="build_install.sh">build_install.sh</a>, 该项目作者编写的脚本非常详细, 大家可以参考编写。</p>
+<p>具体的脚本内容每个人各不相同, Github上有个叫<strong>BashShell</strong>的项目里包含一个脚本示例<a href="https://github.com/heyuan110" target="_blank" rel="external">build_install.sh</a>, 该项目作者编写的脚本非常详细, 大家可以参考编写。</p>
 <ul>
 <li>xcodebuild命令可以指定对应的签名文件, 可以通过预先上传签名文件到编译服务器的keychains中或者将证书存放于代码托管库中方便指定。</li>
 <li>通过Jenkins执行的脚本会默认注入一些全局环境变量, 例如<code>${PWD}</code>、<code>${CHANGES}</code>等等。通过这些全局参数可以在执行脚本或者邮件等任务中打印动态数据。</li>
