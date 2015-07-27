@@ -15,7 +15,8 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 <meta property="og:description" content="本篇文章讲述了如何使用Jenkins搭建iOS的自动化构建环境。
 iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Server以及Xcode Bots去实现, 但是系统依赖和版本依赖过于严重, 并且需要在Xcode中配置Target的Shared属性, 耦合性太强, 因此不建议使用。
 为什么客户端需要自动化构建个人觉得最主要的原因是需要提高编码效率, 其次是方便测试与集成">
-<meta property="og:updated_time" content="2015-07-27T08:59:51.000Z">
+<meta property="og:image" content="http://yoursite.com/../img/blog_jenkins.png">
+<meta property="og:updated_time" content="2015-07-27T09:48:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS开发必备 - 搭建自动化构建服务">
 <meta name="twitter:description" content="本篇文章讲述了如何使用Jenkins搭建iOS的自动化构建环境。
@@ -255,7 +256,8 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 <li>在终端执行<code>jenkins</code>命令启动jenkins(PS: 默认占用8080端口会导致启动失败), 此处有可能会出现jenkins ssl证书过期的问题, 可以通过修改os系统时间, 调整为ssl支持的时间来解决, 否则安装jenkins插件可能会失败。(jenkins命令依赖Java开发环境, 旧版本的jenkins需要自己去配置bash alias)</li>
 <li>打开浏览器, 访问<a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a>, 查看Jenkins是否正常启动。</li>
 </ol>
-<h2 id="配置工作">配置工作</h2><h3 id="jenkins插件配置">jenkins插件配置</h3><p>jenkins是个生态比较完善的自动化构建系统, 提供了各种的可扩展插件给用户下载, 同时又开放接口, 让大家自主开发对应的插件。插件管理路径是<code>系统管理</code>-&gt;<code>管理插件</code></p>
+<h2 id="配置工作">配置工作</h2><h3 id="jenkins插件配置">jenkins插件配置</h3><p><img src="../img/blog_jenkins.png" alt="预编译Setting示例"></p>
+<p>jenkins是个生态比较完善的自动化构建系统, 提供了各种的可扩展插件给用户下载, 同时又开放接口, 让大家自主开发对应的插件。插件管理路径是<code>系统管理</code>-&gt;<code>管理插件</code></p>
 <p>插件索引默认并不是最新的, 需要大家手动更新, 在<code>管理插件</code>-&gt;<code>可选插件</code>的右下角有个<code>立即获取</code>按钮, 点击即可获取最新的插件索引。</p>
 <p>PS: <font color="red">有时候官方索引的地址ssl证书过期导致索引会更新失败, 大家可以通过浏览器调试获取证书到期时间, 然后将本机时间调整为过期以前的时间即可解决该问题。</font>(apache有时候也不靠谱啊。。)</p>
 <p>每个开发者根据不同的业务场景需要用到不同的插件, 本文就不在这里赘述, 大家自由发挥吧。</p>
