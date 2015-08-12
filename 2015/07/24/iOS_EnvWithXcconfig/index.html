@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS开发必备 - 环境变量配置(Debug &amp; Release) | Startry Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本篇文章主要讲述了如何使用(Xcode配置文件xcconfig)去动态配置开发或者生产网络环境, 以及在多项目和运行中如何切换环境。
+关于xcconfig文件, 目前在官方很难找到一篇专门的指南介绍, 但是国外有篇非官方指南《The Unofficial Guide to xcconfig files》详细的介绍了xcconfig。估计很多新入门的iOS开发对xcconfig文件都不是很熟悉, 但">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS开发必备 - 环境变量配置(Debug & Release)">
+<meta property="og:url" content="http://yoursite.com/2015/07/24/iOS_EnvWithXcconfig/index.html">
+<meta property="og:site_name" content="Startry Blog">
+<meta property="og:description" content="本篇文章主要讲述了如何使用(Xcode配置文件xcconfig)去动态配置开发或者生产网络环境, 以及在多项目和运行中如何切换环境。
+关于xcconfig文件, 目前在官方很难找到一篇专门的指南介绍, 但是国外有篇非官方指南《The Unofficial Guide to xcconfig files》详细的介绍了xcconfig。估计很多新入门的iOS开发对xcconfig文件都不是很熟悉, 但">
+<meta property="og:image" content="http://blog.startry.com/img/blog_setting_pcm_demo.png">
+<meta property="og:image" content="http://blog.startry.com/img/blog_xcconfig_configurations.png">
+<meta property="og:updated_time" content="2015-08-12T08:34:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS开发必备 - 环境变量配置(Debug & Release)">
+<meta name="twitter:description" content="本篇文章主要讲述了如何使用(Xcode配置文件xcconfig)去动态配置开发或者生产网络环境, 以及在多项目和运行中如何切换环境。
+关于xcconfig文件, 目前在官方很难找到一篇专门的指南介绍, 但是国外有篇非官方指南《The Unofficial Guide to xcconfig files》详细的介绍了xcconfig。估计很多新入门的iOS开发对xcconfig文件都不是很熟悉, 但">
+  
+    <link rel="alternative" href="/atom.xml" title="Startry Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Startry</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">随便乱写</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/ios/" style="font-size: 20px;">ios</a> <a href="/tags/xcconfig/" style="font-size: 10px;">xcconfig</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://github.com/startry">空荡荡的github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">思考中...</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Startry</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Startry</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">随便乱写</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-iOS_EnvWithXcconfig" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/07/24/iOS_EnvWithXcconfig/" class="article-date">
+  	<time datetime="2015-07-24T11:38:07.000Z" itemprop="datePublished">2015-07-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS开发必备 - 环境变量配置(Debug &amp; Release)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xcconfig/">xcconfig</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本篇文章主要讲述了如何使用<a href="https://developer.apple.com/library/ios/recipes/xcode_help-project_editor/Articles/BasingBuildConfigurationsonConfigurationFiles.html" target="_blank" rel="external">(Xcode配置文件xcconfig)</a>去动态配置开发或者生产网络环境, 以及在多项目和运行中如何切换环境。</p>
+<p>关于xcconfig文件, 目前在官方很难找到一篇专门的指南介绍, 但是国外有篇非官方指南<a href="http://pewpewthespells.com/blog/xcconfig_guide.html" target="_blank" rel="external">《The Unofficial Guide to xcconfig files》</a>详细的介绍了xcconfig。估计很多新入门的iOS开发对xcconfig文件都不是很熟悉, 但是大家可能都用过Cocoapods, 其实Cocoapods的项目配置管理很多都是依赖xcconfig文件去实现的。</p>
+<h3 id="Debug宏应该在哪里定义?">Debug宏应该在哪里定义?</h3><p>iOS系统本身就区分了Configurations选项让开发者去修改对应的开发环境配置, 但是因为很多开发者却又在同一个Configuration环境中自定义了开发环境配置的开发, 使得iOS系统本身的配置成为了摆设, <em>仅仅用于区分打包方式选项和证书配置</em>。</p>
+<p><strong>网络环境切换</strong>是每一个互联网App开发者都会频繁用到的功能, 那么大家都是用什么样的方式在切换环境的呢?我本人接触的项目中最多的就是在预编译头文件里面写一行宏定义, 然后根据宏定义去判断当前的环境。</p>
+<p><font color="orange">最典型的例子</font>是在预编译头pch文件中添加一行代码<code>#define DEBUG 1</code>。然后通过这个<code>DEBUG</code>参数去判断当前环境是否处于开发网络或者生产网络环境。</p>
+<p>使用<code>DEBUG</code>宏去判断判断开发环境还是生产环境没有任何问题, 关键的问题是我们在什么时候去定义这个宏和怎么去动态配置这个宏。</p>
+<h2 id="动态配置不同的网络开发环境">动态配置不同的网络开发环境</h2><p>开发环境的切换在代码中最实用的还是宏定义, 那么我们怎么样才能够让宏定义<font color="red">动态</font>可配置呢?<br><br>其中一种办法就是使用GCC预编译头参数<code>GCC_PREPROCESSOR_DEFINITIONS</code>。</p>
+<p>通常我们可以在Project文件下的Build Settings对预编译宏定义进行默认赋值。在Xcode6下的路径为<code>Build Settings</code>-&gt;<code>Apple LLVM 6.x Preprocessing</code>-&gt;<code>Preprocessor Macros</code><br><img src="http://blog.startry.com/img/blog_setting_pcm_demo.png" alt="预编译Setting示例"></p>
+<p>想必大家看这个宏的名字已经知道它的作用了, 实际上就是和在pch头文件中添加宏定义没有太大的区别, 实际上还是有一些好处:</p>
+<ul>
+<li>Xcode的Project的Build Settings是由一个plist文件进行描述的, plist本质上是一个XML配置文件, 通过外部的脚本比较容易去修改。</li>
+<li>Preprocessor Macros可以按照Configuration选项进行默认配置, 也就是说可以根据不同的环境预先制定不同定义的宏</li>
+</ul>
+<h5 id="xcconfig配置Build_Settings">xcconfig配置Build Settings</h5><p>Xcode Project的Build Settings属性有很多, 如果每一个属性都在配置项改过去比较麻烦, 而且容易忘记, 而且Build Settings用源码的打开可阅读性也不是很高, 这个时候, 我们可以使用xcconfig文件去配置Build Settings参数。</p>
+<p>xcconifg支持可以根据不同的Configuration选项配置不同的文件。不同的xcconfig可以指定不同的Build Settings里的属性值, 这样子我们就可以通过项目xcconifg去修改<code>GCC_PREPROCESSOR_DEFINITIONS</code>的值了(最终目的就达到了)。</p>
+<p>利用xcconfig配置Build Settings的方式比直接在项目Build Settings修改对应的属性值要优雅的多, 英国的iOS大神<a href="https://github.com/jspahrsummers" target="_blank" rel="external">Justin Spahr-Summers</a>书写的开源库<a href="https://github.com/jspahrsummers/xcconfigs" target="_blank" rel="external">xcconfigs</a>提供了一个类权威的模板, 大家可以参考编写以及学习使用xcconfig。</p>
+<h3 id="Object-C下配置的支持">Object-C下配置的支持</h3><p>在项目中的Info类目下, 大家可以配置Configuration对应的选项的xcconfig, 通过xcconfig来配置Build Setting中的参数(见下图)。<br><img src="http://blog.startry.com/img/blog_xcconfig_configurations.png" alt="配置Configuration的各个xcconfig"></p>
+<p>PS: 如果大家对Cocoapods比较熟悉的话, 你会发现其实Pods也是通过xcconfig文件去修改项目配置参数的。</p>
+<h3 id="Swift下配置的支持">Swift下配置的支持</h3><p>这里区分Object-C和Swift没有太大的意义。只不过因为C语言使用一些非常不安全的预处理器指令能力，Swift则只使用预处理器指令的安全子集。因此预编译头参数在Swift并不会生效, 需要增加<code>OTHER_SWIFT_FLAGS</code>标记才能够将<code>Debug</code>作用于Swift的条件式判断。标记书写方式参考下方示例:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OTHER_SWIFT_FLAGS = -D DEBUG</span><br></pre></td></tr></table></figure>
+<h2 id="动态修改配置文件">动态修改配置文件</h2><p>环境切换的标志位宏被提取到Build Setting中的<code>GCC_PROCESSOR_DEFINTIONS</code>有什么好处呢?</p>
+<ul>
+<li>外部修改只需要修改工程的<code>project.pbxproj</code>即可对<code>GCC_PROCESSOR_DEFINTIONS</code>参数进行操作修改</li>
+<li>可以通过xcconfig去配置参数, 而配有xcconfig的Configuration可以通过<code>xcodebuild</code>命令指定</li>
+<li>可以避免将最基础的Debug和Release网络环境切换书写在代码中</li>
+</ul>
+<h3 id="自动化脚本支持(便于自动化构建)">自动化脚本支持(便于自动化构建)</h3><p>一个优秀的iOS工程师一定会使用自动化构建应用去解放自己的打包时间。<a href="http://blog.startry.com/2015/06/23/iOS_CI_With_Jenkins/" target="_blank" rel="external">《搭建自动化构建服务》</a>讲述了如何搭建一个自动化构建程序, 可以作为参考。</p>
+<p>自动化构建的核心在于使用xcodebuild命令和各类脚本, 本文讲述2个场景:</p>
+<ul>
+<li>场景1: 环境变量由宏定义并且书写在项目的预编译头文件中或者在预编译头文件引用的<code>.h</code>文件中; <ul>
+<li>通过脚本动态替换行, 可以采用sed命令来替换, 最典型的实例如下:</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">''</span> <span class="string">'s/^#define Debug 1/\/\/#define Debug 1/'</span> <span class="string">"./Demo/STSwitch.h"</span></span><br><span class="line">``` </span><br><span class="line">* 场景<span class="number">2</span>: 环境变量由宏定义但是配置在``GCC_PREPROCESSOR_DEFINITIONS``编译选项中。</span><br><span class="line">	* 如果``GCC_PREPROCESSOR_DEFINITIONS``由xcconfig文件指定并配置对应的Configuration中, 直接通过``xcodebuild``命令指定``-configuration``参数来选择。</span><br><span class="line">	* 如果``GCC_PREPROCESSOR_DEFINITIONS ``需要在Build Settings中动态修改, 可以在Podfile中书写Hook代码或者用脚本解析配置文件进行动态修改。</span><br><span class="line"></span><br><span class="line"><span class="comment">### Cocoapods下支持</span></span><br><span class="line">如果大家对Cocoapods比较熟悉的话, 就会知道每次执行完``pod install``之后, Cocoapods都会对每一个工程的Configuration配置一个xcconfig文件。</span><br><span class="line"></span><br><span class="line">默认情况下, 如果配置项已经存在了xcconfig文件, Cocoapods是不会将生产的xcconfig文件设置入配置项的。Cocoapods是通过xcconfig文件去修改外部链接依赖的, 因此如果没有正常替换配置文件, 有肯能会导致整个工程无法编译通过(缺少依赖库能通过才怪啦)。</span><br><span class="line"></span><br><span class="line">解决方法</span><br><span class="line"></span><br><span class="line">* 如果自己修改的xcconfig文件内容**不多**, 可以通过在Podfile中编写hook去实现修改对应的项目参数, 参考示例如下:</span><br><span class="line"></span><br><span class="line">``` Ruby</span><br><span class="line">post_install <span class="keyword">do</span> |installer|</span><br><span class="line">    installer.pods_project.targets.each <span class="keyword">do</span> |target|</span><br><span class="line">        target.build_configurations.each <span class="keyword">do</span> |config|</span><br><span class="line">            <span class="keyword">if</span> config.name == <span class="string">'Debug'</span></span><br><span class="line">                config.build_settings[<span class="string">'GCC_PREPROCESSOR_DEFINITIONS'</span>] = <span class="string">'Debug=1'</span></span><br><span class="line">            end</span><br><span class="line">        end</span><br><span class="line">    end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果自己修改的xcconfig文件内容<strong>较多</strong>, 可以在自己的编写的xcconfig include Cocoapods生产的xcconfig文件的方式进行处理, 参考示例如下:</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 自定义的xcconfig (例如: st.debug)</span><br><span class="line"><span class="comment">#include "../Pods.debug"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 自定义的xcconfig (例如: st.release)</span><br><span class="line"><span class="comment">#include "../Pods.release"</span></span><br></pre></td></tr></table></figure>
+<h3 id="多项目环境下支持">多项目环境下支持</h3><p>多项目的环境配置往往是比较麻烦的, 比如有B、C、D三个子工程, A工程引用了B、C、D三个子工程。怎么把统一的环境变量怎么应用到A、B、C、D三个工程里呢?</p>
+<ul>
+<li>做法1: 建立一个公有引用的项目(无论Pods还是手动), 所有的项目均引用这个公有的项目, 公有的项目暴露一个头文件里面定义了所有的环境变量。</li>
+<li>做法2: 每一个项目均维护自己的初始值, 通过外部的脚本一次性修改所有项目的初始值保持统一。</li>
+<li>做法3: 每一个项目维护自己的初始值, 通过上文描述的GCC编译属性或者xcconfig控制, 通过脚本或者Podfile控制每一个项目初始值</li>
+<li>做法4: 每个项目的维护自己的初始值, 但是所有环境变量动态维护, 在主工程的AppDelegate中加载A项目的初始值并通过接口赋值给每一个子工程。(该方式宏定义智能作为初始值, 参考下文<code>动态切换配置</code>)</li>
+</ul>
+<h3 id="动态切换配置">动态切换配置</h3><p>文章前面所述均少了一个关键字<code>初始值</code>, 前面所添加的环境变量的方式都是在添加<code>初始环境变量常量</code>。</p>
+<p>假设有一个运营或者测试需求, 需要能够用户自己去选择网络配置或者环境基础变量, 按照文章前面描述的方法, 是无法实现的。 因此, 上述的方式都只能提供一个初始默认值, 并无法在运行中去修改, 因为上述配置的方式都是通过<strong>预编译</strong>去实现的。</p>
+<p>在App运行时切换环境, 那配置参数都不能简单的用宏或者常量来控制了, 需要讲环境配置参数存储在变量中, 通常是用<code>NSUserDefault</code>或者<code>Singleton</code>去维护环境变量集合。通过开发配置页面对维护的变量进行动态的修改。(建议在Debug模式下开启放置在系统的Setting界面下)</p>
+<h2 id="另外一种选择">另外一种选择</h2><p>除了通过宏初始化, 是否还有其它的读取配置文件的方式初始化呢?</p>
+<p>我们可以维护一个单例去管理所有的初始值, 在iOS应用开发中用属性值去管理开发环境和生产环境(坏处很明显, 控制力度没有<code>宏</code>这么大)。</p>
+<p>资源文件加载其实就是把参数写在资源文件中, 然后通过代码在AppDelegate启动的时候去加载初始值到全局维护的单例中, 然后在工程中到处使用单例的实例变量去判断环境。</p>
+<h3 id="Cocoapods-keys">Cocoapods-keys</h3><p>通过配置加载环境配置环境变量是否能够做到工程依赖无关呢? 换言之就是在不同的安装目录或者不同的机器环境下配置不一样的环境变量, 让环境变量不与工程直接关联而与工程所在目录环境关联起来呢?</p>
+<p>做过服务端开发的童鞋们应该熟悉有一种config配置的方式, 让config在外部注入, 而不是在开发工程中写死, 即使写死也只是个初始值。</p>
+<p>Cocoapods提供了一款插件<a href="https://github.com/orta/cocoapods-keys" target="_blank" rel="external">Cocoapods-keys</a>, 提供了外部注入键值对的功能, 通过Cocoapods-keys插件, 我们可以在工程中调用外部注入的键值对, 通过外部的键值对工程进行一定力度的控制。</p>
+<p>Cocoapods-keys注入的键值对均存储在<code>~/.cocoapods/keys</code>下, 是以yml的格式保存的, yml中描述了已经添加的键值对和对应项目路径。</p>
+<h2 id="总结">总结</h2><p>文章想表达的核心思想是将环境切换初始化提取到配置文件处, 方便外部脚本修改(例如Podfile、自己写的Bash Shell等等)。在多项目环境下, 配置文件修改配置项更加容易可控, 防止多处修改代码或者使用脚本动态修改代码。</p>
+<p>文章的作用是给我本人备忘用的哈~ 水平有限, 有错误支持请大家及时指出哈~<br>转载请注明出处哦~</p>
+<p>参考文章:</p>
+<ol>
+<li><a href="http://pewpewthespells.com/blog/xcconfig_guide.html" target="_blank" rel="external">http://pewpewthespells.com/blog/xcconfig_guide.html</a></li>
+<li><a href="http://www.jianshu.com/p/44c82630bd50" target="_blank" rel="external">http://www.jianshu.com/p/44c82630bd50</a></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/06/23/iOS_CI_With_Jenkins/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS开发必备 - 搭建自动化构建服务</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS_EnvWithXcconfig" data-title="iOS开发必备 - 环境变量配置(Debug &amp; Release)" data-url="http://yoursite.com/2015/07/24/iOS_EnvWithXcconfig/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 Startry
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+  <div style="display:none">
+    <span id="busuanzi_container_site_pv" style="display:hidden;">本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/mobile.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+<! -- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+  </div>
+</body>
+</html>
