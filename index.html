@@ -114,7 +114,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/ios/" style="font-size: 20px;">ios</a> <a href="/tags/xcconfig/" style="font-size: 10px;">xcconfig</a>
+						<a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/ios/" style="font-size: 20px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcconfig/" style="font-size: 10px;">xcconfig</a>
 					</div>
 				</section>
 				
@@ -185,6 +185,153 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Renaming-umbrella-header-for-iOS-framework" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/" class="article-date">
+  	<time datetime="2015-08-25T03:31:03.000Z" itemprop="datePublished">2015-08-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/">iOS - Umbrella Header在framework中的应用(引用警告消除方法)</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在相对较大的互联网App研发中, framework静态库被广泛应用, 那么在研发framework的时候也产生好多的问题? 其实一个常见的问题的就是umbreall header文件的使用。</p>
+<p>大家是否有遇到过一个常见的错误使用umbrella header的场景: framework的文件明明被主工程引用了, 但是在编译的时候依旧抛出<font color="orange">Lexical or Preprocessor Issue - Umbrella header for module ‘xxx’ does not include header ‘xxx.h’</font>的警告。</p>
+<p><strong>那么问题来了, 什么是umbrella header? 什么又是umbrella framework呢?</strong></p>
+<p>参考官方文档<a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Frameworks.html#//apple_ref/doc/uid/10000183-SW1" target="_blank" rel="external">《Introduction to Framework Programming Guide》</a>学习说明, 可以了解到Framework区分Standard Framework和Umbrella Framework。但是, 我找了半天也没有找到官方文档有对Umberlla framework给出明确的定义(大家找到了记得告诉我)。在官方文档<a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/FrameworkAnatomy.html#//apple_ref/doc/uid/20002253-97623-BAJJHAJC" target="_blank" rel="external">《Anatomy of Framework Bundles》</a>章节中, 我找到三段比较合理说明Umbrella Framework的话:</p>
+<blockquote>
+<p>Umbrella frameworks add minor refinements to the standard framework structure, such as the ability to encompass other frameworks</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>The structure of an umbrella framework is similar to that of a standard framework, and applications do not distinguish between umbrella frameworks and standard frameworks when linking to them. However, two factors distinguish umbrella frameworks from other frameworks. The first is the manner in which they include header files. The second is the fact that they encapsulate subframeworks.</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Physically, umbrella frameworks have a similar structure to standard frameworks. One significant difference is the addition of a Frameworks directory to contain the subframeworks that make up the umbrella framework.</p>
+</blockquote>
+<p>字面上的意思应该是在标准的Framework做了一些改良的工作, 使其可以嵌套包含Framework。<br>在物理结构上, Umbrella Framework只在包含头文件的方式以及是否包含子Framework和普通的Framework存在区别。</p>
+<p>那么引用头文件的地方又有什么区别呢? 还是参考官方文档引用:</p>
+<blockquote>
+<p>For most frameworks, you can include header files other than the master header file. You can include any specific header file you want as long as it is available in the framework’s Headers directory. However, if you are including an umbrella framework, you must include the master header file. Umbrella frameworks do not allow you to include the headers of their constituent subframeworks directly. See <a href="">Restrictions on Subframework Linking</a> for more information.</p>
+</blockquote>
+<p>简单翻译一下: <strong>普通的framework可以通过引用对应的heaedr文件而不是Master Header File去引用需要使用的类, 只需要对应的header头文件在Headers文件夹下暴露, 并没有强制要求引用Master Header File。Umbrella Framework要求必须要引用Master Header File, 并且头文件中不能直接引用子Framework的东西。</strong></p>
+<p>上述描述已经说了Umbrella Framework一定要引用Master Header File, 而Umbrella Framework的Master Header File就是Umbrella header文件。</p>
+<p>大家是否存在一个疑问, 官方说明中只有强制规定一定要引用Umbrella Header文件, 但是却没有说能不能单独引用Umbrella Framework的其他头文件呢? 我们可以自己试验一下:</p>
+<ol>
+<li>在Umbrella Framework新建一个<code>testObject</code>类, 分别产生了<code>testObject.h</code>和<code>testObject.m</code>文件。</li>
+<li>打开Framework配置文件, 在<code>Build Phases</code>的<code>Headers</code>里的<code>Public</code>目录下, 将<code>testObject.h</code>文件添加进去。</li>
+<li>Build Framework看是否报错。</li>
+<li>在主工程中调用初始化<code>testObject</code>对象, 看编译是否报错。</li>
+</ol>
+<p>执行结果:</p>
+<ul>
+<li><strong>步骤3</strong>: 没有编译报错, 但是报出了<font color="orange">Lexical or Preprocessor Issue - Umbrella header for module ‘STDemoUI’ does not include header ‘testObject.h’</font>的警告。</li>
+<li><strong>步骤4</strong>: 执行正常。</li>
+</ul>
+<p>那么我们来总结一下:</p>
+<ol>
+<li>Standard Framework不能包含Sub Framework; Umbrella Framework可以包含子Framework;</li>
+<li>Standard Framework可以直接引用需要使用的头, 也可以通过引用Master Header file来引用需要使用的类; Umbrella Framework需要通过引用Master Header File(Umbrella Header)来引用需要使用的类;</li>
+</ol>
+<h3 id="规范的写法">规范的写法</h3><p>Umbrella Framework默认会创建一个同名.h文件最为Umbrella Header文件。规范的写法当然是遵从默认的模式, 将所有需要暴露的头文件都写在Umbrella Header文件中。</p>
+<p>例如: <code>STDemoUI.framework</code>工程包含了<strong>STClassOne</strong>、<strong>STClassTwo</strong>和<strong>STClassThree</strong>三个类。<code>STDemoUI</code>会生成一个默认的伞头文件(直译Umbrella Header, 不专业)<code>STDemoUI.h</code>。假设该framework的三个类均需要在外部调用使用, 则<code>STDemoUI.h</code>需要将三个类的引用均写入伞头文件中。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// STDemoUI.h&#10;// ...&#10;&#10;#import &#60;STDemoUI/STClassOne.h&#62;&#10;#import &#60;STDemoUI/STClassTwo.h&#62;&#10;#import &#60;STDemoUI/STClassThree.h&#62;</span><br></pre></td></tr></table></figure>
+<p>在需要调用的主工程中, 仅仅只要将Umbrella Header引用即可调用所有在Umbrella Header中包含的类了。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#22312;&#20027;&#24037;&#31243;&#38656;&#35201;&#24212;&#29992;&#30340;&#31867;&#20013;&#21253;&#21547;Umbrella Header&#10;#import &#60;STDemoUI/STDemoUI.h&#62;</span><br></pre></td></tr></table></figure>
+<h3 id="如何重命名umbrella_header">如何重命名umbrella header</h3><p>如果大家都遵从默认的Umbrella Framework的写法, 在同名头文件中写需要暴露的引用头文件, 那么就不需要考虑怎么重命名Umbrella header了。</p>
+<p>很多时候, 理想和现实是有差距的, 程序员写代码多数是在二次接手进行开发的。假设公司的前辈已经将Framework的同名文件用作了一个逻辑类, 给同名文件创建了.m文件, 并已经书写了逻辑并应用了各个工程里面去了。那么显然迁移头文件功能代码是不可能的, 因为很多依赖该Framework的业务部门都需要针对库进行代码优化。</p>
+<p>在这种不能将同名文件作为Umbrella header的情况下, 我们又不想通过Public强制暴露头文件的情况下(<strong>不写在Umbrella Header中会有警告</strong>)。我们就需要对Umbrella Header进行指定了。</p>
+<h4 id="指定Umbrella_Header入口在哪里呢?">指定Umbrella Header入口在哪里呢?</h4><p>万事开头难, 我们想要指定Umbrella Header, 但是在哪里指定呢? 通过文章搜索, 都没有找到一个比较合理的方案, 那就只能自己摸索了。</p>
+<ol>
+<li>在工程全局搜索<code>umbrella</code>关键字 - <font color="red">Failed</font></li>
+<li>在Build Settings里搜索<code>umbrella</code>关键字 - <font color="red">Failed</font></li>
+<li>在打包好的<code>STDemoUI.framework</code>中搜索<code>umbrella</code>关键字 - <font color="green">Bingo</font></li>
+</ol>
+<p>既然搜索到了关键字就好办了, 双击点开STDemo.framework, 我们可以看到如下图所示五个文件(夹)。</p>
+<p><img src="http://blog.startry.com/img/blog_framework_structure.png" alt="Framework内部结构"></p>
+<p>初略看名称可以推测出每个文件以及文件夹所承担的作用:</p>
+<ul>
+<li>_CodeSignature: 保存签名相关文件</li>
+<li>Headers: framework暴露的所有头文件</li>
+<li>Info.plist: 描述了该framework所包含的项目配置信息</li>
+<li>STDemo: 编译后的核心库文件</li>
+<li>Modules: 模块相关文件夹, 目测只包含了<code>module.modulemap</code>文件</li>
+</ul>
+<p>我们在<code>module.modulemap</code>文件中找到了<code>umbrella</code>关键字。文件内容如下:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">framework module STDemoUI &#123;</span><br><span class="line">  umbrella header "STDemoUI.h"</span><br><span class="line"></span><br><span class="line">  export *</span><br><span class="line">  module * &#123; export * &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原来Framework的umbrella header是在这个位置被指定的, 但是这个已经是编译好的工程, 我们总不能每次编译好了再进到包里面修改下。既然我们已经找到umbrella header是在module中去指定, 那么我们就用<code>module</code>作为关键字再去<code>Build Settings</code>里重新搜索下呗~ </p>
+<p>这回我们在<code>Kernel Module</code>和<code>Packaging</code>中均找到了<code>Module</code>关键字, 在<code>Packaging</code>标签中, 有一项<code>Module Map File</code>属性, 看名字应该是用来指定modulemap文件的, 这不解决了么?</p>
+<h4 id="指定Modulemap文件">指定Modulemap文件</h4><p>找到了解决方案, 那么接下来就要动手去解决问题了</p>
+<ol>
+<li>创建一个新的.h文件; ex: STHeader.h<ul>
+<li>将所有需要暴露的头文件均写入STHeader.h</li>
+</ul>
+</li>
+<li>创建一个新的modulemap文件; ex: stdemoalt.modulemap</li>
+<li><p>在新的modulemap中指定<code>umbrella header</code></p>
+ <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">framework module STDemoUI &#123;</span><br><span class="line">    umbrella header "STHeader.h"</span><br><span class="line">    </span><br><span class="line">    export *</span><br><span class="line">    module * &#123; export * &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li>在framework的<code>Build Settings</code>中的<code>Module Map File</code>指定新建的modulemap文件</li>
+</ol>
+<p>好了, 准备工作完毕, CMD+B, 编译完了, 打开framework包中的Module文件夹, 看是否包含了新指定的modulemap。</p>
+<p>抛出两个疑问: </p>
+<ol>
+<li>Module是什么?</li>
+<li>如果<code>Defines Module</code>指定为<code>NO</code>, 那会发生什么事情呢? </li>
+</ol>
+<h3 id="总结">总结</h3><p>本文简单的梳理了官方文章关于Umbrella Framework和Umbrella Header的介绍说明, 产生警告的原因是没有引用umbrella header或者暴露头没有写在umbrella header中。在umbrella header被已使用的前提下, 本文提供了一种通过重命名Umbrella Header文件的方式来消除警告的解决方案。</p>
+<p>虽然引用警告可以被消除, 但是建议大家还是采用规范的做法: 尽量不要在同名头文件中写业务逻辑代码, 用同名文件作为Umbrella库的Master Header File。</p>
+<p>水平有限, 有错误请大家及时指出哈~<br>转载请注明出处哦~</p>
+<p>参考文献:</p>
+<ol>
+<li><a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Frameworks.html" target="_blank" rel="external">https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Frameworks.html</a></li>
+<li><a href="http://stackoverflow.com/questions/32153131/renaming-umbrella-header/32153383#32153383" target="_blank" rel="external">http://stackoverflow.com/questions/32153131/renaming-umbrella-header/32153383#32153383</a></li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/framework/">framework</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/umbrella-header/">umbrella header</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
   
     <article id="post-iOS_EnvWithXcconfig" class="article article-type-post" itemscope itemprop="blogPost">
   
