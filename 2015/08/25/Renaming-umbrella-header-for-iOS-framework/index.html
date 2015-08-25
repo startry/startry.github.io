@@ -14,7 +14,7 @@
 <meta property="og:description" content="在相对较大的互联网App研发中, framework静态库被广泛应用, 那么在研发framework的时候也产生好多的问题? 其实一个常见的问题的就是umbreall header文件的使用。
 大家是否有遇到过一个常见的错误使用umbrella header的场景: framework的文件明明被主工程引用了, 但是在编译的时候依旧抛出Lexical or Preprocessor Issue -">
 <meta property="og:image" content="http://blog.startry.com/img/blog_framework_structure.png">
-<meta property="og:updated_time" content="2015-08-25T03:38:46.000Z">
+<meta property="og:updated_time" content="2015-08-25T04:52:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS - Umbrella Header在framework中的应用">
 <meta name="twitter:description" content="在相对较大的互联网App研发中, framework静态库被广泛应用, 那么在研发framework的时候也产生好多的问题? 其实一个常见的问题的就是umbreall header文件的使用。
@@ -193,7 +193,7 @@
   
     <div class="article-meta">
       <a href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/" class="article-date">
-  	<time datetime="2015-08-25T03:38:46.000Z" itemprop="datePublished">2015-08-25</time>
+  	<time datetime="2015-08-25T04:52:19.000Z" itemprop="datePublished">2015-08-25</time>
 </a>
     </div>
   
@@ -313,6 +313,11 @@
 <li>Module是什么?</li>
 <li>如果<code>Defines Module</code>指定为<code>NO</code>, 那会发生什么事情呢? </li>
 </ol>
+<h3 id="题外话">题外话</h3><p>这里我要引用官网Guidelins for Creating Frameworks的一个子标题<strong>Don’t Create Umbrella Frameworks</strong>。原文如下:</p>
+<blockquote>
+<p>While it is possible to create umbrella frameworks using Xcode, doing so is unnecessary for most developers and is not recommended. Apple uses umbrella frameworks to mask some of the interdependencies between libraries in the operating system. In nearly all cases, you should be able to include your code in a single, standard framework bundle. Alternatively, if your code was sufficiently modular, you could create multiple frameworks, but in that case, the dependencies between modules would be minimal or nonexistent and should not warrant the creation of an umbrella for them</p>
+</blockquote>
+<p>在大多数情况下, 苹果是不建议手动创建Umbrella Framework。</p>
 <h3 id="总结">总结</h3><p>本文简单的梳理了官方文章关于Umbrella Framework和Umbrella Header的介绍说明, 产生警告的原因是没有引用umbrella header或者暴露头没有写在umbrella header中。在umbrella header被已使用的前提下, 本文提供了一种通过重命名Umbrella Header文件的方式来消除警告的解决方案。</p>
 <p>虽然引用警告可以被消除, 但是建议大家还是采用规范的做法: 尽量不要在同名头文件中写业务逻辑代码, 用同名文件作为Umbrella库的Master Header File。</p>
 <p>水平有限, 有错误请大家及时指出哈~<br>转载请注明出处哦~</p>
