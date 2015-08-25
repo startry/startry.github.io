@@ -190,7 +190,7 @@
   
     <div class="article-meta">
       <a href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/" class="article-date">
-  	<time datetime="2015-08-25T03:31:03.000Z" itemprop="datePublished">2015-08-25</time>
+  	<time datetime="2015-08-25T03:36:50.000Z" itemprop="datePublished">2015-08-25</time>
 </a>
     </div>
   
@@ -230,7 +230,7 @@
 <p>字面上的意思应该是在标准的Framework做了一些改良的工作, 使其可以嵌套包含Framework。<br>在物理结构上, Umbrella Framework只在包含头文件的方式以及是否包含子Framework和普通的Framework存在区别。</p>
 <p>那么引用头文件的地方又有什么区别呢? 还是参考官方文档引用:</p>
 <blockquote>
-<p>For most frameworks, you can include header files other than the master header file. You can include any specific header file you want as long as it is available in the framework’s Headers directory. However, if you are including an umbrella framework, you must include the master header file. Umbrella frameworks do not allow you to include the headers of their constituent subframeworks directly. See <a href="">Restrictions on Subframework Linking</a> for more information.</p>
+<p>For most frameworks, you can include header files other than the master header file. You can include any specific header file you want as long as it is available in the framework’s Headers directory. However, if you are including an umbrella framework, you must include the master header file. Umbrella frameworks do not allow you to include the headers of their constituent subframeworks directly. See <a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Tasks/IncludingFrameworks.html#//apple_ref/doc/uid/20002257-BAJJBBHJ" target="_blank" rel="external">Restrictions on Subframework Linking</a> for more information.</p>
 </blockquote>
 <p>简单翻译一下: <strong>普通的framework可以通过引用对应的heaedr文件而不是Master Header File去引用需要使用的类, 只需要对应的header头文件在Headers文件夹下暴露, 并没有强制要求引用Master Header File。Umbrella Framework要求必须要引用Master Header File, 并且头文件中不能直接引用子Framework的东西。</strong></p>
 <p>上述描述已经说了Umbrella Framework一定要引用Master Header File, 而Umbrella Framework的Master Header File就是Umbrella header文件。</p>
