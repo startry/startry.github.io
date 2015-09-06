@@ -17,7 +17,7 @@
 <meta property="og:image" content="http://blog.startry.com/img/blog_missing_target.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_pbcproj_too_much.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_shell_muti_target_menu.png">
-<meta property="og:updated_time" content="2015-09-06T08:12:58.000Z">
+<meta property="og:updated_time" content="2015-09-06T08:15:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS - 创建大量相似App的另外一种选择">
 <meta name="twitter:description" content="本篇文章主要针对iOS应用开发中, 针对需要创建许多相似的应用App提出一种新颖的解决方案。
@@ -196,7 +196,7 @@
   
     <div class="article-meta">
       <a href="/2015/09/06/Optional-solutions-for-iOS-multi-target/" class="article-date">
-  	<time datetime="2015-09-06T08:12:58.000Z" itemprop="datePublished">2015-09-06</time>
+  	<time datetime="2015-09-06T08:15:50.000Z" itemprop="datePublished">2015-09-06</time>
 </a>
     </div>
   
@@ -273,7 +273,7 @@
 </ol>
 <h3 id="重新思考">重新思考</h3><p>虽然在项目中遇到了不少坑，但是解决这些坑并不需要大量的时间(那是因为时间被打散了, 组合起来估计也不少了)，所以我个人并没有去重新思考怎么去解决遗漏Target编译报错以及项目配置文件不断冲突的问题。</p>
 <p>触发我重新思考是一次机缘, 经过花瓣网某iOS研发高手(我不知道他名字哇)提点, 他问我基于Cocoapods能否有更好的办法去创建大量相似的App。基于Cocoapods本身就是基于Hook, Hook本身就是动态修改项目配置项, 换言之, <font color="red">能否通过动态修改Target的项目配置项去创建大量相似的App呢</font>?</p>
-<p>回到文章前面的<code>基于多Target的应用实践</code>的5个步骤, 逐一用替换Build Settings的方式去重新审视。</p>
+<p>回到文章前面的<code>基于多Target的应用实践</code>的5个步骤, 逐一用替换项目的配置文件(pbcproj)的方式去重新审视。</p>
 <ol>
 <li>不需要建立多个Target, 只维护一个Target</li>
 <li>主要是icon和launch image的修改, 有两种方案:<ul>
