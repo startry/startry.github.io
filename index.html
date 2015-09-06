@@ -190,7 +190,7 @@
   
     <div class="article-meta">
       <a href="/2015/09/06/Optional-solutions-for-iOS-multi-target/" class="article-date">
-  	<time datetime="2015-09-06T07:32:03.000Z" itemprop="datePublished">2015-09-06</time>
+  	<time datetime="2015-09-06T07:57:17.000Z" itemprop="datePublished">2015-09-06</time>
 </a>
     </div>
   
@@ -286,7 +286,7 @@
 </ol>
 <p><img src="http://blog.startry.com/img/blog_shell_muti_target_menu.png" alt="配置Configuration的各个xcconfig"></p>
 <p>在前面三步的基础下, 主要是为了一个目的, 一行脚本替换所有可变信息。(实际上就是提前将变化项维护在独立的文件夹中了)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 动态变化 demo1 Target</span></span><br><span class="line">./st_muti_target demo1/muti_target.json</span><br><span class="line"></span><br><span class="line"><span class="comment">## 动态变化 demo2 Target</span></span><br><span class="line">./st_muti_target demo2/muti_target.json</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 动态变化 demo1 Target</span></span><br><span class="line">./st_muti_target st_demo1/muti_target.json</span><br><span class="line"></span><br><span class="line"><span class="comment">## 动态变化 demo2 Target</span></span><br><span class="line">./st_muti_target st_demo2/muti_target.json</span><br></pre></td></tr></table></figure>
 <p>想要<code>st_muti_target.sh</code>的源码? 这个自己写吧。。每个项目都不一样的。</p>
 <h3 id="总结">总结</h3><p>基于建立多个相似App的需求, 和本人实际在项目应用中遇到的坑, 提出了一种基于脚本不断替换配置项目和资源文件的解决方案。该方案主要解决了多Target所带来的配置文件过大和容易冲突的问题, 但是同时又引入了脚本的维护成本。本文也提供了一种降低脚本使用成本和项目耦合的一种方案, 但是仍需要进一步优化, 并不是最终的解决方案版本。</p>
 <p>多一种方案多一种选择么, 对于擅长书写脚本的童鞋们, 用这种方式做大量类似的App(换肤App)可能会是更好的一种选择喔~</p>
