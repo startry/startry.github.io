@@ -190,7 +190,7 @@
   
     <div class="article-meta">
       <a href="/2015/09/06/Optional-solutions-for-iOS-multi-target/" class="article-date">
-  	<time datetime="2015-09-06T07:57:17.000Z" itemprop="datePublished">2015-09-06</time>
+  	<time datetime="2015-09-06T08:12:58.000Z" itemprop="datePublished">2015-09-06</time>
 </a>
     </div>
   
@@ -231,7 +231,7 @@
 <p><strong>PS: 切记, 临时解决方案, 如需根治, <font style="font-size:1.5em">拆分工程</font>!</strong></p>
 <h3 id="基于多Target实现的好处">基于多Target实现的好处</h3><ol>
 <li><p>直观</p>
-<p> 一目了然, 可以看到所有已创建的Target醒目的列在Build列表中。每一个Target都有对应的Build Settings界面可以看到每一个项目配置图标以及Info.plist对应信息。</p>
+<p> 一目了然, 可以看到所有已创建的Target醒目的列在Build列表中。每一个Target都有对应的Tagret配置界面可以看到每一个项目配置图标以及Info.plist对应信息。</p>
 </li>
 <li><p>灵活性高</p>
 <p> 可以根据项目需要Link需要的类, 根据Target来指定链接不同的类和资源文件, 而不用一口气全部都Link进来。</p>
@@ -246,7 +246,7 @@
 </li>
 <li><p>配置文件描述庞大, 难以修改</p>
 <p>多个Target会导致项目的pbxproj臃肿, 因为pbxproj文件维护了项目的所有文件id和group层级关系, 多一个target就几乎多了一倍的描述信息, 可想而知, 这个pbxporj文件是有多庞大。</p>
-<p>光文件庞大顶多引起Xcode Build Settings加载慢, 但是遇到冲突的时候可就头疼了, 几万行的描述文件。</p>
+<p>光文件庞大顶多引起Xcode项目的配置文件加载慢, 但是遇到冲突的时候可就头疼了, 几万行的描述文件。</p>
 <p> <img src="http://blog.startry.com/img/blog_pbcproj_too_much.png" alt="配置Configuration的各个xcconfig"></p>
 </li>
 <li><p>配置文件修改不同步</p>
@@ -255,7 +255,7 @@
 </li>
 </ol>
 <h3 id="重新思考">重新思考</h3><p>虽然在项目中遇到了不少坑，但是解决这些坑并不需要大量的时间(那是因为时间被打散了, 组合起来估计也不少了)，所以我个人并没有去重新思考怎么去解决遗漏Target编译报错以及项目配置文件不断冲突的问题。</p>
-<p>触发我重新思考是一次机缘, 经过花瓣网某iOS研发高手(我不知道他名字哇)提点, 他问我基于Cocoapods能否有更好的办法去创建大量相似的App。基于Cocoapods本身就是基于Hook, Hook本身就是动态修改Build Settings, 换言之, <font color="red">能否通过动态修改Build Settings去创建大量相似的App呢</font>?</p>
+<p>触发我重新思考是一次机缘, 经过花瓣网某iOS研发高手(我不知道他名字哇)提点, 他问我基于Cocoapods能否有更好的办法去创建大量相似的App。基于Cocoapods本身就是基于Hook, Hook本身就是动态修改项目配置项, 换言之, <font color="red">能否通过动态修改Target的项目配置项去创建大量相似的App呢</font>?</p>
 <p>回到文章前面的<code>基于多Target的应用实践</code>的5个步骤, 逐一用替换Build Settings的方式去重新审视。</p>
 <ol>
 <li>不需要建立多个Target, 只维护一个Target</li>
