@@ -9,7 +9,7 @@
 关于如何创建大量相似的App，iOS大神@唐巧曾在他的博文《猿题库iOS客户端的技术细节（一）：使用多target来构建大量相似App》提出了一种可行性非常高的解决方案。我本人也将该实现方案应用到了某二手车应用开发中, 通过创建多个target的方式创建了N个某某拍的应用。但是这种方案真的适用于所有场景么">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS - 创建大量相似App的另外一种选择">
-<meta property="og:url" content="http://yoursite.com/2015/09/06/Optional-solutions-for-iOS-multi-target/index.html">
+<meta property="og:url" content="http://startry.com/2015/09/06/Optional-solutions-for-iOS-multi-target/index.html">
 <meta property="og:site_name" content="Startry Blog">
 <meta property="og:description" content="本篇文章主要针对iOS应用开发中, 针对需要创建许多相似的应用App提出一种新颖的解决方案。
 关于如何创建大量相似的App，iOS大神@唐巧曾在他的博文《猿题库iOS客户端的技术细节（一）：使用多target来构建大量相似App》提出了一种可行性非常高的解决方案。我本人也将该实现方案应用到了某二手车应用开发中, 通过创建多个target的方式创建了N个某某拍的应用。但是这种方案真的适用于所有场景么">
@@ -39,7 +39,9 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
+			
 			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			
 		</a>
 
 		<hgroup>
@@ -115,6 +117,10 @@
 					        
 								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
 					        
+								<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+					        
+								<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+					        
 						</div>
 					</nav>
 				</section>
@@ -186,6 +192,10 @@
 						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
 			        
 						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+			        
+						<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
 			        
 				</div>
 			</nav>
@@ -352,7 +362,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Optional-solutions-for-iOS-multi-target" data-title="iOS - 创建大量相似App的另外一种选择" data-url="http://yoursite.com/2015/09/06/Optional-solutions-for-iOS-multi-target/"></div>
+	<div class="ds-thread" data-thread-key="Optional-solutions-for-iOS-multi-target" data-title="iOS - 创建大量相似App的另外一种选择" data-url="http://startry.com/2015/09/06/Optional-solutions-for-iOS-multi-target/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -368,6 +378,7 @@
 	</script>
 	<!-- 多说公共JS代码 end -->
 </div>
+
 
 
 
@@ -405,17 +416,28 @@
     </div>
     
   <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
 
 
-<script src="/js/mobile.js" type="text/javascript"></script>
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="/js/main.js" type="text/javascript"></script>
 
 
 
 
 
-<! -- mathjax config similar to math.stackexchange -->
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -436,7 +458,6 @@ MathJax.Hub.Queue(function() {
 
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-
 
 
   </div>

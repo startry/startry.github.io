@@ -10,7 +10,7 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 为什么客户端需要自动化构建个人觉得最主要的原因是需要提高编码效率, 其次是方便测试与集成">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS开发必备 - 搭建自动化构建服务">
-<meta property="og:url" content="http://yoursite.com/2015/06/23/iOS_CI_With_Jenkins/index.html">
+<meta property="og:url" content="http://startry.com/2015/06/23/iOS_CI_With_Jenkins/index.html">
 <meta property="og:site_name" content="Startry Blog">
 <meta property="og:description" content="本篇文章讲述了如何使用Jenkins搭建iOS的自动化构建环境。
 iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Server以及Xcode Bots去实现, 但是系统依赖和版本依赖过于严重, 并且需要在Xcode中配置Target的Shared属性, 耦合性太强, 因此不建议使用。
@@ -39,7 +39,9 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
+			
 			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			
 		</a>
 
 		<hgroup>
@@ -115,6 +117,10 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 					        
 								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
 					        
+								<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+					        
+								<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+					        
 						</div>
 					</nav>
 				</section>
@@ -186,6 +192,10 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
 			        
 						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+			        
+						<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
 			        
 				</div>
 			</nav>
@@ -381,7 +391,7 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS_CI_With_Jenkins" data-title="iOS开发必备 - 搭建自动化构建服务" data-url="http://yoursite.com/2015/06/23/iOS_CI_With_Jenkins/"></div>
+	<div class="ds-thread" data-thread-key="iOS_CI_With_Jenkins" data-title="iOS开发必备 - 搭建自动化构建服务" data-url="http://startry.com/2015/06/23/iOS_CI_With_Jenkins/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -397,6 +407,7 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
 	</script>
 	<!-- 多说公共JS代码 end -->
 </div>
+
 
 
 
@@ -434,17 +445,28 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
     </div>
     
   <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
 
 
-<script src="/js/mobile.js" type="text/javascript"></script>
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="/js/main.js" type="text/javascript"></script>
 
 
 
 
 
-<! -- mathjax config similar to math.stackexchange -->
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -465,7 +487,6 @@ MathJax.Hub.Queue(function() {
 
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-
 
 
   </div>
