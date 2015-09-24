@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>pod install和pod update背后那点事 | Startry Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Cocoapods对于绝大部分的iOS开发者们应该不陌生吧~ 如果你不知道什么是CocoaPods, 请移步CocoaPods的官方Guide去学习使用指南哇~ 
+pod install和pod update应该大部分iOS以及OSX开发者最常用的两个命令了, 那么大家是否都知道pod install或pod update在执行中主要做了哪些事情呢? 我们来一起探究一下呗~
+初步窥探通过Cooca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pod install和pod update背后那点事">
+<meta property="og:url" content="http://startry.com/2015/09/24/Something-about-Pod-Install-And-Pod-Update/index.html">
+<meta property="og:site_name" content="Startry Blog">
+<meta property="og:description" content="Cocoapods对于绝大部分的iOS开发者们应该不陌生吧~ 如果你不知道什么是CocoaPods, 请移步CocoaPods的官方Guide去学习使用指南哇~ 
+pod install和pod update应该大部分iOS以及OSX开发者最常用的两个命令了, 那么大家是否都知道pod install或pod update在执行中主要做了哪些事情呢? 我们来一起探究一下呗~
+初步窥探通过Cooca">
+<meta property="og:updated_time" content="2015-09-24T12:11:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pod install和pod update背后那点事">
+<meta name="twitter:description" content="Cocoapods对于绝大部分的iOS开发者们应该不陌生吧~ 如果你不知道什么是CocoaPods, 请移步CocoaPods的官方Guide去学习使用指南哇~ 
+pod install和pod update应该大部分iOS以及OSX开发者最常用的两个命令了, 那么大家是否都知道pod install或pod update在执行中主要做了哪些事情呢? 我们来一起探究一下呗~
+初步窥探通过Cooca">
+  
+    <link rel="alternative" href="/atom.xml" title="Startry Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Startry</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">随便乱写</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+					        
+								<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+					        
+								<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/CocoaPods/" style="font-size: 10px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 10px;">iOS</a> <a href="/tags/ios/" style="font-size: 20px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcconfig/" style="font-size: 15px;">xcconfig</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://github.com/startry">空荡荡的github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">思考中...</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Startry</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Startry</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">随便乱写</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+			        
+						<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Something-about-Pod-Install-And-Pod-Update" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/09/24/Something-about-Pod-Install-And-Pod-Update/" class="article-date">
+  	<time datetime="2015-09-24T12:11:19.000Z" itemprop="datePublished">2015-09-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      pod install和pod update背后那点事
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CocoaPods/">CocoaPods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ruby/">Ruby</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Cocoapods对于绝大部分的iOS开发者们应该不陌生吧~ 如果你不知道什么是CocoaPods, 请移步<a href="https://guides.cocoapods.org/" target="_blank" rel="external">CocoaPods的官方Guide</a>去学习使用指南哇~ </p>
+<p><code>pod install</code>和<code>pod update</code>应该大部分iOS以及OSX开发者最常用的两个命令了, 那么大家是否都知道<code>pod install</code>或<code>pod update</code>在执行中主要做了哪些事情呢? 我们来一起探究一下呗~</p>
+<h2 id="初步窥探">初步窥探</h2><p>通过CoocaPods的终端log输出, 我们也可以推测出<code>pod install</code>的大致行为, 如果需要更多的信息, 可以使用<code>--verbose</code>参数输出更多的信息, 被提炼后大致输出log如下:</p>
+<ol>
+<li><code>Updating local specs repositories</code> - 更新本地Spec索引</li>
+<li><code>CocoaPods xxx is available.</code> - 新版本试用提示</li>
+<li><code>Analyzing dependencies</code> - 分析依赖</li>
+<li><code>Downloading dependencies</code> - 下载依赖库</li>
+<li><code>Generating Pods project</code> - 生成Pods项目</li>
+<li><code>Integrating client project</code> - 整合项目</li>
+</ol>
+<h2 id="深入窥探">深入窥探</h2><p>其实呢… 深入了解那自然最好看源码啦~ 问题是怎么跟踪去跟踪源码和学习源码… 我写这篇文章的时候CocoaPods最新的Tag是<a href="https://github.com/CocoaPods/CocoaPods/tree/0.39.0.beta.4" target="_blank" rel="external">0.39.0.beta.4</a>, 那我基于该tag来进行源码分析和追踪。</p>
+<p>我们想要了解两个命令<code>pod install</code>和<code>pod update</code>, 我们可以从命令行入口进行跟踪学习。现在我们以<code>pod install</code>最为学习入口进行跟踪。</p>
+<p>我们可以用终端自带的<code>which</code>命令去跟踪<code>pod</code>命名源码文件所在地作为跟踪入口。执行命令可以发现pod命令原来放置在用户目录下的<code>.rvm</code>隐藏目录下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> pod</span><br><span class="line"><span class="comment"># output: /Users/[UserName]/.rvm/gems/ruby-2.2.1/bin/pod</span></span><br></pre></td></tr></table></figure>
+<p>使用文本编辑器打开<code>pod</code>脚本文件, 我们可以发现如下代码:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">load <span class="constant">Gem</span>.bin_path(<span class="string">'cocoapods'</span>, <span class="string">'pod'</span>, version)</span><br></pre></td></tr></table></figure>
+<p>=。= 这脚本只是负责加载一个在源码目录<code>bin</code>下面的<code>pod</code>文件, 那么我们继续跟踪源码<code>bin</code>下面的<code>pod</code>文件。不多说, 赶紧进入<a href="https://github.com/CocoaPods/CocoaPods" target="_blank" rel="external">CocoaPods项目地址</a>拉源代码了。</p>
+<p>源码的下的<code>pod</code>文件做了一些环境变量的条件控制, 主要是区分<code>COCOAPODS_NO_BUNDLER</code>和<code>PROFILE</code>环境变量, 这些不是本文的关键, 直接找<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/bin/pod#L44" target="_blank" rel="external">核心代码</a>:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Pod::Command</span>.run(<span class="constant">ARGV</span>)</span><br></pre></td></tr></table></figure>
+<p>看到这个。。又要继续去跟踪Command的类了, ARGV是前面脚本传进来的参数。<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/command.rb" target="_blank" rel="external">Command</a>类在<code>lib/cocoapods/command.rb</code>下。</p>
+<p>在Command类下找到初始化函数入口<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/command.rb#L44" target="_blank" rel="external">run</a>方法。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Command</span> <span class="inheritance">&lt; <span class="parent">CLAide::Command</span></span></span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span><span class="keyword">self</span>.run(argv)</span><br><span class="line">    help! <span class="string">'You cannot run CocoaPods as root.'</span> <span class="keyword">if</span> <span class="constant">Process</span>.uid == <span class="number">0</span></span><br><span class="line">    verify_xcode_license_approved!</span><br><span class="line"></span><br><span class="line">    <span class="keyword">super</span>(argv)</span><br><span class="line">  <span class="keyword">ensure</span></span><br><span class="line">    <span class="constant">UI</span>.print_warnings</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在Command类的<code>run</code>方法里, 我们可以看到主要是进行了非root用户检验以及验证xcode使用协议是否已经同意, 然后执行了父类的run方法。什么? 父类? Command的父类是CLAide下的Command类, CLAide可是CoocoaPods依赖的另外一个项目啊… 不多说了, 乖乖去拉<a href="https://github.com/CocoaPods/CLAide" target="_blank" rel="external">CLAide项目</a>的源代码。</p>
+<p>因为前面的CocoaPods主库是基于tag 0.39.0.bete.4分析的, 那么我们要该库对应使用CLAide的Tag分支。在CocoaPods的<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/cocoapods.gemspec#L31" target="_blank" rel="external">cocoapods.gemspec</a>中有所有CocoaPods依赖的项目的制定版本信息, 通过查看该文件我们可以定位对应的CLAide项目使用版本是0.9.1。</p>
+<p>找到CLAide项目下的Command类的<a href="https://github.com/CocoaPods/CLAide/blob/0.9.1/lib/claide/command.rb#L302" target="_blank" rel="external">run</a>方法:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> </span><span class="keyword">self</span>.run(argv = [])</span><br><span class="line">  plugin_prefixes.each <span class="keyword">do</span> |plugin_prefix|</span><br><span class="line">    <span class="constant">PluginManager</span>.load_plugins(plugin_prefix)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">      </span><br><span class="line">  argv = <span class="constant">ARGV</span>.coerce(argv)</span><br><span class="line">  command = parse(argv)</span><br><span class="line">  <span class="constant">ANSI</span>.disabled = !command.ansi_output?</span><br><span class="line">  <span class="keyword">unless</span> command.handle_root_options(argv)</span><br><span class="line">    command.validate!</span><br><span class="line">    command.run</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">rescue</span> <span class="constant">Object</span> =&gt; exception</span><br><span class="line">    handle_exception(command, exception)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>我们可以发现此处主要任务是根据插件前缀预加载插件到管理器中, 通过<a href="https://github.com/CocoaPods/CLAide/blob/0.9.1/lib/claide/argv.rb#L14" target="_blank" rel="external">ARGV类</a>去转换生产一个参数对象, 然后通过参数对象放置转换函数中转换成为一个实际Command类并执行。</p>
+<p>我们跟踪Command类中的<a href="https://github.com/CocoaPods/CLAide/blob/0.9.1/lib/claide/command.rb#L325" target="_blank" rel="external">parse</a>方法, 可以发现parse方法取了参数中的第一个参数去调用[find_subcommand], 即用<code>`install</code>去匹配command的名字, <a href="https://github.com/CocoaPods/CLAide/blob/0.9.1/lib/claide/command.rb#L139" target="_blank" rel="external">command属性的定义</a>中描述如下:</p>
+<blockquote>
+<p> @return [String] The name of the command. Defaults to a snake-cased <br></p>
+</blockquote>
+<p>那么接下来的任务就是寻找类名为install子类的run方法了。赶紧在CoocaPods主工程中搜索install.rb这个文件，额。。没有找到。。这个源码跟踪的就断线了, 莫非一定要用<strong>Debug</strong>的方式去跟踪? </p>
+<p>既然直接搜名字不行, 那就试试用别的途径, 从前面的跟踪推测Install总得是个Command的子类吧, 那我们尝试用<code>Install &lt; Command</code>去搜索。Pingo!! Install类果然被我们找到了, 藏在了project.rb文件下, 原来CocoaPods的开发者们把Install和Update类都放置在了project.rb中了。不多说，继续上代码:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Install</span> <span class="inheritance">&lt; <span class="parent">Command</span></span></span></span><br><span class="line">  <span class="keyword">include</span> <span class="constant">Project</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>run</span><br><span class="line">    verify_podfile_exists!</span><br><span class="line">    run_install_with_update(<span class="keyword">false</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>Install类的<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/command/project.rb#L99" target="_blank" rel="external">run</a>方法终于进入到了前面初探的执行步骤了哇, 前面这么一大堆行为都是为了处理命令哇。</p>
+<p>到这里我们可以猜想一下Update类的run方法是否就是在调用<code>run_install_with_update</code>方法时候传入参数的不同呢? 哈哈, 其实不是, Update类的<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/command/project.rb#L130" target="_blank" rel="external">run</a>方法还要检查是否所有的pods都被install过了, 如果没有的话会主动抛错, 检查通过的才会调用<code>run_install_with_update</code>方法。</p>
+<p><code>verify_podfile_exists</code>在这里就不做赘述, 我们直接进入<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/command/project.rb#L68" target="_blank" rel="external"><code>run_install_with_update</code></a>方法。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> </span>run_install_with_update(update)</span><br><span class="line">  installer = <span class="constant">Installer</span>.new(config.sandbox, config.podfile, config.lockfile)</span><br><span class="line">  installer.update = update</span><br><span class="line">  installer.install!</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>这个大家可能会有个困惑: config是什么时候加载的呢? 这个大家可以自己去发掘喔~ 不然本文就要改名为CocoaPods源码分析之一二三四了。</p>
+<p><code>run_install_with_update</code>的核心代码是调用了Installer类的<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L103" target="_blank" rel="external">install</a>方法, 继续贴代码:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> </span>install!</span><br><span class="line">  prepare</span><br><span class="line">  resolve_dependencies</span><br><span class="line">  download_dependencies</span><br><span class="line">  determine_dependency_product_types</span><br><span class="line">  verify_no_duplicate_framework_names</span><br><span class="line">  verify_no_static_framework_transitive_dependencies</span><br><span class="line">  verify_framework_usage</span><br><span class="line">  generate_pods_project</span><br><span class="line">  integrate_user_project <span class="keyword">if</span> config.integrate_targets?</span><br><span class="line">  perform_post_install_actions</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>哇塞, 我要找所有东西都几乎全列在这个方法里了, 大致的行为动作如下哈, 我会每一个都粗略的介绍一番。</p>
+<h2 id="背后那点事">背后那点事</h2><p>通过签名的代码跟踪，我们可以总结出<code>pod install</code>命令背后执行了这么十件大事:</p>
+<ol>
+<li><strong>准备工作</strong></li>
+<li><strong>查找依赖库</strong></li>
+<li><strong>下载依赖库</strong></li>
+<li><strong>决定依赖库的类型</strong></li>
+<li><strong>验证没有重名的framework</strong></li>
+<li><strong>验证静态库的传递依赖</strong></li>
+<li><strong>验证framwoke的使用</strong></li>
+<li><strong>生成工程</strong></li>
+<li><strong>整合用户项目</strong></li>
+<li><strong>执行install后的行为</strong></li>
+</ol>
+<h3 id="准备工作">准备工作</h3><p>准备工作<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L116" target="_blank" rel="external">(<code>prepare</code>)</a>主要做了以下事情:</p>
+<ol>
+<li>沙盒的准备 - 一些文件以及目录的删除以及创建</li>
+<li>确保Podfile指定的插件都已经安装(不然抛错)</li>
+<li>迁移沙盒中部分文件(区分Pods版本迁移地址不同)</li>
+<li>执行pre_install的Hook</li>
+</ol>
+<h3 id="查找依赖库">查找依赖库</h3><p>查找依赖库<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L125" target="_blank" rel="external">(<code>resolve_dependencies</code><br>)</a>主要做了以下事情:</p>
+<ol>
+<li>通过HookManager添加插件源</li>
+<li>如果config的<code>skip_repo_update</code>参数没有设置的时候执行Analyzer类的<code>update_repositories</code>方法来更新本地索引库 (这里大家其实可以看出<code>--no-repo-update</code>的作用了吧)</li>
+<li>验证Build Configurations参数的有效性</li>
+<li>准备版本兼容的遗留问题处理(0.39.0.beta.4属于空方法)</li>
+<li>清理沙盒</li>
+</ol>
+<h3 id="下载依赖库">下载依赖库</h3><p>下载依赖库<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L752" target="_blank" rel="external">(<code>run_podfile_pre_install_hooks</code>)</a>做了如下事情:</p>
+<ol>
+<li>准备沙盒文件访问器</li>
+<li>下载安装Pods依赖库源文件</li>
+<li>执行Pods依赖库的pre install的执行钩子</li>
+<li>根据Config和Installers参数清理Pods的源文件</li>
+</ol>
+<h3 id="决定依赖库的类型">决定依赖库的类型</h3><p>决定依赖库的类型<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L385" target="_blank" rel="external">(<code>determine_dependency_product_types</code>)</a>方法的作用主要是预判断库的<code>host_requires_frameworks</code>存储在<code>pod_target</code>属性中给后续使用。 那么主要决定什么内容呢? 参考源码中的注释:</p>
+<blockquote>
+<p>Determines if the dependencies need to be built as dynamic frameworks or if they can be built as static libraries by checking for the Swift source presence.</p>
+</blockquote>
+<p>主要是判断库是否需要支持动态Framework以及是否可以被Swift使用过的静态库。</p>
+<h3 id="验证没有重名的framework">验证没有重名的framework</h3><p><a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L393" target="_blank" rel="external">(<code>verify_no_duplicate_framework_names</code>)</a>主要是验证了目标工程集合和Pods库工程没有命名冲突的Framework, 重点是检查了Framework的名字是否冲突; 如果冲突会抛出<code>frameworks with conflicting names</code>异常</p>
+<h3 id="验证静态库的传递依赖">验证静态库的传递依赖</h3><p><a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L410" target="_blank" rel="external">(<code>verify_no_static_framework_transitive_dependencies</code>)</a>检查了静态库里是否包含了引用的静态库, 形成传递依赖。静态库的传递依赖如果形成会主动抛出<code>transitive dependencies that include static binaries</code>异常。</p>
+<h3 id="验证framework的使用">验证framework的使用</h3><p><a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L429" target="_blank" rel="external">(<code>verify_framework_usage</code>)</a>检查是否引用了Switf书写的framework, 并且Podfile中没有指定<code>use framework!</code>。如果验证不通过, 主动抛出异常。</p>
+<h3 id="生成工程">生成工程</h3><p><a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer.rb#L152" target="_blank" rel="external">(generate_pods_project<br>)</a>指定了八件任务, 执行分析过程相对比较复杂, 并且大部分执行动作都涉及CocoaPods依赖的另外一个工程<a href="https://github.com/CocoaPods/Xcodeproj" target="_blank" rel="external">Xcodeproj</a>。</p>
+<ol>
+<li>准备Pods工程(<code>prepare_pods_project</code>)</li>
+<li>安装文件引用(<code>install_file_references</code>)</li>
+<li>安装库(<code>install_libraries</code>)</li>
+<li>为Target设置依赖(<code>set_target_dependencies</code>)</li>
+<li>执行pod项目的post install的钩子(<code>run_podfile_post_install_hooks</code>)</li>
+<li>执行Project类的Save方法保存配置(<code>write_pod_project</code>)</li>
+<li>Pods工程配置共享依赖库的Target Scheme(<code>share_development_pod_schemes</code>)</li>
+<li>修改Pods工程的LockFile文件(<code>write_lockfiles</code>)</li>
+</ol>
+<h3 id="整合用户项目">整合用户项目</h3><p>整合项目主要是依赖<code>UserProjectIntegrator</code>类的<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/lib/cocoapods/installer/user_project_integrator.rb#L49" target="_blank" rel="external">integrate</a>方法, 该方法主要是做了两件事情:</p>
+<ol>
+<li>负责创建xcode的workspace, 并整合所有的target到新的workspace中. </li>
+<li>抛出Podfile空项目依赖和xcconfig是否被原有的xcconfig所覆盖依赖相关的警告。<font style="color:orange">最常见的xcconfig override警告就是这里抛出来的哦</font></li>
+</ol>
+<h3 id="执行install后的行为">执行install后的行为</h3><p>install后的行为分为四段:</p>
+<ol>
+<li>unLock Pods库下的文件以便执行post install的钩子逻辑</li>
+<li>执行Post Install的钩子逻辑</li>
+<li>抛出签名执行收集的Spec废弃警告</li>
+<li>重新锁定Lock Pods库下的文件防止用户误修改</li>
+</ol>
+<p>到目前为止, <code>pod install</code>背后的十件大事都<em>粗略</em>的介绍完了哈。</p>
+<h2 id="总结">总结</h2><p>本文从<code>pod install</code>作为入口, 跟踪CocoaPods的实现源码, 并粗略根据<code>tag 0.39.0.beta.4</code>的源码将<code>pod install</code>背后主要执行的十个任务罗列出来。通过源码跟踪, 能够更深入的去了解Pods背后的工作, 能够更轻易排查因为Pods使用产生的问题。</p>
+<p>另: 源码跟踪还是要自己动手更有效果wow~~~</p>
+<p><strong>PS: 本人水平有限, 如果有错误的地方, 请及时指出纠正, 谢谢哇!</strong><br><br><strong>PS: 转载请注明出处哦~~</strong></p>
+<h4 id="参考文献">参考文献</h4><ol>
+<li><a href="https://guides.cocoapods.org" target="_blank" rel="external">CocoaPods官方Docs</a></li>
+<li><a href="https://github.com/CocoaPods" target="_blank" rel="external">Github CocoaPods源码库</a></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/09/06/Optional-solutions-for-iOS-multi-target/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS - 创建大量相似App的另外一种选择</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Something-about-Pod-Install-And-Pod-Update" data-title="pod install和pod update背后那点事" data-url="http://startry.com/2015/09/24/Something-about-Pod-Install-And-Pod-Update/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 Startry
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+  <div style="display:none">
+    <span id="busuanzi_container_site_pv" style="display:hidden;">本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-67055063-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
