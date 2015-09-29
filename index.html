@@ -199,8 +199,8 @@
     <article id="post-Something-about-Pod-Install-And-Pod-Update" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/09/24/Something-about-Pod-Install-And-Pod-Update/" class="article-date">
-  	<time datetime="2015-09-24T12:30:43.000Z" itemprop="datePublished">2015-09-24</time>
+      <a href="/2015/09/29/Something-about-Pod-Install-And-Pod-Update/" class="article-date">
+  	<time datetime="2015-09-29T08:51:07.000Z" itemprop="datePublished">2015-09-29</time>
 </a>
     </div>
   
@@ -213,7 +213,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/24/Something-about-Pod-Install-And-Pod-Update/">pod install和pod update背后那点事</a>
+      <a class="article-title" href="/2015/09/29/Something-about-Pod-Install-And-Pod-Update/">pod install和pod update背后那点事</a>
     </h1>
   
 
@@ -241,7 +241,7 @@
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">load <span class="constant">Gem</span>.bin_path(<span class="string">'cocoapods'</span>, <span class="string">'pod'</span>, version)</span><br></pre></td></tr></table></figure>
 <p>=。= 这脚本只是负责加载一个在源码目录<code>bin</code>下面的<code>pod</code>文件, 那么我们继续跟踪源码<code>bin</code>下面的<code>pod</code>文件。不多说, 赶紧进入<a href="https://github.com/CocoaPods/CocoaPods" target="_blank" rel="external">CocoaPods项目地址</a>拉源代码了。</p>
 <p>进入CocoaPods的开源项目可以发现CocoaPods时由下图所示的多个项目组成的。</p>
-<p><img src="http://blog.startry.com/img/blog_pods_subproj.png" alt="预编译Setting示例"></p>
+<p><img src="http://blog.startry.com/img/blog_pods_subproj.png" alt="CocoaPods依赖子项目"></p>
 <p>除去主工程CocoaPods和索引库Master Repo, 还依赖了5个工程。这给源码跟踪增加了不少难度, 不过没关系, 我们不是直接阅读源代码, 只需要关注主工程CocoaPods, 依赖的库在用到或者必须跟踪的时候再去跟踪。</p>
 <p>回归主题哇~</p>
 <p>主工程<a href="https://github.com/CocoaPods/CocoaPods" target="_blank" rel="external">CocoaPods</a>源码的下的<code>pod</code>文件做了一些环境变量的条件控制, 主要是区分<code>COCOAPODS_NO_BUNDLER</code>和<code>PROFILE</code>环境变量, 这些不是本文的关键, 直接找<a href="https://github.com/CocoaPods/CocoaPods/blob/0.39.0.beta.4/bin/pod#L44" target="_blank" rel="external">核心代码</a>:</p>
