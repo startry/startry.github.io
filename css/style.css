@@ -197,6 +197,7 @@ a {
 #container {
   position: relative;
   min-height: 100%;
+  zoom: 0.9;
 }
 #container #mobile-nav {
   display: none;
