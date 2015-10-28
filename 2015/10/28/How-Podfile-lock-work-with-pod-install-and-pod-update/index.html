@@ -10,13 +10,13 @@
 那么, 这个Podfile.lock的作用究竟就是干嘛的呢?">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Podfile.lock背后的那点事">
-<meta property="og:url" content="http://startry.com/2015/10/27/How-Podfile-lock-work-with-pod-install-and-pod-update/index.html">
+<meta property="og:url" content="http://startry.com/2015/10/28/How-Podfile-lock-work-with-pod-install-and-pod-update/index.html">
 <meta property="og:site_name" content="Startry Blog">
 <meta property="og:description" content="大部分的iOS开发者应该都曾使用过CocoaPods去管理工程的依赖, 但是你们有没有留意一个小小的文件Podfile.lock呢?
 通常我们需要使用CocoaPods去管理依赖, 都会执行一次pod install。 在install命令的执行过程中会改变被执行Project的配置项, 同时也会生产一个Podfile.lock文件。
 那么, 这个Podfile.lock的作用究竟就是干嘛的呢?">
 <meta property="og:image" content="http://blog.startry.com/img/blog_pod_update_help.png">
-<meta property="og:updated_time" content="2015-10-27T11:39:35.000Z">
+<meta property="og:updated_time" content="2015-10-28T02:33:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Podfile.lock背后的那点事">
 <meta name="twitter:description" content="大部分的iOS开发者应该都曾使用过CocoaPods去管理工程的依赖, 但是你们有没有留意一个小小的文件Podfile.lock呢?
@@ -205,8 +205,8 @@
       <div class="body-wrap"><article id="post-How-Podfile-lock-work-with-pod-install-and-pod-update" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/10/27/How-Podfile-lock-work-with-pod-install-and-pod-update/" class="article-date">
-  	<time datetime="2015-10-27T11:39:35.000Z" itemprop="datePublished">2015-10-27</time>
+      <a href="/2015/10/28/How-Podfile-lock-work-with-pod-install-and-pod-update/" class="article-date">
+  	<time datetime="2015-10-28T02:33:34.000Z" itemprop="datePublished">2015-10-28</time>
 </a>
     </div>
   
@@ -253,7 +253,7 @@
 <blockquote>
 <p>This file is generated after the first run of <font color="red"> pod install</font>, and tracks the version of each Pod that was installed. </p>
 </blockquote>
-<p>其实在<a href="weibo.com/tangqiaoboy">@唐巧大神</a>博客<a href="http://www.devtang.com/blog/2014/05/25/use-cocoapod-to-manage-ios-lib-dependency/" target="_blank" rel="external">《用CocoaPods做iOS程序的依赖管理》</a>中有提到update和install的区别以及Podfile.lock的关系, 原文引用如下:</p>
+<p>其实在<a href="http://weibo.com/tangqiaoboy" target="_blank" rel="external">@唐巧大神</a>博客<a href="http://www.devtang.com/blog/2014/05/25/use-cocoapod-to-manage-ios-lib-dependency/" target="_blank" rel="external">《用CocoaPods做iOS程序的依赖管理》</a>中有提到update和install的区别以及Podfile.lock的关系, 原文引用如下:</p>
 <blockquote>
 <p>当你执行pod install之后，除了 Podfile 外，CocoaPods 还会生成一个名为Podfile.lock的文件，Podfile.lock 应该加入到版本控制里面，不应该把这个文件加入到.gitignore中。因为Podfile.lock会锁定当前各依赖库的版本，之后如果多次执行pod install 不会更改版本，要pod update才会改Podfile.lock了。这样多人协作的时候，可以防止第三方库升级时造成大家各自的第三方库版本不一致</p>
 </blockquote>
@@ -435,7 +435,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="How-Podfile-lock-work-with-pod-install-and-pod-update" data-title="Podfile.lock背后的那点事" data-url="http://startry.com/2015/10/27/How-Podfile-lock-work-with-pod-install-and-pod-update/"></div>
+	<div class="ds-thread" data-thread-key="How-Podfile-lock-work-with-pod-install-and-pod-update" data-title="Podfile.lock背后的那点事" data-url="http://startry.com/2015/10/28/How-Podfile-lock-work-with-pod-install-and-pod-update/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
