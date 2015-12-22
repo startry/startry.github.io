@@ -23,7 +23,7 @@ CocoaPods的基本使用现在网站上遍历都是的教程, 官方文档的简
 <meta property="og:image" content="http://blog.startry.com/img/blog_podspec_demo.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_menu_level_sub_jsonmodel.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_menu_level_flat_jsonmodel.png">
-<meta property="og:updated_time" content="2015-12-22T11:12:52.000Z">
+<meta property="og:updated_time" content="2015-12-22T11:13:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pods依赖库快速开发入门">
 <meta name="twitter:description" content="CocoaPods是所有iOS开发熟知的一个第三方类库依赖管理工具。只要稍微有些经验的iOS开发者都会使用三方依赖库管理工具来管理工程依赖, CocoaPods是目前最火热权威的管理工具。
@@ -215,7 +215,7 @@ CocoaPods的基本使用现在网站上遍历都是的教程, 官方文档的简
   
     <div class="article-meta">
       <a href="/2015/12/22/pod-repo-dev-quick-start/" class="article-date">
-  	<time datetime="2015-12-22T11:12:52.000Z" itemprop="datePublished">2015-12-22</time>
+  	<time datetime="2015-12-22T11:13:47.000Z" itemprop="datePublished">2015-12-22</time>
 </a>
     </div>
   
@@ -295,13 +295,18 @@ CocoaPods的基本使用现在网站上遍历都是的教程, 官方文档的简
 <p> 因为STShareKit本身是一个库, 如果直接网里面拖framework, 只会把对应的target引用写进项目的pbproj下, 只是一次性的被根项目引用, 并且不能被库本身引用, 因此通过纯粹的拖动是不可取的。(其实本人觉得如果Xcode做的智能点, 应该是可以解决这个问题的, 吐槽下)</p>
 <p> 参考前面<strong>PodSepc文件示例</strong>的podspec文件描述, 核心解决关键在于下述代码:</p>
  <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s.vendored_frameworks = [</span><br><span class="line">  		<span class="string">'Pod/Frameworks/*.framework'</span></span><br><span class="line"> 	]</span><br><span class="line"> 	s.frameworks = <span class="string">'UIKit'</span>, <span class="string">'Foundation'</span></span><br></pre></td></tr></table></figure>
-<p> 通过在podspec中添加上述两个文件描述并执行一次<code>pod install</code>, 一个可以解决第三方动态库, 一个可以添加本身库依赖的系统库。</p>
-<p> 大家会不会好奇通过podspec描述的文件是怎么添加上去的, 是怎么被主工程和库给引用的。对Xcode环境配置熟悉的童鞋肯定能够猜到, 环境配置不是在pbproj描述下就是通过xcconfig进行注入的。如果大家对xcconfig想要进一步了解, 请大家移步我之前写的文章<a href="http://blog.startry.com/2015/07/24/iOS_EnvWithXcconfig/" target="_blank" rel="external">《iOS开发必备 - 环境变量配置(Debug &amp; Release)》</a>。</p>
-<p> 那么我们打开STShareKit.xcconfig文件进行一探究竟。(需要在引用工程执行完<code>pod install</code>命令才会生成)</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">	FRAMEWORK_SEARCH_PATHS = $(inherited) <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/../Pod/Frameworks"</span></span><br><span class="line">	GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=<span class="number">1</span></span><br><span class="line">	HEADER_SEARCH_PATHS = <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/Headers/Private"</span> <span class="comment">## 此处省略</span></span><br><span class="line">	``` </span><br><span class="line">	第一行**FRAMEWORK_SEARCH_PATHS**基本已经解除了大家的困惑了吧~</span><br><span class="line">	</span><br><span class="line"><span class="number">2</span>. 添加资源文件</span><br><span class="line">	</span><br><span class="line">	添加资源文件的方式和添加第三方framework的方式相同, 核心解决关键在下述代码:</span><br><span class="line">	</span><br><span class="line">	``` Ruby</span><br><span class="line">	s.resource_bundles = &#123;</span><br><span class="line">   		<span class="string">'STShareKit'</span> =&gt; [<span class="string">'Pod/Assets/*.png'</span>]</span><br><span class="line">  	&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<pre><code>这里有个特殊的地方, 通过上述写法书写的方式在<span class="comment"><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#28155;&#21152;&#36164;&#28304;&#25991;&#20214;&#36824;&#26377;&#21478;&#22806;&#19968;&#31181;&#26041;&#24335;(**&#19981;&#25512;&#33616;**):&#10;&#10;``` Ruby&#10;s.resources = &#39;Pod/Assets/**/*&#39;</span><br></pre></td></tr></table></figure></span>
+<pre><code>通过在podspec中添加上述两个文件描述并执行一次``pod install``, 一个可以解决第三方动态库, 一个可以添加本身库依赖的系统库。
+
+大家会不会好奇通过podspec描述的文件是怎么添加上去的, 是怎么被主工程和库给引用的。对Xcode环境配置熟悉的童鞋肯定能够猜到, 环境配置不是在pbproj描述下就是通过xcconfig进行注入的。如果大家对xcconfig想要进一步了解, 请大家移步我之前写的文章[《iOS开发必备 - 环境变量配置(Debug &amp; Release)》](http://blog.startry.com/2015/07/24/iOS_EnvWithXcconfig/)。
+
+那么我们打开STShareKit.xcconfig文件进行一探究竟。(需要在引用工程执行完``pod install``命令才会生成)
+
+<span class="comment"><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">	FRAMEWORK_SEARCH_PATHS = $(inherited) <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/../Pod/Frameworks"</span></span><br><span class="line">	GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=<span class="number">1</span></span><br><span class="line">	HEADER_SEARCH_PATHS = <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/Headers/Private"</span> <span class="comment">## 此处省略</span></span><br><span class="line">	``` </span><br><span class="line">	</span><br><span class="line">	第一行**FRAMEWORK_SEARCH_PATHS**基本已经解除了大家的困惑了吧~</span><br><span class="line">	</span><br><span class="line"><span class="number">2</span>. 添加资源文件</span><br><span class="line">	</span><br><span class="line">	添加资源文件的方式和添加第三方framework的方式相同, 核心解决关键在下述代码:</span><br><span class="line">	</span><br><span class="line">	``` Ruby</span><br><span class="line">	s.resource_bundles = &#123;</span><br><span class="line">   		<span class="string">'STShareKit'</span> =&gt; [<span class="string">'Pod/Assets/*.png'</span>]</span><br><span class="line">  	&#125;</span><br></pre></td></tr></table></figure></span>
+
+
+这里有个特殊的地方, 通过上述写法书写的方式在<span class="comment"><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#28155;&#21152;&#36164;&#28304;&#25991;&#20214;&#36824;&#26377;&#21478;&#22806;&#19968;&#31181;&#26041;&#24335;(**&#19981;&#25512;&#33616;**):&#10;&#10;``` Ruby&#10;s.resources = &#39;Pod/Assets/**/*&#39;</span><br></pre></td></tr></table></figure></span>
 
 
 通过这种方式写法会被所有的资源文件不添加bundle直接copy进入主工程, 很容易发生重名冲突等问题, 不建议用这个写法~
