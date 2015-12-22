@@ -21,9 +21,10 @@ CocoaPods的基本使用现在网站上遍历都是的教程, 官方文档的简
 如何将库">
 <meta property="og:image" content="http://blog.startry.com/img/blog_create_pod_simple_demo.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_podspec_demo.png">
+<meta property="og:image" content="http://blog.startry.com/img/blog_repo_copy_build_phases.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_menu_level_sub_jsonmodel.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_menu_level_flat_jsonmodel.png">
-<meta property="og:updated_time" content="2015-12-22T11:15:10.000Z">
+<meta property="og:updated_time" content="2015-12-22T11:21:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pods依赖库快速开发入门">
 <meta name="twitter:description" content="CocoaPods是所有iOS开发熟知的一个第三方类库依赖管理工具。只要稍微有些经验的iOS开发者都会使用三方依赖库管理工具来管理工程依赖, CocoaPods是目前最火热权威的管理工具。
@@ -215,7 +216,7 @@ CocoaPods的基本使用现在网站上遍历都是的教程, 官方文档的简
   
     <div class="article-meta">
       <a href="/2015/12/22/pod-repo-dev-quick-start/" class="article-date">
-  	<time datetime="2015-12-22T11:15:10.000Z" itemprop="datePublished">2015-12-22</time>
+  	<time datetime="2015-12-22T11:21:29.000Z" itemprop="datePublished">2015-12-22</time>
 </a>
     </div>
   
@@ -289,57 +290,32 @@ CocoaPods的基本使用现在网站上遍历都是的教程, 官方文档的简
 <p><strong>补充</strong>:<br>关于索引库, 有区分官方库和非官方库。一般大公司都会维护一个<strong>官方索引库</strong>和<strong>自有索引库</strong>。<strong>官方索引库</strong>一般是<a href="https://github.com/CocoaPods/Specs" target="_blank" rel="external">git官方库</a>的一个镜像, 为了加快公司内对库索引更新的速度。<strong>自由索引库</strong>一般维护了公司业务产品自有依赖的基础组件和业务组件。</p>
 <h3 id="Repo添加文件依赖">Repo添加文件依赖</h3><p>在实际工程开发过程中, 我发现很多童鞋都不了解怎么去添加资源文件到工程中, 其实我自己一开始也不太了解哈, 后面在工程应用中逐渐熟悉起来的。我结合自己的使用经验以及参考<a href="https://guides.cocoapods.org/making/specs-and-specs-repo.html" target="_blank" rel="external">CocoaPods官方描述文档</a>, 在这里简单描述一下。</p>
 <p>我先举几个常用的实际场景:</p>
-<ol>
-<li><p>添加framework</p>
-<p> 假设我们已经通过前面说的模板去创建了一个私有库<strong>STShareKit</strong>, 然后我需要往<strong>STShareKit</strong>库添加分享库<strong>ShareSDK.framework</strong>, 我是不是直接和开发普通工程一样直接往文件目录一拖就好了呢? <font color="orange">实践证明这种方式是不可取的</font>。</p>
-<p> 因为STShareKit本身是一个库, 如果直接网里面拖framework, 只会把对应的target引用写进项目的pbproj下, 只是一次性的被根项目引用, 并且不能被库本身引用, 因此通过纯粹的拖动是不可取的。(其实本人觉得如果Xcode做的智能点, 应该是可以解决这个问题的, 吐槽下)</p>
-<p> 参考前面<strong>PodSepc文件示例</strong>的podspec文件描述, 核心解决关键在于下述代码:</p>
- <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s.vendored_frameworks = [</span><br><span class="line">  		<span class="string">'Pod/Frameworks/*.framework'</span></span><br><span class="line"> 	]</span><br><span class="line">s.frameworks = <span class="string">'UIKit'</span>, <span class="string">'Foundation'</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<pre><code>通过在podspec中添加上述两个文件描述并执行一次``pod install``, 一个可以解决第三方动态库, 一个可以添加本身库依赖的系统库。
-
-大家会不会好奇通过podspec描述的文件是怎么添加上去的, 是怎么被主工程和库给引用的。对Xcode环境配置熟悉的童鞋肯定能够猜到, 环境配置不是在pbproj描述下就是通过xcconfig进行注入的。如果大家对xcconfig想要进一步了解, 请大家移步我之前写的文章[《iOS开发必备 - 环境变量配置(Debug &amp; Release)》](http://blog.startry.com/2015/07/24/iOS_EnvWithXcconfig/)。
-
-那么我们打开STShareKit.xcconfig文件进行一探究竟。(需要在引用工程执行完``pod install``命令才会生成)
-
-<span class="comment"><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">	FRAMEWORK_SEARCH_PATHS = $(inherited) <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/../Pod/Frameworks"</span></span><br><span class="line">	GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=<span class="number">1</span></span><br><span class="line">	HEADER_SEARCH_PATHS = <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/Headers/Private"</span> <span class="comment">## 此处省略</span></span><br><span class="line">	``` </span><br><span class="line">	</span><br><span class="line">	第一行**FRAMEWORK_SEARCH_PATHS**基本已经解除了大家的困惑了吧~</span><br><span class="line">	</span><br><span class="line"><span class="number">2</span>. 添加资源文件</span><br><span class="line">	</span><br><span class="line">	添加资源文件的方式和添加第三方framework的方式相同, 核心解决关键在下述代码:</span><br><span class="line">	</span><br><span class="line">	``` Ruby</span><br><span class="line">	s.resource_bundles = &#123;</span><br><span class="line">   		<span class="string">'STShareKit'</span> =&gt; [<span class="string">'Pod/Assets/*.png'</span>]</span><br><span class="line">  	&#125;</span><br></pre></td></tr></table></figure></span>
-
-
-这里有个特殊的地方, 通过上述写法书写的方式在<span class="comment"><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#28155;&#21152;&#36164;&#28304;&#25991;&#20214;&#36824;&#26377;&#21478;&#22806;&#19968;&#31181;&#26041;&#24335;(**&#19981;&#25512;&#33616;**):&#10;&#10;``` Ruby&#10;s.resources = &#39;Pod/Assets/**/*&#39;</span><br></pre></td></tr></table></figure></span>
-
-
-通过这种方式写法会被所有的资源文件不添加bundle直接copy进入主工程, 很容易发生重名冲突等问题, 不建议用这个写法~
-
-**补充:** 大家如果把上述描述文件修改和下面一样, 大家猜猜会发生什么事情呢? (库名为STShareKit)
-
-<span class="comment"><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s.resource_bundles = &#123;</span><br><span class="line">  		<span class="string">'STShareUI'</span> =&gt; [<span class="string">'Pod/Assets/*.png'</span>]</span><br><span class="line"> 	&#125;</span><br></pre></td></tr></table></figure></span>
-
-
-接下来抛给大家一个问题, 资源文件是怎么添加到主工程里的, 是通过xcconfig吗?
-我一开始以为是通过xcconfig进行配置, 后面并没有找到对应的配置项目, 在工程下面的Build Phases, CocoaPods会默认添加一个执行脚本:
-
-![Build Phases拷贝脚本](http://blog.startry.com/img/blog_repo_copy_build_phases.png)
-
-打开Target Support Files目录下Pods文件夹下的Pods-resources.sh脚本文件, 全局搜索STShareKit.bundle, 可以发现在脚本里有如下代码:
-
-<span class="comment"><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install_resource <span class="string">"$&#123;BUILT_PRODUCTS_DIR&#125;/STShareKit.bundle"</span></span><br></pre></td></tr></table></figure></span>
-
-
-看到这行代码基本已经解释了整个bundle是怎么进去到主工程里的了, 具体的细节请大家自行研究**install_resource**的实现。
-</code></pre><ol>
-<li><p>源代码分目录(区分group)</p>
-<p> 做个私有库开发或者细心的童鞋会发现, 本身在开发库时候明明已经区分了物理目录的, 但是在引用工程里的Pods文件夹却是平铺展开的。对于<strong>处女座</strong>的开发者来说, 都是一怔灾难, 平铺看上怎么都是别扭的。以知名库<a href="https://github.com/icanzilb/JSONModel" target="_blank" rel="external">JSONModel</a>为例子:</p>
-<p> 开发库时候的目录分级:</p>
-<p> <img src="http://blog.startry.com/img/blog_menu_level_sub_jsonmodel.png" alt="JSONModel源码中目录"></p>
-<p> 引用库时候的目录分级:</p>
-<p> <img src="http://blog.startry.com/img/blog_menu_level_flat_jsonmodel.png" alt="JSONModel引入后目录"></p>
-<p> 是不是看到这个平级目录很抓狂~ <a href="https://guides.cocoapods.org/making/specs-and-specs-repo.html" target="_blank" rel="external">官方Guide</a>来解救有代码整齐强迫症的童鞋们了, 在<strong>A specification with subspecs</strong>章节, 有如下的一个样本podspec</p>
- <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Pod::Spec</span>.new <span class="keyword">do</span> |spec|</span><br><span class="line">  spec.name          = <span class="string">'ShareKit'</span></span><br><span class="line">  spec.source_files  = <span class="string">'Classes/ShareKit/&#123;Configuration,Core,Customize UI,UI&#125;/**/*.&#123;h,m,c&#125;'</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line">  spec.subspec <span class="string">'Evernote'</span> <span class="keyword">do</span> |evernote|</span><br><span class="line">    evernote.source_files = <span class="string">'Classes/ShareKit/Sharers/Services/Evernote/**/*.&#123;h,m&#125;'</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  spec.subspec <span class="string">'Facebook'</span> <span class="keyword">do</span> |facebook|</span><br><span class="line">    facebook.source_files   = <span class="string">'Classes/ShareKit/Sharers/Services/Facebook/**/*.&#123;h,m&#125;'</span></span><br><span class="line">    facebook.compiler_flags = <span class="string">'-Wno-incomplete-implementation -Wno-missing-prototypes'</span></span><br><span class="line">    facebook.dependency <span class="string">'Facebook-iOS-SDK'</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p> 呵呵, 有强迫症的童鞋是否已经找到了救星了呢? 通过描述subspec来对代码进行不同的层级区分, 这样使得引用的库能够有一定的层次感, 阅读和逻辑结构更加清晰。</p>
-<p> 想要了解的更加清晰, 可以参考知名库<a href="https://github.com/AFNetworking/AFNetworking" target="_blank" rel="external">AFNetworking</a>的<a href="https://github.com/AFNetworking/AFNetworking/blob/master/AFNetworking.podspec" target="_blank" rel="external">podspec</a>实现以及引用时候其生产的目录结构!</p>
-</li>
-</ol>
+<h4 id="添加framework">添加framework</h4><p>假设我们已经通过前面说的模板去创建了一个私有库<strong>STShareKit</strong>, 然后我需要往<strong>STShareKit</strong>库添加分享库<strong>ShareSDK.framework</strong>, 我是不是直接和开发普通工程一样直接往文件目录一拖就好了呢? <font color="orange">实践证明这种方式是不可取的</font>。</p>
+<p>因为STShareKit本身是一个库, 如果直接网里面拖framework, 只会把对应的target引用写进项目的pbproj下, 只是一次性的被根项目引用, 并且不能被库本身引用, 因此通过纯粹的拖动是不可取的。(其实本人觉得如果Xcode做的智能点, 应该是可以解决这个问题的, 吐槽下)</p>
+<p>参考前面<strong>PodSepc文件示例</strong>的podspec文件描述, 核心解决关键在于下述代码:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s.vendored_frameworks = [</span><br><span class="line">	<span class="string">'Pod/Frameworks/*.framework'</span></span><br><span class="line">]</span><br><span class="line">s.frameworks = <span class="string">'UIKit'</span>, <span class="string">'Foundation'</span></span><br></pre></td></tr></table></figure>
+<p>通过在podspec中添加上述两个文件描述并执行一次<code>pod install</code>, 一个可以解决第三方动态库, 一个可以添加本身库依赖的系统库。</p>
+<p>大家会不会好奇通过podspec描述的文件是怎么添加上去的, 是怎么被主工程和库给引用的。对Xcode环境配置熟悉的童鞋肯定能够猜到, 环境配置不是在pbproj描述下就是通过xcconfig进行注入的。如果大家对xcconfig想要进一步了解, 请大家移步我之前写的文章<a href="http://blog.startry.com/2015/07/24/iOS_EnvWithXcconfig/" target="_blank" rel="external">《iOS开发必备 - 环境变量配置(Debug &amp; Release)》</a>。</p>
+<p>那么我们打开STShareKit.xcconfig文件进行一探究竟。(需要在引用工程执行完<code>pod install</code>命令才会生成)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">FRAMEWORK_SEARCH_PATHS = $(inherited) <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/../Pod/Frameworks"</span></span><br><span class="line">GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=<span class="number">1</span></span><br><span class="line">HEADER_SEARCH_PATHS = <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/Headers/Private"</span> <span class="comment">## 此处省略</span></span><br><span class="line">``` </span><br><span class="line">	</span><br><span class="line">第一行**FRAMEWORK_SEARCH_PATHS**基本已经解除了大家的困惑了吧~</span><br><span class="line">	</span><br><span class="line"><span class="comment">#### 添加资源文件</span></span><br><span class="line">	</span><br><span class="line">添加资源文件的方式和添加第三方framework的方式相同, 核心解决关键在下述代码:</span><br><span class="line">	</span><br><span class="line">``` Ruby</span><br><span class="line">s.resource_bundles = &#123;</span><br><span class="line">	<span class="string">'STShareKit'</span> =&gt; [<span class="string">'Pod/Assets/*.png'</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有个特殊的地方, 通过上述写法书写的方式在<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#9;&#10;&#28155;&#21152;&#36164;&#28304;&#25991;&#20214;&#36824;&#26377;&#21478;&#22806;&#19968;&#31181;&#26041;&#24335;(**&#19981;&#25512;&#33616;**):&#10;&#9;&#10;``` Ruby&#10;s.resources = &#39;Pod/Assets/**/*&#39;</span><br></pre></td></tr></table></figure></p>
+<p>通过这种方式写法会被所有的资源文件不添加bundle直接copy进入主工程, 很容易发生重名冲突等问题, 不建议用这个写法~</p>
+<p><strong>补充:</strong> 大家如果把上述描述文件修改和下面一样, 大家猜猜会发生什么事情呢? (库名为STShareKit)</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s.resource_bundles = &#123;</span><br><span class="line">	<span class="string">'STShareUI'</span> =&gt; [<span class="string">'Pod/Assets/*.png'</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来抛给大家一个问题, 资源文件是怎么添加到主工程里的, 是通过xcconfig吗?<br>我一开始以为是通过xcconfig进行配置, 后面并没有找到对应的配置项目, 在工程下面的Build Phases, CocoaPods会默认添加一个执行脚本:</p>
+<p><img src="http://blog.startry.com/img/blog_repo_copy_build_phases.png" alt="Build Phases拷贝脚本"></p>
+<p>打开Target Support Files目录下Pods文件夹下的Pods-resources.sh脚本文件, 全局搜索STShareKit.bundle, 可以发现在脚本里有如下代码:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install_resource <span class="string">"$&#123;BUILT_PRODUCTS_DIR&#125;/STShareKit.bundle"</span></span><br></pre></td></tr></table></figure>
+<p>看到这行代码基本已经解释了整个bundle是怎么进去到主工程里的了, 具体的细节请大家自行研究<strong>install_resource</strong>的实现。</p>
+<h4 id="源代码分目录(区分group)">源代码分目录(区分group)</h4><p>做个私有库开发或者细心的童鞋会发现, 本身在开发库时候明明已经区分了物理目录的, 但是在引用工程里的Pods文件夹却是平铺展开的。对于<strong>处女座</strong>的开发者来说, 都是一怔灾难, 平铺看上怎么都是别扭的。以知名库<a href="https://github.com/icanzilb/JSONModel" target="_blank" rel="external">JSONModel</a>为例子:</p>
+<p>开发库时候的目录分级:</p>
+<p><img src="http://blog.startry.com/img/blog_menu_level_sub_jsonmodel.png" alt="JSONModel源码中目录"></p>
+<p>引用库时候的目录分级:</p>
+<p><img src="http://blog.startry.com/img/blog_menu_level_flat_jsonmodel.png" alt="JSONModel引入后目录"></p>
+<p>是不是看到这个平级目录很抓狂~ <a href="https://guides.cocoapods.org/making/specs-and-specs-repo.html" target="_blank" rel="external">官方Guide</a>来解救有代码整齐强迫症的童鞋们了, 在<strong>A specification with subspecs</strong>章节, 有如下的一个样本podspec</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Pod::Spec</span>.new <span class="keyword">do</span> |spec|</span><br><span class="line">	spec.name          = <span class="string">'ShareKit'</span></span><br><span class="line">	spec.source_files  = <span class="string">'Classes/ShareKit/&#123;Configuration,Core,Customize UI,UI&#125;/**/*.&#123;h,m,c&#125;'</span></span><br><span class="line">	<span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line">	spec.subspec <span class="string">'Evernote'</span> <span class="keyword">do</span> |evernote|</span><br><span class="line">	evernote.source_files = <span class="string">'Classes/ShareKit/Sharers/Services/Evernote/**/*.&#123;h,m&#125;'</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">spec.subspec <span class="string">'Facebook'</span> <span class="keyword">do</span> |facebook|</span><br><span class="line">	facebook.source_files   = <span class="string">'Classes/ShareKit/Sharers/Services/Facebook/**/*.&#123;h,m&#125;'</span></span><br><span class="line">	facebook.compiler_flags = <span class="string">'-Wno-incomplete-implementation -Wno-missing-prototypes'</span></span><br><span class="line">	facebook.dependency <span class="string">'Facebook-iOS-SDK'</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>呵呵, 有强迫症的童鞋是否已经找到了救星了呢? 通过描述subspec来对代码进行不同的层级区分, 这样使得引用的库能够有一定的层次感, 阅读和逻辑结构更加清晰。</p>
+<p>想要了解的更加清晰, 可以参考知名库<a href="https://github.com/AFNetworking/AFNetworking" target="_blank" rel="external">AFNetworking</a>的<a href="https://github.com/AFNetworking/AFNetworking/blob/master/AFNetworking.podspec" target="_blank" rel="external">podspec</a>实现以及引用时候其生产的目录结构!</p>
 <h3 id="总结">总结</h3><p>关于如何使用如何使用CocoaPods创建私有库, 个人感觉<a href="http://blog.wtlucky.com/blog/2015/02/26/create-private-podspec/" target="_blank" rel="external">使用Cocoapods创建私有podspec</a>已经写的非常的详细, 本篇文章的意义不大。本篇文章对于开发私有库时候的文件等资源文件添加的细节进行了一些补充, 方便大家更加快速的入门, 对于各路高手来说, 这篇文章只有带人引路的作用。</p>
 <p>PS: 水平有限, 有错误的地方请及时指出~</p>
 <h4 id="参考文献">参考文献</h4><ol>
