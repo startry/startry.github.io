@@ -13,9 +13,9 @@
 <meta property="og:site_name" content="Startry Blog">
 <meta property="og:description" content="App应用程序开发, 界面跳转是基础中的基础, 几乎没有一个App是用不到界面跳转的, 那么怎么样去书写界面跳转代码才是比较合理的呢?
 大家可能在想跳转无非就2种方式, 能有什么内容? 其实并不是这样子的, 对于研发老手来说, 大型应用几乎都是利用URLScheme进行全方位的解决方案; 对于研发新手来说, 他们可能并没有遇到多路口界面跳转的瓶颈, 只会使用一些常用跳转, 并不会意识到界面跳转潜在">
-<meta property="og:image" content="http://blog.startry.com/img/blog_scheme_directly.png">
+<meta property="og:image" content="http://blog.startry.com/img/blog_sheme_directly.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_scheme_routable.png">
-<meta property="og:updated_time" content="2016-02-14T05:41:24.000Z">
+<meta property="og:updated_time" content="2016-02-14T05:44:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS界面跳转的一些优化方案">
 <meta name="twitter:description" content="App应用程序开发, 界面跳转是基础中的基础, 几乎没有一个App是用不到界面跳转的, 那么怎么样去书写界面跳转代码才是比较合理的呢?
@@ -204,7 +204,7 @@
   
     <div class="article-meta">
       <a href="/2016/02/14/Think-Of-UIViewController-Switch/" class="article-date">
-  	<time datetime="2016-02-14T05:41:24.000Z" itemprop="datePublished">2016-02-14</time>
+  	<time datetime="2016-02-14T05:44:06.000Z" itemprop="datePublished">2016-02-14</time>
 </a>
     </div>
   
@@ -258,7 +258,7 @@
 <li>App内部网页打开</li>
 <li>应用内点击打开</li>
 </ol>
-<p><img src="http://blog.startry.com/img/blog_scheme_directly.png" alt="多入口示意"></p>
+<p><img src="http://blog.startry.com/img/blog_sheme_directly.png" alt="多入口示意"></p>
 <p>这四种方式均跳转到DetailViewController界面。普通的跳转依然可以满足该场景, 最简单的解决方案是在四个不同的地方都写一个独立的界面打开逻辑。</p>
 <p>作为一名业务模块人才, 如此不复用代码合理么? 作为一名App架构师, 如此冗余四份入口代码合适么? </p>
 <p>如果您觉得不合适, 那自然需要去抽离代码到统一的地方去书写一套统一的管理逻辑; 如果您觉得合适, 那么您会设想什么方案去根据外部网页以及Push内容去转化代码至普通跳转代码呢?</p>
