@@ -15,7 +15,7 @@
 大家可能在想跳转无非就2种方式, 能有什么内容? 其实并不是这样子的, 对于研发老手来说, 大型应用几乎都是利用URLScheme进行全方位的解决方案; 对于研发新手来说, 他们可能并没有遇到多路口界面跳转的瓶颈, 只会使用一些常用跳转, 并不会意识到界面跳转潜在">
 <meta property="og:image" content="http://blog.startry.com/img/blog_sheme_directly.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_scheme_routable.png">
-<meta property="og:updated_time" content="2016-02-14T06:11:35.000Z">
+<meta property="og:updated_time" content="2016-02-14T07:39:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS界面跳转的一些优化方案">
 <meta name="twitter:description" content="App应用程序开发, 界面跳转是基础中的基础, 几乎没有一个App是用不到界面跳转的, 那么怎么样去书写界面跳转代码才是比较合理的呢?
@@ -204,7 +204,7 @@
   
     <div class="article-meta">
       <a href="/2016/02/14/Think-Of-UIViewController-Switch/" class="article-date">
-  	<time datetime="2016-02-14T06:11:35.000Z" itemprop="datePublished">2016-02-14</time>
+  	<time datetime="2016-02-14T07:39:11.000Z" itemprop="datePublished">2016-02-14</time>
 </a>
     </div>
   
@@ -242,7 +242,7 @@
           <p>App应用程序开发, 界面跳转是基础中的基础, 几乎没有一个App是用不到界面跳转的, 那么怎么样去书写界面跳转代码才是比较合理的呢?</p>
 <p>大家可能在想跳转无非就2种方式, 能有什么内容? 其实并不是这样子的, 对于研发老手来说, 大型应用几乎都是利用URLScheme进行全方位的解决方案; 对于研发新手来说, 他们可能并没有遇到多路口界面跳转的瓶颈, 只会使用一些常用跳转, 并不会意识到界面跳转潜在的一些问题, 甚至无法严格区分Present和Push的操作区别~</p>
 <p>本文将针对界面跳转提出一些优化解决方案~</p>
-<h3 id="常用跳转方式">常用跳转方式</h3><p>iOS常用的跳转方式只有两种<a href="https://developer.apple.com/library/prerelease/tvos/documentation/UIKit/Reference/UIViewController_Class/#//apple_ref/doc/uid/TP40006926-CH3-SW96" target="_blank" rel="external">Present</a>和<a href="https://developer.apple.com/library/prerelease/tvos/documentation/UIKit/Reference/UINavigationController_Class/index.html#//apple_ref/doc/uid/TP40006934-CH3-SW13" target="_blank" rel="external">Push</a>。Push和Present最直观的区别是默认的转场效果, Present的默认转场效果是自下而上的, Push的转场效果是自右到左的。Push往往需要搭配<a href="https://developer.apple.com/library/prerelease/tvos/documentation/UIKit/Reference/UINavigationController_Class/index.html" target="_blank" rel="external">UINavigationController</a>来使用。</p>
+<h3 id="常用跳转方式">常用跳转方式</h3><p>iOS常用的跳转方式只有两种<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIViewController_Class/#//apple_ref/doc/uid/TP40006926-CH3-SW96" target="_blank" rel="external">Present</a>和<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UINavigationController_Class/index.html#//apple_ref/doc/uid/TP40006934-CH3-SW13" target="_blank" rel="external">Push</a>。Push和Present最直观的区别是默认的转场效果, Present的默认转场效果是自下而上的, Push的转场效果是自右到左的。Push往往需要搭配<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UINavigationController_Class/index.html" target="_blank" rel="external">UINavigationController</a>来使用。</p>
 <p>Push跳转使用示意:</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIViewController *nextViewController = [[UIViewController alloc] init];&#10;nextViewController.title = @&#34;&#31532;&#20108;&#20010;&#30028;&#38754;&#34;;&#10;&#10;[self.navigationController pushViewController:nextViewController animated:YES];</span><br></pre></td></tr></table></figure>
 <p>Present跳转使用示意:</p>
@@ -350,8 +350,8 @@
 <p>根据个人在界面跳转开发中遇到的困难, 提出了几个相应的瓶颈和对应的解决方案。针对传递对象值提出了一种暴力但是耦合度比较低的解决方案。</p>
 <p>PS: 本人水平有限, 有错误的地方还望大家及时指出~ 谢谢!</p>
 <h4 id="参考文献">参考文献</h4><ol>
-<li><a href="https://developer.apple.com/library/prerelease/tvos/documentation/UIKit/Reference/UIViewController_Class/index.html" target="_blank" rel="external">Apple官方文档 - UIViewController</a></li>
-<li><a href="https://developer.apple.com/library/prerelease/tvos/documentation/UIKit/Reference/UINavigationController_Class/index.html" target="_blank" rel="external">Apple官方文档 - UINavigationController</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIViewController_Class/index.html" target="_blank" rel="external">Apple官方文档 - UIViewController</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UINavigationController_Class/index.html" target="_blank" rel="external">Apple官方文档 - UINavigationController</a></li>
 <li><a href="https://developer.apple.com/library/ios/featuredarticles/iPhoneURLScheme_Reference/Introduction/Introduction.html" target="_blank" rel="external">Apple官方文档 - URLScheme</a></li>
 <li><a href="https://developer.apple.com/library/prerelease/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/Introduction.html" target="_blank" rel="external">Apple官方文档 - APNs</a></li>
 </ol>
