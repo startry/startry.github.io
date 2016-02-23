@@ -16,7 +16,7 @@
 <meta property="og:image" content="http://blog.startry.com/img/blog_swvc_bug_solution.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_swvc_fake_cover.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_swvc_wkwebview.png">
-<meta property="og:updated_time" content="2016-02-23T06:13:18.000Z">
+<meta property="og:updated_time" content="2016-02-23T09:36:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="我只是想要截个屏">
 <meta name="twitter:description" content="想必使用iPhone的用户, 大家都知道按照Home键+电源键就可以截屏了。 截屏对于产品经理、工程师、设计师都比较重要。那么在iOS中用代码截屏也是再常用不过的功能了~ 那么在iOS研发中, 怎么样才能有效的截屏呢? 笔者在上周用了2天时间去写了一个Swift版本的截图开源库 - SwViewCapture。
@@ -205,7 +205,7 @@
   
     <div class="article-meta">
       <a href="/2016/02/23/Screenshots-With-SwViewCapture/" class="article-date">
-  	<time datetime="2016-02-23T06:13:19.000Z" itemprop="datePublished">2016-02-23</time>
+  	<time datetime="2016-02-23T09:36:45.000Z" itemprop="datePublished">2016-02-23</time>
 </a>
     </div>
   
@@ -376,7 +376,7 @@
 <p>鉴于<code>drawViewHierarchyInRect</code>方法对线程支持的友好性不够, 笔者在第一版本的<a href="https://github.com/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>中并没有考虑去使用多线程的方式去优化性能, 是需要进一步改进和尝试的地方。</p>
 <h4 id="内存过大问题">内存过大问题</h4><p>笔者在第一版本的<a href="https://github.com/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>中没有去考虑内存问题, 因此如果非常长的UIScrollView去截取图片的时候可能会出现卡顿甚至闪退的现象。 </p>
 <p>笔者认为在截图之前, 用户自己应该大概知道自己要截图的视图的大小, 需要进行一定的预先处理。笔者计划在以后引入区域块截图的方式让用户自定义的去控制截取视图的大小, 这样来规避可能存在的截图导致内存过大的问题。</p>
-<h2 id="总结">总结</h2><p>笔者一开始只是想实现一个截取网页内容的一个小功能, 在实现过程中发现截图竟然也可以踩出这么的坑, 便将采坑的过程总结成这篇文章, 供大家参考。同时, 将采坑实现的产物以Swift库<a href="https://github.com/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>的形式开源在Github上。</p>
+<h2 id="总结">总结</h2><p>笔者一开始只是想实现一个截取网页内容的一个小功能, 在实现过程中发现截图竟然也可以踩出这么的坑, 便将采坑的过程总结成这篇文章, 供大家参考。同时, 将采坑实现的产物以Swift库<a href="https://github.com/startry/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>的形式开源在Github上。</p>
 <p>笔者将题目取为<code>我只是想截个屏</code>, 是一种自嘲的方式来描述程序员实现一个功能的艰辛啊~</p>
 <p>PS: 本人水平有限, 有错误之处请大家及时指出~~ 如果觉得文章有用, 可以<a href="http://blog.startry.com" target="_blank" rel="external">多多来访</a>哇~</p>
 <h4 id="参考链接">参考链接</h4><ol>
