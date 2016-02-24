@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-02-23T09:36:45.000Z</updated>
+  <updated>2016-02-24T13:03:08.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>我只是想要截个屏</title>
-    <link href="http://startry.com/2016/02/23/Screenshots-With-SwViewCapture/"/>
-    <id>http://startry.com/2016/02/23/Screenshots-With-SwViewCapture/</id>
-    <published>2016-02-23T09:36:45.000Z</published>
-    <updated>2016-02-23T09:36:45.000Z</updated>
+    <link href="http://startry.com/2016/02/24/Screenshots-With-SwViewCapture/"/>
+    <id>http://startry.com/2016/02/24/Screenshots-With-SwViewCapture/</id>
+    <published>2016-02-24T13:03:08.000Z</published>
+    <updated>2016-02-24T13:03:08.000Z</updated>
     
     <content type="html">&lt;p&gt;想必使用iPhone的用户, 大家都知道按照Home键+电源键就可以截屏了。 截屏对于产品经理、工程师、设计师都比较重要。那么在iOS中用代码截屏也是再常用不过的功能了~ 那么在iOS研发中, 怎么样才能有效的截屏呢? 笔者在上周用了2天时间去写了一个Swift版本的截图开源库 - &lt;a href=&quot;https://github.com/startry/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;起初笔者有一个小小的想法, 怎么样去截取整个网页甚至整个滚动视图的内容呢? 造一个支持该功能的开源库会不会受欢迎呢?  基于CocoaChina+ App的分享思路以及笔者自己的一点小想法, 笔者决定写一个方便Swift开发者使用的截屏库, 支持截取页面载体所有内容的库。&lt;/p&gt;
@@ -155,8 +155,8 @@
 &lt;li&gt;&lt;code&gt;renderInContext&lt;/code&gt;对异步绘制支持的挺好, 并没有出现截图失败以及系统闪退的情况。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;drawViewHierarchyInRect&lt;/code&gt;对多线程并不能友好支持, 可能因为&lt;code&gt;drawViewHierarchyInRect&lt;/code&gt;是UIView的方法的缘故, 在GCD异步线程中用&lt;code&gt;drawViewHierarchyInRect&lt;/code&gt;绘制的图像会出现绘制丢失和失败的情况。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;鉴于&lt;code&gt;drawViewHierarchyInRect&lt;/code&gt;方法对线程支持的友好性不够, 笔者在第一版本的&lt;a href=&quot;https://github.com/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;中并没有考虑去使用多线程的方式去优化性能, 是需要进一步改进和尝试的地方。&lt;/p&gt;
-&lt;h4 id=&quot;内存过大问题&quot;&gt;内存过大问题&lt;/h4&gt;&lt;p&gt;笔者在第一版本的&lt;a href=&quot;https://github.com/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;中没有去考虑内存问题, 因此如果非常长的UIScrollView去截取图片的时候可能会出现卡顿甚至闪退的现象。 &lt;/p&gt;
+&lt;p&gt;鉴于&lt;code&gt;drawViewHierarchyInRect&lt;/code&gt;方法对线程支持的友好性不够, 笔者在第一版本的&lt;a href=&quot;https://github.com/startry/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;中并没有考虑去使用多线程的方式去优化性能, 是需要进一步改进和尝试的地方。&lt;/p&gt;
+&lt;h4 id=&quot;内存过大问题&quot;&gt;内存过大问题&lt;/h4&gt;&lt;p&gt;笔者在第一版本的&lt;a href=&quot;https://github.com/startry/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;中没有去考虑内存问题, 因此如果非常长的UIScrollView去截取图片的时候可能会出现卡顿甚至闪退的现象。 &lt;/p&gt;
 &lt;p&gt;笔者认为在截图之前, 用户自己应该大概知道自己要截图的视图的大小, 需要进行一定的预先处理。笔者计划在以后引入区域块截图的方式让用户自定义的去控制截取视图的大小, 这样来规避可能存在的截图导致内存过大的问题。&lt;/p&gt;
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;&lt;p&gt;笔者一开始只是想实现一个截取网页内容的一个小功能, 在实现过程中发现截图竟然也可以踩出这么的坑, 便将采坑的过程总结成这篇文章, 供大家参考。同时, 将采坑实现的产物以Swift库&lt;a href=&quot;https://github.com/startry/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;的形式开源在Github上。&lt;/p&gt;
 &lt;p&gt;笔者将题目取为&lt;code&gt;我只是想截个屏&lt;/code&gt;, 是一种自嘲的方式来描述程序员实现一个功能的艰辛啊~&lt;/p&gt;
