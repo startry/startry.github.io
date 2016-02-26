@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-02-24T13:03:08.000Z</updated>
+  <updated>2016-02-26T07:39:19.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -14,6 +14,85 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>我只是想要截个屏(续)</title>
+    <link href="http://startry.com/2016/02/26/Screenshots-WKWebView/"/>
+    <id>http://startry.com/2016/02/26/Screenshots-WKWebView/</id>
+    <published>2016-02-26T07:39:19.000Z</published>
+    <updated>2016-02-26T07:39:19.000Z</updated>
+    
+    <content type="html">&lt;p&gt;上两天写了一篇《&lt;a href=&quot;http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;我只是想要截个屏&lt;/a&gt;》的博文, 来描述了在书写&lt;a href=&quot;https://github.com/startry/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;中遇到的一些坎坷和解决方案。在《&lt;a href=&quot;http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;我只是想要截个屏&lt;/a&gt;》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。&lt;/p&gt;
+&lt;p&gt;本文主要在上篇文章中做一些粗略的补充, 来描述&lt;a href=&quot;https://github.com/startry/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;中是怎么更好的解决WKWebView的截屏问题, 还有怎么找到这种取巧的解决方案的~ &lt;/p&gt;
+&lt;p&gt;PS: 如果大家想直接看实现原理, 请跳过&lt;strong&gt;几次失败尝试&lt;/strong&gt;章节~&lt;/p&gt;
+&lt;h2 id=&quot;几次失败尝试&quot;&gt;几次失败尝试&lt;/h2&gt;&lt;p&gt;阅读过《&lt;a href=&quot;blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/&quot;&gt;我只是想要截个屏&lt;/a&gt;》的童鞋们可能都知道, 对于WKWebView的截图, 只能使用View的&lt;code&gt;drawViewHierarchyInRect:afterScreenUpdates:&lt;/code&gt;方法去获取截图。在此前我曾尝试用如下几种方案去截图, 均以&lt;strong&gt;失败&lt;/strong&gt;收尾。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;将WKWebView的frame拉长和ContentSize的高度保持一致, 然后截图&lt;/li&gt;
+&lt;li&gt;将WKWebView的frame拉长和ContentSize的高度一致, 然后通过WKWebView的&lt;code&gt;snapshotViewAfterScreenUpdates&lt;/code&gt;获取的view进行截图&lt;/li&gt;
+&lt;li&gt;对WKWebView内部的WKContentView直接截图&lt;/li&gt;
+&lt;li&gt;将WKScrollView对应的Screen进行拉伸, 然后对WKWebView进行等价拉伸, 再截图&lt;/li&gt;
+&lt;li&gt;使用私有API&lt;code&gt;_snapshotRect:intoImageOfWidth:completionHandler&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;上述第一、二、三种方法是笔者自己脑洞尝试, 可是截图要么完全是空白, 要么就只能显示屏幕区域的图。&lt;/p&gt;
+&lt;p&gt;第四种和第五种是对WKWebView源码不了解的窥看后, 进行一种投机取巧尝试。&lt;/p&gt;
+&lt;p&gt;既然已经实在找不到解决方案了, 笔者就去官网下载&lt;a href=&quot;http://www.opensource.apple.com/source/WebKit2/WebKit2-7601.1.46.9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;源码&lt;/a&gt;, 希望能够找到突破口。WKWebView是开源的, 其源码放置在苹果官方开源网站&lt;a href=&quot;opensource.apple.com&quot;&gt;http://opensource.apple.com&lt;/a&gt;中, 项目名字为WebKit2。&lt;/p&gt;
+&lt;p&gt;笔者以为下载到源码了, 至少能够找到一个突破口, 在打开工程项目后, 笔者就发现自己错了, 这个工程&lt;strong&gt;太庞大&lt;/strong&gt;了。。。&lt;/p&gt;
+&lt;p&gt;WKWebView的组成笔者尚不熟悉, iOS的WKWebView底层更多的是WebKit的底层实现, 如果彻底从理解去阅读代码, 估计半个月甚至大半年都不一定读的完~ 有这个心思去阅读代码, 还不如先去阅读&lt;a href=&quot;https://book.douban.com/subject/25910556/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《WebKit技术内幕》&lt;/a&gt;这本书~ &lt;/p&gt;
+&lt;p&gt;笔者自知不可能从阅读理解源码进行着手, 那就只能直奔要点: 关键字跟踪!笔者一开从&lt;code&gt;WKWebView.mm&lt;/code&gt;文件进行突破, 去寻找遮盖关键字&lt;code&gt;unobscured&lt;/code&gt;, 从这个关键字中&lt;a href=&quot;http://www.opensource.apple.com/source/WebKit2/WebKit2-7601.1.46.9/UIProcess/API/Cocoa/WKWebView.mm&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;发现遮盖区域和scrollView的window&lt;/a&gt;相关, 因此尝试第四种方法, 修改window的大小~ 失败的结果唯一能够告诉笔者的就是: &lt;strong&gt;没有找到遮盖视图不渲染的根源!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;笔者在第一次寻找关键字失败后尝试从&lt;code&gt;snapshot&lt;/code&gt;这个关键字去突破, 结果发现了私有API&lt;code&gt;_snapshotRect:intoImageOfWidth:completionHandler&lt;/code&gt;。这也是第五种方法的尝试来源。通过&lt;code&gt;snapshot&lt;/code&gt;关键字其实还发现了隐藏在&lt;code&gt;WKWebView.mm&lt;/code&gt;底下的&lt;a href=&quot;http://www.opensource.apple.com/source/WebKit2/WebKit2-7601.1.46.9/UIProcess/API/Cocoa/WKWebView.mm&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;_takeViewSnapshot&lt;/a&gt;方法, 可是该方法返回的对象是C++对象, 笔者就没有从Object-C层级对方法进行调用尝试。&lt;/p&gt;
+&lt;p&gt;结合&lt;code&gt;snapshot&lt;/code&gt;和&lt;code&gt;unobscured&lt;/code&gt;两个关键字的搜索, 笔者在底层一串跟踪, 发现了WebPage、DrawingArea等一系列概念, 笔者偶然间在WebPage的初始化方法中发现有个&lt;code&gt;WebPageCreationParameters&lt;/code&gt;参数作为构造WebPage的初始参数, 其中包含了如下几个参数&lt;/p&gt;
+&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;#&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; PLATFORM(IOS)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    WebCore::FloatSize screenSize;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    WebCore::FloatSize availableScreenSize;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;float&lt;/span&gt; textAutosizingWidth;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;#&lt;span class=&quot;keyword&quot;&gt;endif&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;通过全局搜索&lt;code&gt;availableScreenSize&lt;/code&gt;, 在&lt;a href=&quot;http://www.opensource.apple.com/source/WebKit2/WebKit2-7601.1.46.9/UIProcess/ios/WebPageProxyIOS.mm&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;WebPageProxyIOS.mm&lt;/a&gt;源码中发现, WebPage的屏幕尺寸是根据&lt;code&gt;WKGetAvailableScreenSize()&lt;/code&gt;和&lt;code&gt;WKGetScreenSize()&lt;/code&gt;获取的, 核心代码如下:&lt;/p&gt;
+&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;FloatSize WebPageProxy::screenSize()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; FloatSize(WKGetScreenSize());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;FloatSize WebPageProxy::availableScreenSize()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; FloatSize(WKGetAvailableScreenSize());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;终于有些眉目了, 一全局搜索&lt;code&gt;WKGetAvailableScreenSize&lt;/code&gt;就&lt;strong&gt;崩溃&lt;/strong&gt;了~  在WebKit2开源中并没有这个方法的定义, 并且无法通过&lt;code&gt;Google&lt;/code&gt;和&lt;code&gt;Apple Developer&lt;/code&gt;搜索到相关信息… T_T&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;最鸡血的来了, 跟踪了几个小时, 笔者放弃了…&lt;/strong&gt;  没错, 笔者直到最后都没有从源码中找到解决方案~ =。=&lt;/p&gt;
+&lt;h2 id=&quot;WKWebView截图方案&quot;&gt;WKWebView截图方案&lt;/h2&gt;&lt;h4 id=&quot;灵机一动&quot;&gt;灵机一动&lt;/h4&gt;&lt;p&gt;虽然没有通过源码找到解决方案, 但是通过改变Window的尝试让我的脑洞打开, 想到了另外一种和滚动截图很相似的暴力的解决方式。&lt;/p&gt;
+&lt;p&gt;PS: 滚动截图是笔者在&lt;a href=&quot;blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/&quot;&gt;我只想要截个屏&lt;/a&gt;中所描述的暴力解决截图的方式。实现方式就是滚动一页截取一页, 最后组装成一张长图。&lt;/p&gt;
+&lt;p&gt;笔者想: &lt;em&gt;既然WKWebView的渲染区域是屏幕范围固定的, 那我不滚动视图, 不断的往上推视图呢?&lt;/em&gt; &lt;/p&gt;
+&lt;p&gt;不断往上推视图的意思就是改变View的origin的y轴, 每截取一张图片后去上移View的高度(高度等价于该WKWebView在界面中的显示范围)和拉长WKWebView的总高度, 直到截取到了最后一张图并组装。&lt;/p&gt;
+&lt;p&gt;这个思路有个小小的问题, 就是笔者曾经尝试通过放大WKWebView本身去截图, 但是却截出一片空白的情况。透过这个问题可以假设, 我不断上移y轴并放大高度的最后一张情况和上述有问题的情况完全一致, 可以猜测这个方法是无法正确的截取WKWebView的图的。&lt;/p&gt;
+&lt;p&gt;笔者用了一种很巧妙的方法去躲避了这个问题, 就是去截取WKWebView的父视图, 因为无论WKWebView怎么改变, 通过WKWebView父视图截图是可以正确获取对应的界面的(笔者实验的)。 &lt;/p&gt;
+&lt;p&gt;通过优化后大致的流程如下: &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;基于WKWebView的尺寸伪造一个UIView, 并拉长至ContentSize高度&lt;/li&gt;
+&lt;li&gt;将伪造的UIView作为WKWebView的父视图&lt;/li&gt;
+&lt;li&gt;放置一张大画布长度和WKWebView的ContentSize高度一致&lt;/li&gt;
+&lt;li&gt;对父视图进行普通截图并放置在大画布中&lt;/li&gt;
+&lt;li&gt;将WKWebView的高度上移一个父视图的高度&lt;/li&gt;
+&lt;li&gt;循环执行步骤3和步骤4直到总高度和WKWebView的ContentSize高度一致&lt;/li&gt;
+&lt;li&gt;读取画布中的图像并返回&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;大致思路如图:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_swvc_wkwebview_solution.png&quot; alt=&quot;WKWebView合成示意&quot;&gt;&lt;/p&gt;
+&lt;p&gt;思路核心代码如下:&lt;/p&gt;
+&lt;figure class=&quot;highlight swift&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; containerView  = &lt;span class=&quot;type&quot;&gt;UIView&lt;/span&gt;(frame: &lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.bounds)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.removeFromSuperview()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;containerView.addSubview(&lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; totalSize = &lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.scrollView.contentSize&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; page      = floorf(&lt;span class=&quot;type&quot;&gt;Float&lt;/span&gt;( totalSize.height / containerView.bounds.height))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;UIGraphicsBeginImageContextWithOptions&lt;/span&gt;(totalSize, &lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;, &lt;span class=&quot;type&quot;&gt;UIScreen&lt;/span&gt;.mainScreen().scale)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; index &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;...&lt;span class=&quot;type&quot;&gt;Int&lt;/span&gt;(page) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;// async for, action need package a method&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; splitFrame = &lt;span class=&quot;type&quot;&gt;CGRectMake&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, &lt;span class=&quot;type&quot;&gt;CGFloat&lt;/span&gt;(index) * containerView.frame.size.height, containerView.bounds.size.width, containerView.frame.size.height) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; myFrame = &lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.frame&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        myFrame.origin.y = -(&lt;span class=&quot;type&quot;&gt;CGFloat&lt;/span&gt;(index) * containerView.frame.size.height)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;self&lt;/span&gt;.frame = myFrame &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	containerView.drawViewHierarchyInRect(splitFrame, afterScreenUpdates: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; capturedImage = &lt;span class=&quot;type&quot;&gt;UIGraphicsGetImageFromCurrentImageContext&lt;/span&gt;()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;UIGraphicsEndImageContext&lt;/span&gt;()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;通过这种方式果然可以截取完整的WKWebView, 并且不存在&lt;code&gt;position: fixed;&lt;/code&gt;的标签重复的问题。&lt;/p&gt;
+&lt;font color=&quot;orange&quot;&gt;上述代码起示意作用, 实际循环部分需要等待延迟, 因为需要等待WKWebView在改变frame之后准备完毕执行下一次循环。&lt;/font&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;&lt;p&gt;因为WKWebView只能渲染屏幕范围大小左右的视图范围, 因此笔者就利用这个点, 不断的去改变WKWebView的frame去截图, 然后组装成为一张内容截图。通过这种方式可以巧妙的躲避过因为滚动视图产生的部分页面元素重复的问题。&lt;/p&gt;
+&lt;p&gt;其实WKWebView现在在iOS开发应用中并没有UIWebView广泛, 做截图相关功能的开发者也可能会优先采用UIWebView最为搭载容器, 但是多多少少本篇文章应该还是会帮助到一些使用WKWebView的先驱者的~&lt;/p&gt;
+&lt;p&gt;另: 本文提供的解决方案可能只是众多解决方案的其中一种, 并且相当的耗时也消耗内存, 希望大家可以一起想想能否有更优的解决方案~ 希望多多交流~ 如果有&lt;strong&gt;更好的方案&lt;/strong&gt;, 跪求&lt;strong&gt;Pull Request&lt;/strong&gt;或者提交&lt;strong&gt;issue&lt;/strong&gt;到&lt;a href=&quot;https://github.com/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;PS: 鉴于个人水平有限, 有错误之处, 请大家及时指出~ 谢谢~&lt;/p&gt;
+&lt;h4 id=&quot;参考文献&quot;&gt;参考文献&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.opensource.apple.com/source/WebKit2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Apple Open Source - WebKit2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/&quot;&gt;我只是想要截个屏&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;上两天写了一篇《&lt;a href=&quot;http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;我只是想要截个屏&lt;/a&gt;》的博文, 来描述
+    
+    </summary>
+    
+    
+      <category term="Screenshots" scheme="http://startry.com/tags/Screenshots/"/>
+    
+      <category term="WKWebView" scheme="http://startry.com/tags/WKWebView/"/>
+    
+      <category term="iOS" scheme="http://startry.com/tags/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title>我只是想要截个屏</title>

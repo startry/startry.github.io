@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我只是想要截个屏(续) | Startry Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上两天写了一篇《我只是想要截个屏》的博文, 来描述了在书写SwViewCapture中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。
+本文主要在上篇文章中做一些粗略的补充, 来描述SwViewCapture中是怎么更好的解决WKWebView的截屏问题, 还有怎么找到这种取巧的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我只是想要截个屏(续)">
+<meta property="og:url" content="http://startry.com/2016/02/26/Screenshots-WKWebView/index.html">
+<meta property="og:site_name" content="Startry Blog">
+<meta property="og:description" content="上两天写了一篇《我只是想要截个屏》的博文, 来描述了在书写SwViewCapture中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。
+本文主要在上篇文章中做一些粗略的补充, 来描述SwViewCapture中是怎么更好的解决WKWebView的截屏问题, 还有怎么找到这种取巧的">
+<meta property="og:image" content="http://blog.startry.com/img/blog_swvc_wkwebview_solution.png">
+<meta property="og:updated_time" content="2016-02-26T07:39:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="我只是想要截个屏(续)">
+<meta name="twitter:description" content="上两天写了一篇《我只是想要截个屏》的博文, 来描述了在书写SwViewCapture中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。
+本文主要在上篇文章中做一些粗略的补充, 来描述SwViewCapture中是怎么更好的解决WKWebView的截屏问题, 还有怎么找到这种取巧的">
+  
+    <link rel="alternative" href="/atom.xml" title="Startry Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Startry</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+					        
+								<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+					        
+								<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/CocoaPods/" style="font-size: 15px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 12.5px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 12.5px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 12.5px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 17.5px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcconfig/" style="font-size: 12.5px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://github.com/startry">空荡荡的github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">混迹于各类互联网公司, 学习成长中, 边走边学~ 参与过某二手车公司创业, 也曾在某大型公司混的一花名&quot;玄书&quot;。现在重新学习成长中...</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Startry</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Startry</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+			        
+						<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Screenshots-WKWebView" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/26/Screenshots-WKWebView/" class="article-date">
+  	<time datetime="2016-02-26T07:39:19.000Z" itemprop="datePublished">2016-02-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      我只是想要截个屏(续)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Screenshots/">Screenshots</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WKWebView/">WKWebView</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>上两天写了一篇《<a href="http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/" target="_blank" rel="external">我只是想要截个屏</a>》的博文, 来描述了在书写<a href="https://github.com/startry/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>中遇到的一些坎坷和解决方案。在《<a href="http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/" target="_blank" rel="external">我只是想要截个屏</a>》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。</p>
+<p>本文主要在上篇文章中做一些粗略的补充, 来描述<a href="https://github.com/startry/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>中是怎么更好的解决WKWebView的截屏问题, 还有怎么找到这种取巧的解决方案的~ </p>
+<p>PS: 如果大家想直接看实现原理, 请跳过<strong>几次失败尝试</strong>章节~</p>
+<h2 id="几次失败尝试">几次失败尝试</h2><p>阅读过《<a href="blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/">我只是想要截个屏</a>》的童鞋们可能都知道, 对于WKWebView的截图, 只能使用View的<code>drawViewHierarchyInRect:afterScreenUpdates:</code>方法去获取截图。在此前我曾尝试用如下几种方案去截图, 均以<strong>失败</strong>收尾。</p>
+<ol>
+<li>将WKWebView的frame拉长和ContentSize的高度保持一致, 然后截图</li>
+<li>将WKWebView的frame拉长和ContentSize的高度一致, 然后通过WKWebView的<code>snapshotViewAfterScreenUpdates</code>获取的view进行截图</li>
+<li>对WKWebView内部的WKContentView直接截图</li>
+<li>将WKScrollView对应的Screen进行拉伸, 然后对WKWebView进行等价拉伸, 再截图</li>
+<li>使用私有API<code>_snapshotRect:intoImageOfWidth:completionHandler</code></li>
+</ol>
+<p>上述第一、二、三种方法是笔者自己脑洞尝试, 可是截图要么完全是空白, 要么就只能显示屏幕区域的图。</p>
+<p>第四种和第五种是对WKWebView源码不了解的窥看后, 进行一种投机取巧尝试。</p>
+<p>既然已经实在找不到解决方案了, 笔者就去官网下载<a href="http://www.opensource.apple.com/source/WebKit2/WebKit2-7601.1.46.9/" target="_blank" rel="external">源码</a>, 希望能够找到突破口。WKWebView是开源的, 其源码放置在苹果官方开源网站<a href="opensource.apple.com">http://opensource.apple.com</a>中, 项目名字为WebKit2。</p>
+<p>笔者以为下载到源码了, 至少能够找到一个突破口, 在打开工程项目后, 笔者就发现自己错了, 这个工程<strong>太庞大</strong>了。。。</p>
+<p>WKWebView的组成笔者尚不熟悉, iOS的WKWebView底层更多的是WebKit的底层实现, 如果彻底从理解去阅读代码, 估计半个月甚至大半年都不一定读的完~ 有这个心思去阅读代码, 还不如先去阅读<a href="https://book.douban.com/subject/25910556/" target="_blank" rel="external">《WebKit技术内幕》</a>这本书~ </p>
+<p>笔者自知不可能从阅读理解源码进行着手, 那就只能直奔要点: 关键字跟踪!笔者一开从<code>WKWebView.mm</code>文件进行突破, 去寻找遮盖关键字<code>unobscured</code>, 从这个关键字中<a href="http://www.opensource.apple.com/source/WebKit2/WebKit2-7601.1.46.9/UIProcess/API/Cocoa/WKWebView.mm" target="_blank" rel="external">发现遮盖区域和scrollView的window</a>相关, 因此尝试第四种方法, 修改window的大小~ 失败的结果唯一能够告诉笔者的就是: <strong>没有找到遮盖视图不渲染的根源!</strong></p>
+<p>笔者在第一次寻找关键字失败后尝试从<code>snapshot</code>这个关键字去突破, 结果发现了私有API<code>_snapshotRect:intoImageOfWidth:completionHandler</code>。这也是第五种方法的尝试来源。通过<code>snapshot</code>关键字其实还发现了隐藏在<code>WKWebView.mm</code>底下的<a href="http://www.opensource.apple.com/source/WebKit2/WebKit2-7601.1.46.9/UIProcess/API/Cocoa/WKWebView.mm" target="_blank" rel="external">_takeViewSnapshot</a>方法, 可是该方法返回的对象是C++对象, 笔者就没有从Object-C层级对方法进行调用尝试。</p>
+<p>结合<code>snapshot</code>和<code>unobscured</code>两个关键字的搜索, 笔者在底层一串跟踪, 发现了WebPage、DrawingArea等一系列概念, 笔者偶然间在WebPage的初始化方法中发现有个<code>WebPageCreationParameters</code>参数作为构造WebPage的初始参数, 其中包含了如下几个参数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">if</span> PLATFORM(IOS)</span></span><br><span class="line">    WebCore::FloatSize screenSize;</span><br><span class="line">    WebCore::FloatSize availableScreenSize;</span><br><span class="line">    <span class="keyword">float</span> textAutosizingWidth;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>通过全局搜索<code>availableScreenSize</code>, 在<a href="http://www.opensource.apple.com/source/WebKit2/WebKit2-7601.1.46.9/UIProcess/ios/WebPageProxyIOS.mm" target="_blank" rel="external">WebPageProxyIOS.mm</a>源码中发现, WebPage的屏幕尺寸是根据<code>WKGetAvailableScreenSize()</code>和<code>WKGetScreenSize()</code>获取的, 核心代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FloatSize WebPageProxy::screenSize()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> FloatSize(WKGetScreenSize());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">FloatSize WebPageProxy::availableScreenSize()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> FloatSize(WKGetAvailableScreenSize());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>终于有些眉目了, 一全局搜索<code>WKGetAvailableScreenSize</code>就<strong>崩溃</strong>了~  在WebKit2开源中并没有这个方法的定义, 并且无法通过<code>Google</code>和<code>Apple Developer</code>搜索到相关信息… T_T</p>
+<p><strong>最鸡血的来了, 跟踪了几个小时, 笔者放弃了…</strong>  没错, 笔者直到最后都没有从源码中找到解决方案~ =。=</p>
+<h2 id="WKWebView截图方案">WKWebView截图方案</h2><h4 id="灵机一动">灵机一动</h4><p>虽然没有通过源码找到解决方案, 但是通过改变Window的尝试让我的脑洞打开, 想到了另外一种和滚动截图很相似的暴力的解决方式。</p>
+<p>PS: 滚动截图是笔者在<a href="blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/">我只想要截个屏</a>中所描述的暴力解决截图的方式。实现方式就是滚动一页截取一页, 最后组装成一张长图。</p>
+<p>笔者想: <em>既然WKWebView的渲染区域是屏幕范围固定的, 那我不滚动视图, 不断的往上推视图呢?</em> </p>
+<p>不断往上推视图的意思就是改变View的origin的y轴, 每截取一张图片后去上移View的高度(高度等价于该WKWebView在界面中的显示范围)和拉长WKWebView的总高度, 直到截取到了最后一张图并组装。</p>
+<p>这个思路有个小小的问题, 就是笔者曾经尝试通过放大WKWebView本身去截图, 但是却截出一片空白的情况。透过这个问题可以假设, 我不断上移y轴并放大高度的最后一张情况和上述有问题的情况完全一致, 可以猜测这个方法是无法正确的截取WKWebView的图的。</p>
+<p>笔者用了一种很巧妙的方法去躲避了这个问题, 就是去截取WKWebView的父视图, 因为无论WKWebView怎么改变, 通过WKWebView父视图截图是可以正确获取对应的界面的(笔者实验的)。 </p>
+<p>通过优化后大致的流程如下: </p>
+<ol>
+<li>基于WKWebView的尺寸伪造一个UIView, 并拉长至ContentSize高度</li>
+<li>将伪造的UIView作为WKWebView的父视图</li>
+<li>放置一张大画布长度和WKWebView的ContentSize高度一致</li>
+<li>对父视图进行普通截图并放置在大画布中</li>
+<li>将WKWebView的高度上移一个父视图的高度</li>
+<li>循环执行步骤3和步骤4直到总高度和WKWebView的ContentSize高度一致</li>
+<li>读取画布中的图像并返回</li>
+</ol>
+<p>大致思路如图:</p>
+<p><img src="http://blog.startry.com/img/blog_swvc_wkwebview_solution.png" alt="WKWebView合成示意"></p>
+<p>思路核心代码如下:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> containerView  = <span class="type">UIView</span>(frame: <span class="keyword">self</span>.bounds)</span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.removeFromSuperview()</span><br><span class="line">containerView.addSubview(<span class="keyword">self</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> totalSize = <span class="keyword">self</span>.scrollView.contentSize</span><br><span class="line"><span class="keyword">let</span> page      = floorf(<span class="type">Float</span>( totalSize.height / containerView.bounds.height))</span><br><span class="line"></span><br><span class="line"><span class="type">UIGraphicsBeginImageContextWithOptions</span>(totalSize, <span class="literal">false</span>, <span class="type">UIScreen</span>.mainScreen().scale)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">0</span>...<span class="type">Int</span>(page) &#123;</span><br><span class="line">	<span class="comment">// async for, action need package a method</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> splitFrame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="type">CGFloat</span>(index) * containerView.frame.size.height, containerView.bounds.size.width, containerView.frame.size.height) </span><br><span class="line">	<span class="keyword">var</span> myFrame = <span class="keyword">self</span>.frame</span><br><span class="line">        myFrame.origin.y = -(<span class="type">CGFloat</span>(index) * containerView.frame.size.height)</span><br><span class="line">        <span class="keyword">self</span>.frame = myFrame </span><br><span class="line">	containerView.drawViewHierarchyInRect(splitFrame, afterScreenUpdates: <span class="literal">true</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> capturedImage = <span class="type">UIGraphicsGetImageFromCurrentImageContext</span>()</span><br><span class="line"><span class="type">UIGraphicsEndImageContext</span>()</span><br></pre></td></tr></table></figure>
+<p>通过这种方式果然可以截取完整的WKWebView, 并且不存在<code>position: fixed;</code>的标签重复的问题。</p>
+<font color="orange">上述代码起示意作用, 实际循环部分需要等待延迟, 因为需要等待WKWebView在改变frame之后准备完毕执行下一次循环。</font>
+
+<h2 id="总结">总结</h2><p>因为WKWebView只能渲染屏幕范围大小左右的视图范围, 因此笔者就利用这个点, 不断的去改变WKWebView的frame去截图, 然后组装成为一张内容截图。通过这种方式可以巧妙的躲避过因为滚动视图产生的部分页面元素重复的问题。</p>
+<p>其实WKWebView现在在iOS开发应用中并没有UIWebView广泛, 做截图相关功能的开发者也可能会优先采用UIWebView最为搭载容器, 但是多多少少本篇文章应该还是会帮助到一些使用WKWebView的先驱者的~</p>
+<p>另: 本文提供的解决方案可能只是众多解决方案的其中一种, 并且相当的耗时也消耗内存, 希望大家可以一起想想能否有更优的解决方案~ 希望多多交流~ 如果有<strong>更好的方案</strong>, 跪求<strong>Pull Request</strong>或者提交<strong>issue</strong>到<a href="https://github.com/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>。</p>
+<p>PS: 鉴于个人水平有限, 有错误之处, 请大家及时指出~ 谢谢~</p>
+<h4 id="参考文献">参考文献</h4><ol>
+<li><a href="http://www.opensource.apple.com/source/WebKit2/" target="_blank" rel="external">Apple Open Source - WebKit2</a></li>
+<li><a href="blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/">我只是想要截个屏</a></li>
+</ol>
+
+        
+      
+    </div>
+    
+  </div>
+
+  
+    <!-- 添加打赏逻辑 -->
+    <div class='dashang' style='text-align:center; height:50px;'>如果您觉得文章有用, 打赏一个呗~~ ( ⊙ o ⊙ )/</div>
+    <div class='dashang_alipay' style='text-align:center;'>
+      <form action="https://shenghuo.alipay.com/send/payment/fill.htm"
+    method="POST" target="_blank" accept-charset="GBK">
+        <input name="optEmail" type="hidden" value="148140274@qq.com" />
+        <input name="payAmount" type="hidden" value="1" />
+        <input id="title" name="title" type="hidden" value="来自Startry博文的打赏" />
+        <input name="memo" type="hidden" value="打赏以资鼓励~~ O(∩_∩)O" />
+        <input name="pay" type="image" value="转账"
+      src="https://img.alipay.com/sys/personalprod/style/mc/btn-index.png" />
+      </form>
+    </div>
+    <div style='text-align:center; margin-top: 20px;'>
+      <img src='/img/wechat_pay.png' style='width: 160px; height:160px; margin-right: 15px;'>
+      <img src='/img/alipay_pay.png' style='width: 160px; height:160px; margin-left: 15px;  '>
+    </div>
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/02/24/Screenshots-With-SwViewCapture/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">我只是想要截个屏</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Screenshots-WKWebView" data-title="我只是想要截个屏(续)" data-url="http://startry.com/2016/02/26/Screenshots-WKWebView/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Startry
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+  <div style="display:none">
+    <span id="busuanzi_container_site_pv" style="display:hidden;">本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-67055063-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
