@@ -14,7 +14,7 @@
 <meta property="og:description" content="上两天写了一篇《我只是想要截个屏》的博文, 来描述了在书写SwViewCapture中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。
 本文主要在上篇文章中做一些粗略的补充, 来描述SwViewCapture中是怎么更好的解决WKWebView的截屏问题, 还有怎么找到这种取巧的">
 <meta property="og:image" content="http://blog.startry.com/img/blog_swvc_wkwebview_solution.png">
-<meta property="og:updated_time" content="2016-02-26T07:39:19.000Z">
+<meta property="og:updated_time" content="2016-02-26T07:44:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="我只是想要截个屏(续)">
 <meta name="twitter:description" content="上两天写了一篇《我只是想要截个屏》的博文, 来描述了在书写SwViewCapture中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。
@@ -207,7 +207,7 @@
   
     <div class="article-meta">
       <a href="/2016/02/26/Screenshots-WKWebView/" class="article-date">
-  	<time datetime="2016-02-26T07:39:19.000Z" itemprop="datePublished">2016-02-26</time>
+  	<time datetime="2016-02-26T07:44:47.000Z" itemprop="datePublished">2016-02-26</time>
 </a>
     </div>
   
@@ -242,8 +242,8 @@
       
         
         
-          <p>上两天写了一篇《<a href="http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/" target="_blank" rel="external">我只是想要截个屏</a>》的博文, 来描述了在书写<a href="https://github.com/startry/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>中遇到的一些坎坷和解决方案。在《<a href="http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/" target="_blank" rel="external">我只是想要截个屏</a>》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。</p>
-<p>本文主要在上篇文章中做一些粗略的补充, 来描述<a href="https://github.com/startry/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>中是怎么更好的解决WKWebView的截屏问题, 还有怎么找到这种取巧的解决方案的~ </p>
+          <p>上两天写了一篇《<a href="http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/" target="_blank" rel="external">我只是想要截个屏</a>》的博文, 来描述了在书写<a href="https://github.com/startry/SwViewCapture" target="_blank" rel="external">SwViewCapture</a>中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。</p>
+<p>本文主要在上篇文章中做一些粗略的补充, 来描述SwViewCapture中是怎么更好的解决<a href="https://developer.apple.com/library/prerelease/ios/documentation/WebKit/Reference/WKWebView_Ref/" target="_blank" rel="external">WKWebView</a>的截屏问题, 还有怎么找到这种取巧的解决方案的~ </p>
 <p>PS: 如果大家想直接看实现原理, 请跳过<strong>几次失败尝试</strong>章节~</p>
 <h2 id="几次失败尝试">几次失败尝试</h2><p>阅读过《<a href="blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/">我只是想要截个屏</a>》的童鞋们可能都知道, 对于WKWebView的截图, 只能使用View的<code>drawViewHierarchyInRect:afterScreenUpdates:</code>方法去获取截图。在此前我曾尝试用如下几种方案去截图, 均以<strong>失败</strong>收尾。</p>
 <ol>
@@ -295,6 +295,7 @@
 <p>PS: 鉴于个人水平有限, 有错误之处, 请大家及时指出~ 谢谢~</p>
 <h4 id="参考文献">参考文献</h4><ol>
 <li><a href="http://www.opensource.apple.com/source/WebKit2/" target="_blank" rel="external">Apple Open Source - WebKit2</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/WebKit/Reference/WKWebView_Ref/" target="_blank" rel="external">iOS Developer library - WKWebView</a></li>
 <li><a href="blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/">我只是想要截个屏</a></li>
 </ol>
 
