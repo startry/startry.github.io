@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-02-26T07:44:47.000Z</updated>
+  <updated>2016-02-26T08:26:23.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <title>我只是想要截个屏(续)</title>
     <link href="http://startry.com/2016/02/26/Screenshots-WKWebView/"/>
     <id>http://startry.com/2016/02/26/Screenshots-WKWebView/</id>
-    <published>2016-02-26T07:44:47.000Z</published>
-    <updated>2016-02-26T07:44:47.000Z</updated>
+    <published>2016-02-26T08:26:23.000Z</published>
+    <updated>2016-02-26T08:26:23.000Z</updated>
     
     <content type="html">&lt;p&gt;上两天写了一篇《&lt;a href=&quot;http://blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;我只是想要截个屏&lt;/a&gt;》的博文, 来描述了在书写&lt;a href=&quot;https://github.com/startry/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt;中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。&lt;/p&gt;
 &lt;p&gt;本文主要在上篇文章中做一些粗略的补充, 来描述SwViewCapture中是怎么更好的解决&lt;a href=&quot;https://developer.apple.com/library/prerelease/ios/documentation/WebKit/Reference/WKWebView_Ref/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;WKWebView&lt;/a&gt;的截屏问题, 还有怎么找到这种取巧的解决方案的~ &lt;/p&gt;
@@ -46,7 +46,7 @@
 &lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;FloatSize WebPageProxy::screenSize()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; FloatSize(WKGetScreenSize());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;FloatSize WebPageProxy::availableScreenSize()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; FloatSize(WKGetAvailableScreenSize());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;终于有些眉目了, 一全局搜索&lt;code&gt;WKGetAvailableScreenSize&lt;/code&gt;就&lt;strong&gt;崩溃&lt;/strong&gt;了~  在WebKit2开源中并没有这个方法的定义, 并且无法通过&lt;code&gt;Google&lt;/code&gt;和&lt;code&gt;Apple Developer&lt;/code&gt;搜索到相关信息… T_T&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;最鸡血的来了, 跟踪了几个小时, 笔者放弃了…&lt;/strong&gt;  没错, 笔者直到最后都没有从源码中找到解决方案~ =。=&lt;/p&gt;
-&lt;h2 id=&quot;WKWebView截图方案&quot;&gt;WKWebView截图方案&lt;/h2&gt;&lt;h4 id=&quot;灵机一动&quot;&gt;灵机一动&lt;/h4&gt;&lt;p&gt;虽然没有通过源码找到解决方案, 但是通过改变Window的尝试让我的脑洞打开, 想到了另外一种和滚动截图很相似的暴力的解决方式。&lt;/p&gt;
+&lt;h2 id=&quot;WKWebView截图方案&quot;&gt;WKWebView截图方案&lt;/h2&gt;&lt;p&gt;虽然没有通过源码找到解决方案, 但是通过改变Window的尝试让我的脑洞打开, 想到了另外一种和滚动截图很相似的暴力的解决方式。&lt;/p&gt;
 &lt;p&gt;PS: 滚动截图是笔者在&lt;a href=&quot;blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/&quot;&gt;我只想要截个屏&lt;/a&gt;中所描述的暴力解决截图的方式。实现方式就是滚动一页截取一页, 最后组装成一张长图。&lt;/p&gt;
 &lt;p&gt;笔者想: &lt;em&gt;既然WKWebView的渲染区域是屏幕范围固定的, 那我不滚动视图, 不断的往上推视图呢?&lt;/em&gt; &lt;/p&gt;
 &lt;p&gt;不断往上推视图的意思就是改变View的origin的y轴, 每截取一张图片后去上移View的高度(高度等价于该WKWebView在界面中的显示范围)和拉长WKWebView的总高度, 直到截取到了最后一张图并组装。&lt;/p&gt;

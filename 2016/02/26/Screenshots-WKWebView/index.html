@@ -14,7 +14,7 @@
 <meta property="og:description" content="上两天写了一篇《我只是想要截个屏》的博文, 来描述了在书写SwViewCapture中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。
 本文主要在上篇文章中做一些粗略的补充, 来描述SwViewCapture中是怎么更好的解决WKWebView的截屏问题, 还有怎么找到这种取巧的">
 <meta property="og:image" content="http://blog.startry.com/img/blog_swvc_wkwebview_solution.png">
-<meta property="og:updated_time" content="2016-02-26T07:44:47.000Z">
+<meta property="og:updated_time" content="2016-02-26T08:26:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="我只是想要截个屏(续)">
 <meta name="twitter:description" content="上两天写了一篇《我只是想要截个屏》的博文, 来描述了在书写SwViewCapture中遇到的一些坎坷和解决方案。在《我只是想要截个屏》中并没有找到针对WKWebView的全内容截图的相对完美的解决方案, 只是用一种滚动的暴力的方式去截图然后组装临时解决。
@@ -207,7 +207,7 @@
   
     <div class="article-meta">
       <a href="/2016/02/26/Screenshots-WKWebView/" class="article-date">
-  	<time datetime="2016-02-26T07:44:47.000Z" itemprop="datePublished">2016-02-26</time>
+  	<time datetime="2016-02-26T08:26:23.000Z" itemprop="datePublished">2016-02-26</time>
 </a>
     </div>
   
@@ -266,7 +266,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FloatSize WebPageProxy::screenSize()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> FloatSize(WKGetScreenSize());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">FloatSize WebPageProxy::availableScreenSize()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> FloatSize(WKGetAvailableScreenSize());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>终于有些眉目了, 一全局搜索<code>WKGetAvailableScreenSize</code>就<strong>崩溃</strong>了~  在WebKit2开源中并没有这个方法的定义, 并且无法通过<code>Google</code>和<code>Apple Developer</code>搜索到相关信息… T_T</p>
 <p><strong>最鸡血的来了, 跟踪了几个小时, 笔者放弃了…</strong>  没错, 笔者直到最后都没有从源码中找到解决方案~ =。=</p>
-<h2 id="WKWebView截图方案">WKWebView截图方案</h2><h4 id="灵机一动">灵机一动</h4><p>虽然没有通过源码找到解决方案, 但是通过改变Window的尝试让我的脑洞打开, 想到了另外一种和滚动截图很相似的暴力的解决方式。</p>
+<h2 id="WKWebView截图方案">WKWebView截图方案</h2><p>虽然没有通过源码找到解决方案, 但是通过改变Window的尝试让我的脑洞打开, 想到了另外一种和滚动截图很相似的暴力的解决方式。</p>
 <p>PS: 滚动截图是笔者在<a href="blog.startry.com/2016/02/24/Screenshots-With-SwViewCapture/">我只想要截个屏</a>中所描述的暴力解决截图的方式。实现方式就是滚动一页截取一页, 最后组装成一张长图。</p>
 <p>笔者想: <em>既然WKWebView的渲染区域是屏幕范围固定的, 那我不滚动视图, 不断的往上推视图呢?</em> </p>
 <p>不断往上推视图的意思就是改变View的origin的y轴, 每截取一张图片后去上移View的高度(高度等价于该WKWebView在界面中的显示范围)和拉长WKWebView的总高度, 直到截取到了最后一张图并组装。</p>
