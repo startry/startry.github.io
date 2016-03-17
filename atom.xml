@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-03-17T09:14:30.000Z</updated>
+  <updated>2016-03-17T09:22:10.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <title>在Pod库中使用xcasset的拷贝陷阱</title>
     <link href="http://startry.com/2016/03/17/the-trap-of-image-resource/"/>
     <id>http://startry.com/2016/03/17/the-trap-of-image-resource/</id>
-    <published>2016-03-17T09:14:30.000Z</published>
-    <updated>2016-03-17T09:14:30.000Z</updated>
+    <published>2016-03-17T09:22:10.000Z</published>
+    <updated>2016-03-17T09:22:10.000Z</updated>
     
     <content type="html">&lt;p&gt;本篇文章来自笔者工作中遇到一个难解的BUG - 在App中用&lt;code&gt;UIImage&lt;/code&gt;的&lt;code&gt;imageNamed:&lt;/code&gt;方法读取的图片始终是&lt;strong&gt;不正确&lt;/strong&gt;的。&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_image_repeate_intro.png&quot; alt=&quot;暴走示意&quot;&gt;&lt;/p&gt;
@@ -28,7 +28,7 @@
 &lt;ol&gt;
 &lt;li&gt;有多张同名图片存在工程下, 比如都叫&lt;code&gt;pic_same_test&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;同名图片有存在被工程引用的子Bundle中, 主Bundle中和xcasset中&lt;/li&gt;
-&lt;li&gt;同名图片未被工程引用进来, 但是防止在工程物理目录下的某个xcasset中&lt;/li&gt;
+&lt;li&gt;同名图片未被工程引用进来, 但是放置在工程物理目录下的某个xcasset中&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;试想一下, 这个时候你如果使用下述代码去读取该图片, 会发生取到哪种图片呢?&lt;/p&gt;
 &lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;UIImage *image = [UIImage imageNamed:@&amp;#34;pic_same_test&amp;#34;];&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
