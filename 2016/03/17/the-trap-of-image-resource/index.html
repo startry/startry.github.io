@@ -29,7 +29,7 @@
 试想一下, 这个时候你如果">
 <meta property="og:image" content="http://blog.startry.com/img/blog_image_repeate_intro.png">
 <meta property="og:image" content="http://blog.startry.com/img/blog_asset_car_mogujie.png">
-<meta property="og:updated_time" content="2016-03-17T10:40:28.000Z">
+<meta property="og:updated_time" content="2016-03-17T11:54:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在Pod库中使用xcasset的拷贝陷阱">
 <meta name="twitter:description" content="本篇文章来自笔者工作中遇到一个难解的BUG - 在App中用UIImage的imageNamed:方法读取的图片始终是不正确的。
@@ -229,7 +229,7 @@
   
     <div class="article-meta">
       <a href="/2016/03/17/the-trap-of-image-resource/" class="article-date">
-  	<time datetime="2016-03-17T10:40:29.000Z" itemprop="datePublished">2016-03-17</time>
+  	<time datetime="2016-03-17T11:54:10.000Z" itemprop="datePublished">2016-03-17</time>
 </a>
     </div>
   
@@ -287,7 +287,7 @@
 <p>经过上述四部操作和漫长的打包等待, 结果当然是呵呵哒了~ 如果结果正常就不会出现本篇博文了! 没错, 经过上述四部操作, 图片依旧还是<strong>错误</strong>的! </p>
 <p>呵呵, 删除缓存不行, 那就不是缓存问题, 笔者怀疑打出来的包里面有图片串位的可能, 心想根目录下的图是不是就是错误的。不多说, 提取ipa, 显示包内容, 包内容根目录下的图竟然是<strong>正确</strong>的!!! </p>
 <p>在包内容目录下, 我想要取的图片名字一样的图片总共就两张, 一张在根目录下, 另外一张在子Bundle下面。既然总共就2张图片, 那我就尝试在工程里<strong>删除掉子Bundle下的另外一张图片</strong>, 然后执行上述四部操作重新来过。结果大家想必还是知道的, 图片照样是错误的, 但是打包出来的文件包根目录下就只有一张<strong>正确</strong>的图片! </p>
-<p>这个尼玛不是一张幽灵图片么? 笔者当时脑洞打开, 甚至怀疑到是否iCloud同步下来的, 可是笔者的测试机压根就没有绑定iCloud。</p>
+<p>这个尼玛不是一张幽灵图片么? 笔者当时脑洞大开, 甚至怀疑到是否iCloud同步下来的, 可是笔者的测试机压根就没有绑定iCloud。</p>
 <blockquote>
 <p>PS: 当时忽略了Assets.car是因为工程里引用的Image.assets里并没有这张同名的文件, 源文件没有, 那自然就不会怀疑打包后的内容。另外, 笔者比较懒, 懒得去提取car文件。</p>
 </blockquote>
