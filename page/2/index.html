@@ -122,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/CocoaPods/" style="font-size: 15px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 12.5px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 12.5px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 12.5px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 17.5px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcconfig/" style="font-size: 12.5px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
+						<a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
 					</div>
 				</section>
 				
@@ -199,6 +199,76 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Renaming-umbrella-header-for-iOS-framework" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/" class="article-date">
+  	<time datetime="2015-08-25T04:52:19.000Z" itemprop="datePublished">2015-08-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/">iOS - Umbrella Header在framework中的应用</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>在相对较大的互联网App研发中, framework静态库被广泛应用, 那么在研发framework的时候也产生好多的问题? 其实一个常见的问题的就是umbreall header文件的使用。</p>
+<p>大家是否有遇到过一个常见的错误使用umbrella header的场景: framework的文件明明被主工程引用了, 但是在编译的时候依旧抛出<font color="orange">Lexical or Preprocessor Issue - Umbrella header for module ‘xxx’ does not include header ‘xxx.h’</font>的警告。</p>
+<p><strong>那么问题来了, 什么是umbrella header? 什么又是umbrella framework呢?</strong></p>
+<p>参考官方文档<a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Frameworks.html#//apple_ref/doc/uid/10000183-SW1" target="_blank" rel="external">《Introduction to Framework Programming Guide》</a>学习说明, 可以了解到Framework区分Standard Framework和Umbrella Framework。但是, 我找了半天也没有找到官方文档有对Umberlla framework给出明确的定义(大家找到了记得告诉我)。在官方文档<a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/FrameworkAnatomy.html#//apple_ref/doc/uid/20002253-97623-BAJJHAJC" target="_blank" rel="external">《Anatomy of Framework Bundles》</a>章节中, 我找到三段比较合理说明Umbrella Framework的话:</p>
+<blockquote>
+<p>Umbrella frameworks add minor refinements to the standard framework structure, such as the ability to encompass other frameworks</p>
+</blockquote>
+
+          
+            <p class="article-more-link">
+              <a href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/#more">more</a>
+            </p>
+          
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/framework/">framework</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/umbrella-header/">umbrella header</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-iOS_EnvWithXcconfig" class="article article-type-post" itemscope itemprop="blogPost">
   

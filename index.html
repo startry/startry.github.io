@@ -122,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/CocoaPods/" style="font-size: 15px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 12.5px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 12.5px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 12.5px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 17.5px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcconfig/" style="font-size: 12.5px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
+						<a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
 					</div>
 				</section>
 				
@@ -199,6 +199,81 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-the-trap-of-image-resource" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/17/the-trap-of-image-resource/" class="article-date">
+  	<time datetime="2016-03-17T09:14:30.000Z" itemprop="datePublished">2016-03-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/17/the-trap-of-image-resource/">在Pod库中使用xcasset的拷贝陷阱</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>本篇文章来自笔者工作中遇到一个难解的BUG - 在App中用<code>UIImage</code>的<code>imageNamed:</code>方法读取的图片始终是<strong>不正确</strong>的。</p>
+<p><img src="http://blog.startry.com/img/blog_image_repeate_intro.png" alt="暴走示意"></p>
+<p>场景条件回放:</p>
+<ol>
+<li>有多张同名图片存在工程下, 比如都叫<code>pic_same_test</code></li>
+<li>同名图片有存在被工程引用的子Bundle中, 主Bundle中和xcasset中</li>
+<li>同名图片未被工程引用进来, 但是防止在工程物理目录下的某个xcasset中</li>
+</ol>
+<p>试想一下, 这个时候你如果使用下述代码去读取该图片, 会发生取到哪种图片呢?</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIImage *image = [UIImage imageNamed:@&#34;pic_same_test&#34;];</span><br></pre></td></tr></table></figure>
+<p>在上述的条件场景中, 当我在应用中用UIImage去读取<strong>A</strong>图片的时候, 总是会读取到了错误的<strong>B</strong>图片。因为笔者最初的排查方向只在<strong>条件1</strong>和<strong>条件2</strong>两个方向去查找, 没有去深究未被工程引用的部分, 导致了整个思路方向被引向了错误的方向, 极大的加深了BUG的排查难度。</p>
+<p>笔者在这个问题上纠结了很久, 在<a href="http://stackoverflow.com/questions/36008210/uiimage-load-wrong-image-in-main-bundle" target="_blank" rel="external">Stackoverflow</a>和<a href="https://forums.developer.apple.com/message/124162" target="_blank" rel="external">苹果开发者论坛</a>都根据这个场景进行了提问, 最终在开发者论坛中经过昵称为<em>Bob133</em>的高人指点, 将问题的<font color="orange">突破口</font>定位在了<a href="https://developer.apple.com/library/prerelease/ios/documentation/Xcode/Reference/xcode_ref-Asset_Catalog_Format/index.html#//apple_ref/doc/uid/TP40015170-CH18-SW1" target="_blank" rel="external">xcasset</a>上。</p>
+
+          
+            <p class="article-more-link">
+              <a href="/2016/03/17/the-trap-of-image-resource/#more">more</a>
+            </p>
+          
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CocoaPods/">CocoaPods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xcasset/">xcasset</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-Screenshots-WKWebView" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -787,76 +862,6 @@
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xcconfig/">xcconfig</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Renaming-umbrella-header-for-iOS-framework" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/" class="article-date">
-  	<time datetime="2015-08-25T04:52:19.000Z" itemprop="datePublished">2015-08-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/">iOS - Umbrella Header在framework中的应用</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        
-          <p>在相对较大的互联网App研发中, framework静态库被广泛应用, 那么在研发framework的时候也产生好多的问题? 其实一个常见的问题的就是umbreall header文件的使用。</p>
-<p>大家是否有遇到过一个常见的错误使用umbrella header的场景: framework的文件明明被主工程引用了, 但是在编译的时候依旧抛出<font color="orange">Lexical or Preprocessor Issue - Umbrella header for module ‘xxx’ does not include header ‘xxx.h’</font>的警告。</p>
-<p><strong>那么问题来了, 什么是umbrella header? 什么又是umbrella framework呢?</strong></p>
-<p>参考官方文档<a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Frameworks.html#//apple_ref/doc/uid/10000183-SW1" target="_blank" rel="external">《Introduction to Framework Programming Guide》</a>学习说明, 可以了解到Framework区分Standard Framework和Umbrella Framework。但是, 我找了半天也没有找到官方文档有对Umberlla framework给出明确的定义(大家找到了记得告诉我)。在官方文档<a href="https://developer.apple.com/library/ios/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/FrameworkAnatomy.html#//apple_ref/doc/uid/20002253-97623-BAJJHAJC" target="_blank" rel="external">《Anatomy of Framework Bundles》</a>章节中, 我找到三段比较合理说明Umbrella Framework的话:</p>
-<blockquote>
-<p>Umbrella frameworks add minor refinements to the standard framework structure, such as the ability to encompass other frameworks</p>
-</blockquote>
-
-          
-            <p class="article-more-link">
-              <a href="/2015/08/25/Renaming-umbrella-header-for-iOS-framework/#more">more</a>
-            </p>
-          
-        
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/framework/">framework</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/umbrella-header/">umbrella header</a></li></ul>
 	</div>
 
       

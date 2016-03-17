@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>在Pod库中使用xcasset的拷贝陷阱 | Startry Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本篇文章来自笔者工作中遇到一个难解的BUG - 在App中用UIImage的imageNamed:方法读取的图片始终是不正确的。
+
+场景条件回放:
+
+有多张同名图片存在工程下, 比如都叫pic_same_test
+同名图片有存在被工程引用的子Bundle中, 主Bundle中和xcasset中
+同名图片未被工程引用进来, 但是防止在工程物理目录下的某个xcasset中
+
+试想一下, 这个时候你如果">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Pod库中使用xcasset的拷贝陷阱">
+<meta property="og:url" content="http://startry.com/2016/03/17/the-trap-of-image-resource/index.html">
+<meta property="og:site_name" content="Startry Blog">
+<meta property="og:description" content="本篇文章来自笔者工作中遇到一个难解的BUG - 在App中用UIImage的imageNamed:方法读取的图片始终是不正确的。
+
+场景条件回放:
+
+有多张同名图片存在工程下, 比如都叫pic_same_test
+同名图片有存在被工程引用的子Bundle中, 主Bundle中和xcasset中
+同名图片未被工程引用进来, 但是防止在工程物理目录下的某个xcasset中
+
+试想一下, 这个时候你如果">
+<meta property="og:image" content="http://blog.startry.com/img/blog_image_repeate_intro.png">
+<meta property="og:image" content="http://blog.startry.com/img/blog_asset_car_mogujie.png">
+<meta property="og:updated_time" content="2016-03-17T09:14:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在Pod库中使用xcasset的拷贝陷阱">
+<meta name="twitter:description" content="本篇文章来自笔者工作中遇到一个难解的BUG - 在App中用UIImage的imageNamed:方法读取的图片始终是不正确的。
+
+场景条件回放:
+
+有多张同名图片存在工程下, 比如都叫pic_same_test
+同名图片有存在被工程引用的子Bundle中, 主Bundle中和xcasset中
+同名图片未被工程引用进来, 但是防止在工程物理目录下的某个xcasset中
+
+试想一下, 这个时候你如果">
+  
+    <link rel="alternative" href="/atom.xml" title="Startry Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Startry</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+					        
+								<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+					        
+								<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://github.com/startry">空荡荡的github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">混迹于各类互联网公司, 学习成长中, 边走边学~ 参与过某二手车公司创业, 也曾在某大型公司混的一花名&quot;玄书&quot;。现在重新学习成长中...</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Startry</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Startry</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+			        
+						<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-the-trap-of-image-resource" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/17/the-trap-of-image-resource/" class="article-date">
+  	<time datetime="2016-03-17T09:14:30.000Z" itemprop="datePublished">2016-03-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      在Pod库中使用xcasset的拷贝陷阱
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CocoaPods/">CocoaPods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xcasset/">xcasset</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>本篇文章来自笔者工作中遇到一个难解的BUG - 在App中用<code>UIImage</code>的<code>imageNamed:</code>方法读取的图片始终是<strong>不正确</strong>的。</p>
+<p><img src="http://blog.startry.com/img/blog_image_repeate_intro.png" alt="暴走示意"></p>
+<p>场景条件回放:</p>
+<ol>
+<li>有多张同名图片存在工程下, 比如都叫<code>pic_same_test</code></li>
+<li>同名图片有存在被工程引用的子Bundle中, 主Bundle中和xcasset中</li>
+<li>同名图片未被工程引用进来, 但是防止在工程物理目录下的某个xcasset中</li>
+</ol>
+<p>试想一下, 这个时候你如果使用下述代码去读取该图片, 会发生取到哪种图片呢?</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIImage *image = [UIImage imageNamed:@&#34;pic_same_test&#34;];</span><br></pre></td></tr></table></figure>
+<p>在上述的条件场景中, 当我在应用中用UIImage去读取<strong>A</strong>图片的时候, 总是会读取到了错误的<strong>B</strong>图片。因为笔者最初的排查方向只在<strong>条件1</strong>和<strong>条件2</strong>两个方向去查找, 没有去深究未被工程引用的部分, 导致了整个思路方向被引向了错误的方向, 极大的加深了BUG的排查难度。</p>
+<p>笔者在这个问题上纠结了很久, 在<a href="http://stackoverflow.com/questions/36008210/uiimage-load-wrong-image-in-main-bundle" target="_blank" rel="external">Stackoverflow</a>和<a href="https://forums.developer.apple.com/message/124162" target="_blank" rel="external">苹果开发者论坛</a>都根据这个场景进行了提问, 最终在开发者论坛中经过昵称为<em>Bob133</em>的高人指点, 将问题的<font color="orange">突破口</font>定位在了<a href="https://developer.apple.com/library/prerelease/ios/documentation/Xcode/Reference/xcode_ref-Asset_Catalog_Format/index.html#//apple_ref/doc/uid/TP40015170-CH18-SW1" target="_blank" rel="external">xcasset</a>上。</p>
+<h2 id="神秘的错误图片">神秘的错误图片</h2><p>事情的起因是因为笔者在开发的某App的时候突然爆出了一个图片锯齿的BUG, 可是笔者的代码在线上已经稳定运行了几个月了, 怎么可能会突然抽风呢? </p>
+<p>处于笔者对UIImage的了解, 第一反应想到的就是<strong>缓存</strong>。这里的<strong>缓存</strong>不是UIImage加载图片的加速缓存, 而是在打包时候的资源不重复copy的<strong>缓存</strong>。因此, 笔者对这个BUG的存在性持有怀疑的态度, 二话不说自己做起了实验, 执行了下述操作:</p>
+<ol>
+<li>删除Project对应的<strong>Derived Data</strong>.</li>
+<li>对项目执行<strong>clean</strong>操作</li>
+<li>删除目标设备的项目App</li>
+<li>重新打包编译整个App</li>
+</ol>
+<p>经过上述四部操作和漫长的打包等待, 结果当然是呵呵哒了~ 如果结果正常就不会出现本篇博文了! 没错, 经过上述四部操作, 图片依旧还是<strong>错误</strong>的! </p>
+<p>呵呵, 删除缓存不行, 那就不是缓存问题, 笔者怀疑打出来的包里面有图片串位的可能, 心想根目录下的图是不是就是错误的。不多说, 提取ipa, 显示包内容, 包内容根目录下的图竟然是<strong>正确</strong>的!!! </p>
+<p>在包内容目录下, 我想要取的图片名字一样的图片总共就两张, 一张在根目录下, 另外一张在子Bundle下面。既然总共就2张图片, 那我就尝试在工程里<strong>删除掉子Bundle下的另外一张图片</strong>, 然后执行上述四部操作重新来过。结果大家想必还是知道的, 图片照样是错误的, 但是打包出来的文件包根目录下就只有一张<strong>正确</strong>的图片! </p>
+<p>这个尼玛不是一张幽灵图片么? 笔者当时脑洞打开, 甚至怀疑到是否iCloud同步下来的, 可是笔者的测试机压根就没有绑定iCloud。</p>
+<blockquote>
+<p>PS: 当时忽略了Assets.car是因为工程里引用的Image.assets里并没有这张同名的文件, 源文件没有, 那自然就不会怀疑打包后的内容。另外, 笔者比较懒, 懒得去提取car文件。</p>
+</blockquote>
+<h2 id="产生的原因&amp;解决方案">产生的原因&amp;解决方案</h2><p>针对这个幽灵图片, 笔者在<strong>XCode</strong>全局搜索, 也就搜索到前文提到的两者图片。那么这个图片究竟是从哪里来的呢? </p>
+<p>笔者在这个问题上纠结了超过十个小时, 并分别在<a href="https://forums.developer.apple.com/message/124162" target="_blank" rel="external">苹果开发论坛</a>和<a href="http://stackoverflow.com/questions/36008210/uiimage-load-wrong-image-in-main-bundle" target="_blank" rel="external">Stackoverflow</a>提出的疑问, 但是疑问有误导回答者往Bundle排查的嫌疑。</p>
+<p>但是世界上开发牛人这么多, 稍微误导下问题也不大, 在<a href="https://forums.developer.apple.com/message/124162" target="_blank" rel="external">苹果开发者论坛</a>中的用户<strong>bob133</strong>说他曾经遇到过类似的场景, 也排查了好久, 让我仔细检查下是不是<code>xcasset</code>捣的鬼。</p>
+<p>笔者基于<strong>bob133</strong>的提示, 想到是否真的<code>xcasset</code>有问题。笔者通过<strong>XCode</strong>全局搜索了项目里的<strong>xcasset</strong>, 并没有找到错误的那张显示图片。直到这个时候, 笔者才想到要把加密的<code>Assets.car</code>文件提取出来看看。</p>
+<p><img src="http://blog.startry.com/img/blog_asset_car_mogujie.png" alt="ThemeEngine Demo"></p>
+<p>图片示例提取的是国内知名女性购物平台某某街的App, 可以从上图看出该App的图片使用也存在非常不规范的地方, 同一名字的图片被打入了这么多张。设想一下, 假如在这里写下述代码,  取到的究竟是上图中四张的哪张呢? =。=</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIImage *image = [UIImage imageNamed:@&#34;address_icon_location&#34;];</span><br></pre></td></tr></table></figure>
+<p>Assets.car的提取工具很多, 笔者使用的是<a href="https://github.com/alexzielenski/ThemeEngine" target="_blank" rel="external">ThemeEngine</a>。通过<a href="https://github.com/alexzielenski/ThemeEngine" target="_blank" rel="external">ThemeEngine</a>提取的<code>Assets.car</code>文件中<font color="orange">果然找到错误的图片</font>! 原来UIImage读取错误图片的根源是在这里啊!</p>
+<p>总之, 打包后读取的问题图片已经找到了, 藏在二进制文件<code>Assets.car</code>中。</p>
+<h4 id="幽灵图片从哪里来">幽灵图片从哪里来</h4><p>在打包生产的<code>Assets.car</code>竟然会出现错误的图片, 那一定还是工程目录下打包进去的。那究竟是什么地方打包进去的呢? </p>
+<p>笔者首先想到的突破点是打包编译过程的<code>Copy Pods Resources</code>过程, 通过编译选项笔者发现有一个物理目录下的<code>Example</code>里的<code>XXX.assets</code>被打包进入了最终的<code>Asset.car</code>。</p>
+<p>笔者尝试删除该目录下的<code>Example</code>工程, 果然编译出来的App可以读取到了<strong>正确</strong>的图片。</p>
+<p>问题根源已经找到了, 笔者查看<code>Copy Pods Resouces</code>下的核心脚本<code>Pods_resources.sh</code>, 发现一段很牛B的代码段:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Find all other xcassets (this unfortunately includes those of path pods and other targets).</span></span><br><span class="line">OTHER_XCASSETS=$(find <span class="string">"<span class="variable">$PWD</span>"</span> -iname <span class="string">"*.xcassets"</span> -type d)</span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$line</span> != <span class="string">"`realpath <span class="variable">$PODS_ROOT</span>`*"</span> ]]; <span class="keyword">then</span></span><br><span class="line">	XCASSET_FILES+=(<span class="string">"<span class="variable">$line</span>"</span>)</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span> &lt;&lt;&lt;<span class="string">"<span class="variable">$OTHER_XCASSETS</span>"</span></span><br></pre></td></tr></table></figure>
+<p>我去啊。。。怎么会有这样的代码段, 而且从0.35的CocoaPods版本开始就早已存在。笔者当时使用的<a href="https://github.com/CocoaPods/CocoaPods/tree/0.39-stable" target="_blank" rel="external">0.39.stable</a>的CocoaPods版本。关于这个问题, 笔者顺藤摸瓜, 找到了一个相关的<a href="https://github.com/CocoaPods/CocoaPods/issues/1546" target="_blank" rel="external">CocoaPods issue - Pods copy resource script overrides default xcasset bahaviour</a>。</p>
+<p>这个资源覆盖的issue截止笔者发文之前依旧还open着。笔者先回归正题, 为什么笔者的代码在线上跑了几个月后会突然出问题了呢? 关键代码在这里:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [[ -n <span class="string">"<span class="variable">$&#123;WRAPPER_EXTENSION&#125;</span>"</span> ]] &amp;&amp; [ <span class="string">"`xcrun --find actool`"</span> ] &amp;&amp; [ -n <span class="string">"<span class="variable">$XCASSET_FILES</span>"</span> ]</span><br><span class="line">...</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>上述的Copy脚本执行条件是满足这个if语句, 这个条件语句有三个条件:</p>
+<ol>
+<li>有WRAPPER_EXTENSION, pod库依赖的资源文件默认都是<code>bundle</code></li>
+<li>xcode命令行支持actool, actool是用来合并xcasset的官方工具</li>
+<li>有添加过任意一个<code>xcasset</code>相关的文件</li>
+</ol>
+<p>条件1和条件2一直都没有改变过, 那么客观条件只有第3条有改变过的可能, 追朔代码:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">install_resource</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="variable">$1</span> <span class="keyword">in</span></span><br><span class="line">  ...</span><br><span class="line">  *.xcassets)</span><br><span class="line">      ABSOLUTE_XCASSET_FILE=$(realpath <span class="string">"<span class="variable">$&#123;PODS_ROOT&#125;</span>/<span class="variable">$1</span>"</span>)</span><br><span class="line">      XCASSET_FILES+=(<span class="string">"<span class="variable">$ABSOLUTE_XCASSET_FILE</span>"</span>)</span><br><span class="line">      ;;</span><br><span class="line">  /*)</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原来如此, 笔者所用的工程里依赖的Pod库里只要有任意一个Pod库被添加过一次<code>xcasst</code>文件, 则会触发这个全资源拷贝的脚本语句。这也是为啥之前工程没事, 好端端突然就出问题的原因。</p>
+<p><strong>总而言之, CocoaPods判断如果任意的Pod库里通过描述文件引入了xcasset文件, 就会触发根目录下所有xcasset文件扫描打包car的执行操作。</strong></p>
+<h4 id="解决方案">解决方案</h4><p>针对该问题的解决方案有很多, 熟悉了CocoaPods的特性后怎么样都可以解决这个问题:</p>
+<p><strong>方法一:</strong> 删除所有物理目录下多余的xcasset, 本身在源代码根目录下放置没有用到库本身就是非常危险的行为。</p>
+<p><strong>方法二:</strong> 通过Podfile Hook去屏蔽Pod库资源的Copy和合成, 替换核心脚本, 定向指定自己需要Copy的资源。</p>
+<p><strong>方法三:</strong> 逃避的方法, 不要在Pod库中使用xcasset。本身CocoaPods的初衷并没有打算支持资源文件的, 后续演变成目前的形态。(不适用xcasset默认png压缩不会执行, 可能需要手动执行, 并且图片容易被提取)</p>
+<h4 id="追根溯源">追根溯源</h4><p>作为一个极具盛名的开源库, 怎么可能会写这么大的一个BUG呢? 有因必有果, 有一个关键问题还是没有找出来, 为什么两年来没有人给这个问题提Pull Request呢?</p>
+<p>笔者本着好奇之心去探索CocoaPods的相关issue和commit记录, 找到了一个关键提交节点:</p>
+<blockquote>
+<p>0.36.4 (2015-04-16)</p>
+<p>Bug Fixes</p>
+<p>Fixes various problems with Pods that use xcasset bundles. Pods that use xcassets can now be used with the pod :path option.</p>
+<p><a href="https://github.com/kylef" target="_blank" rel="external">Kyle Fuller</a> <a href="https://github.com/CocoaPods/CocoaPods/issues/1549" target="_blank" rel="external">#1549</a> <a href="https://github.com/CocoaPods/CocoaPods/pull/3383" target="_blank" rel="external">#3384</a> <a href="https://github.com/CocoaPods/CocoaPods/pull/3358" target="_blank" rel="external">#3358</a></p>
+</blockquote>
+<p>该解决BUG对应的Merge issue是<a href="https://github.com/CocoaPods/CocoaPods/pull/3405" target="_blank" rel="external">#3405</a></p>
+<p>通过该关键节点引申出了一个BUG Fix的<a href="https://github.com/CocoaPods/CocoaPods/commit/44cde6feb61360bc530d85ea52a418ffe023c7ed" target="_blank" rel="external">commit - Do not discard .xcassets from the main project</a>和<a href="https://github.com/CocoaPods/CocoaPods/pull/2212" target="_blank" rel="external">issue - Only include *.xcassets from Pods</a>。</p>
+<p>从提交记录可以看出这两次提交分别是为了解决支持<code>:path</code>属性和打包<code>xcasset</code>时候遗漏了主工程的<code>xcasset</code>的问题。</p>
+<p>原来这个暴力的拷贝脚本是用来<font color="orange">将主工程的<code>xcasset</code>和Pod的<code>xcasset</code>一起利用actool合成car用的</font>。因为主工程的<code>xcasset</code>命名不规律和文件存储位置的不规律, 和actool的特性有限。CocoaPods的研发者暂时也没有更好的办法, 所以采用这种暴力的方式！</p>
+<font color="orange">广大的网友如果有更好的方法, 可以帮助CocoaPods开发者解决该问题。笔者想了半天, 没有想出什么靠谱的方法。</font>
+
+<p>PS: 如果估计针对主工程的<code>xcasset</code>做标志位的话, 和直接利用hook去屏蔽一些对应的资源文件本质上是没有差距的, 因为都需要在主工程里做额外的操作。</p>
+<h2 id="总结">总结</h2><p>UIImage加载重名图片本身就存在问题, 因为图片不应该重名出现在工程里。但是, 在大型App开发中, 因为参与人员流动和数量的问题, 就不可避免的会出现各种各样的复杂情况。本文将笔者遇到的资源图片错误加载梳理了一下, 因为对CocoaPods和<code>xcasset</code>共同使用的不了解, 导致了排查的困难。</p>
+<p><strong>CocoaPods在Pod里引用了任意一个xcasset相关的文件后, 就会去根目录搜索所有的xcasset组合成为最终的car</strong>。CocoaPods设定这样脚本的原因是无法精确的将主工程下的<code>xcasset</code>寻找到, 只能采用暴力的方式去解决, 暂时也没有更好的解决方案！</p>
+<p>PS: 本人技术水平有限, 如果有错误的地方, 请各位大大及时指出哈~~</p>
+<h4 id="参考">参考</h4><ol>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Xcode/Reference/xcode_ref-Asset_Catalog_Format/index.html#//apple_ref/doc/uid/TP40015170-CH18-SW1" target="_blank" rel="external">Apple - Asset Catalog Format Reference</a></li>
+<li><a href="http://stackoverflow.com/questions/36008210/uiimage-load-wrong-image-in-main-bundle" target="_blank" rel="external">Stackoverflow - UIImage load wrong image in main bundle</a></li>
+<li><a href="https://forums.developer.apple.com/message/124162" target="_blank" rel="external">Apple Developer Forum</a></li>
+<li><a href="https://github.com/alexzielenski/ThemeEngine" target="_blank" rel="external">Github - ThemeEngine</a></li>
+<li><a href="https://github.com/CocoaPods/CocoaPods" target="_blank" rel="external">GitHub - CoocaPods</a></li>
+</ol>
+
+        
+      
+    </div>
+    
+  </div>
+
+  
+    <!-- 添加打赏逻辑 -->
+    <div class='dashang' style='text-align:center; height:50px;'>如果您觉得文章有用, 打赏一个呗~~ ( ⊙ o ⊙ )/</div>
+    <div class='dashang_alipay' style='text-align:center;'>
+      <form action="https://shenghuo.alipay.com/send/payment/fill.htm"
+    method="POST" target="_blank" accept-charset="GBK">
+        <input name="optEmail" type="hidden" value="148140274@qq.com" />
+        <input name="payAmount" type="hidden" value="1" />
+        <input id="title" name="title" type="hidden" value="来自Startry博文的打赏" />
+        <input name="memo" type="hidden" value="打赏以资鼓励~~ O(∩_∩)O" />
+        <input name="pay" type="image" value="转账"
+      src="https://img.alipay.com/sys/personalprod/style/mc/btn-index.png" />
+      </form>
+    </div>
+    <div style='text-align:center; margin-top: 20px;'>
+      <img src='/img/wechat_pay.png' style='width: 160px; height:160px; margin-right: 15px;'>
+      <img src='/img/alipay_pay.png' style='width: 160px; height:160px; margin-left: 15px;  '>
+    </div>
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/02/26/Screenshots-WKWebView/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">我只是想要截个屏(续)</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="the-trap-of-image-resource" data-title="在Pod库中使用xcasset的拷贝陷阱" data-url="http://startry.com/2016/03/17/the-trap-of-image-resource/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Startry
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+  <div style="display:none">
+    <span id="busuanzi_container_site_pv" style="display:hidden;">本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-67055063-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
