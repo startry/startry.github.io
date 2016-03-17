@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-03-17T10:33:32.000Z</updated>
+  <updated>2016-03-17T10:40:28.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <title>在Pod库中使用xcasset的拷贝陷阱</title>
     <link href="http://startry.com/2016/03/17/the-trap-of-image-resource/"/>
     <id>http://startry.com/2016/03/17/the-trap-of-image-resource/</id>
-    <published>2016-03-17T10:33:32.000Z</published>
-    <updated>2016-03-17T10:33:32.000Z</updated>
+    <published>2016-03-17T10:40:29.000Z</published>
+    <updated>2016-03-17T10:40:28.000Z</updated>
     
     <content type="html">&lt;p&gt;本篇文章来自笔者工作中遇到一个难解的BUG - 在App中用&lt;code&gt;UIImage&lt;/code&gt;的&lt;code&gt;imageNamed:&lt;/code&gt;方法读取的图片始终是&lt;strong&gt;不正确&lt;/strong&gt;的。&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_image_repeate_intro.png&quot; alt=&quot;暴走示意&quot;&gt;&lt;/p&gt;
@@ -75,7 +75,7 @@
 &lt;p&gt;条件1和条件2一直都没有改变过, 那么客观条件只有第3条有改变过的可能, 追朔代码:&lt;/p&gt;
 &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;install_resource&lt;/span&gt;&lt;/span&gt;()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  *.xcassets)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      ABSOLUTE_XCASSET_FILE=$(realpath &lt;span class=&quot;string&quot;&gt;&quot;&lt;span class=&quot;variable&quot;&gt;$&amp;#123;PODS_ROOT&amp;#125;&lt;/span&gt;/&lt;span class=&quot;variable&quot;&gt;$1&lt;/span&gt;&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      XCASSET_FILES+=(&lt;span class=&quot;string&quot;&gt;&quot;&lt;span class=&quot;variable&quot;&gt;$ABSOLUTE_XCASSET_FILE&lt;/span&gt;&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      ;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  /*)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;原来如此, 笔者所用的工程里依赖的Pod库里只要有任意一个Pod库被添加过一次&lt;code&gt;xcasset&lt;/code&gt;文件, 则会触发这个全资源拷贝的脚本语句。这也是为啥之前工程没事, 好端端突然就出问题的原因。&lt;/p&gt;
-&lt;p&gt;防止用户误解, 这里条件3的添加&lt;code&gt;xcasset&lt;/code&gt;需要通过引用库的podspec指定添加, 添加后通过主工程&lt;code&gt;pod_install&lt;/code&gt;或&lt;code&gt;pod_update&lt;/code&gt;生产的脚本引入产生。&lt;/p&gt;
+&lt;p&gt;防止大家误解, 这里条件3的添加&lt;code&gt;xcasset&lt;/code&gt;需要通过引用库的podspec指定添加, 添加后通过主工程&lt;code&gt;pod_install&lt;/code&gt;或&lt;code&gt;pod_update&lt;/code&gt;生产的脚本引入产生。&lt;/p&gt;
 &lt;p&gt;示例语句(写在podspec中):&lt;/p&gt;
 &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;s.resource = &lt;span class=&quot;string&quot;&gt;&#39;DemoLib/Pod/AnyName.xcassets&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;&lt;strong&gt;总而言之, CocoaPods判断如果任意的Pod库里通过描述文件引入了xcasset文件, 就会触发根目录下所有xcasset文件扫描打包car的执行操作。&lt;/strong&gt;&lt;/p&gt;
