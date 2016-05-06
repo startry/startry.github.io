@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-05-05T06:35:40.000Z</updated>
+  <updated>2016-05-06T03:37:10.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>译 - iOS UI自动化测试(上)</title>
-    <link href="http://startry.com/2016/05/05/Automate_UI_Testing_in_iOS/"/>
-    <id>http://startry.com/2016/05/05/Automate_UI_Testing_in_iOS/</id>
-    <published>2016-05-05T06:35:40.000Z</published>
-    <updated>2016-05-05T06:35:40.000Z</updated>
+    <link href="http://startry.com/2016/05/06/Automate_UI_Testing_in_iOS/"/>
+    <id>http://startry.com/2016/05/06/Automate_UI_Testing_in_iOS/</id>
+    <published>2016-05-06T03:37:10.000Z</published>
+    <updated>2016-05-06T03:37:10.000Z</updated>
     
     <content type="html">&lt;p&gt;原文: &lt;a href=&quot;https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;UI Testing in iOS&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;译者笔录: &lt;/p&gt;
@@ -197,10 +197,10 @@
 &lt;p&gt;在示例脚本中, 我们用局部变量来声明存储对应的Tab Bar。然后我们通过访问该变量获取已选中的按钮的名字。最后通过比对选中按钮的名字(这个例子中名字是”Unit Conversion”)来决定是否要自动点击该tab。&lt;/p&gt;
 &lt;p&gt;PS: 这里好奇怪啊, 这个例子有意义么? 译者觉得这个示例好无语。可能是译者翻译水平不到位, 建议大家去原文仔细参考该段代码以及对应解释。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;滚动到某一个元素.&lt;/strong&gt; 在很多App中, 滚动是占据了很大一部分的用户交互行为。UI自动化工具提供了多种方法用于实现滚动。&lt;/p&gt;
-&lt;p&gt;基本的滚动方法允许我们滚动匀速到下一个元素的周边, 但是我们可以通过高级的滚动方法来支持更加灵活的滚动, 其中一种高级的方法名就叫&lt;code&gt;scrollToElementWithPredicate&lt;/code&gt;。&lt;code&gt;scrollToElementWithPredicate&lt;/code&gt;可以滚动到匹配您指定的正则表达式的对应元素。下述例子展示了列表怎么滚动到名字为&lt;code&gt;Turtle Pie&lt;/code&gt;元素这:&lt;/p&gt;
+&lt;p&gt;基本的滚动方法允许我们滚动匀速到下一个元素的周边, 但是我们可以通过高级的滚动方法来支持更加灵活的滚动, 其中一种高级的方法名就叫&lt;code&gt;scrollToElementWithPredicate&lt;/code&gt;。&lt;code&gt;scrollToElementWithPredicate&lt;/code&gt;可以滚动到匹配您指定的NSPredicate的对应元素。下述例子展示了列表怎么滚动到名字为&lt;code&gt;Turtle Pie&lt;/code&gt;元素这:&lt;/p&gt;
 &lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;UIATarget.localTarget().frontMostApp().mainWindow().tableViews()[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;] \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    .scrollToElementWithPredicate(&lt;span class=&quot;string&quot;&gt;&quot;name beginswith &#39;Turtle Pie&#39;&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;&lt;code&gt;scrollToElementWithPredicate&lt;/code&gt;支持滚动到某一个名字不确定的元素(通过正则匹配)。&lt;/p&gt;
-&lt;p&gt;在您的脚本中使用正则表达式可以很大程度上提高脚本的可用性。更多关于正则表达式, 请参考&lt;a href=&quot;https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Predicate Programming Guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;scrollToElementWithPredicate&lt;/code&gt;支持滚动到某一个名字不确定的元素(通过NSPredicate匹配)。&lt;/p&gt;
+&lt;p&gt;在您的脚本中使用NSPredicate可以很大程度上提高脚本的可用性。更多关于NSPredicate, 请参考&lt;a href=&quot;https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Predicate Programming Guide&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;其他灵活有效的滚动方法还有&lt;code&gt;scrollToElementWithName&lt;/code&gt;和&lt;code&gt;scrollToElementWithValueForKey&lt;/code&gt;等方法。可以参考&lt;a href=&quot;https://developer.apple.com/library/ios/documentation/ToolsLanguages/Reference/UIAScrollViewClassReference/index.html#//apple_ref/doc/uid/TP40009912&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;UIAScrollView Class Reference&lt;/a&gt; 获取更多信息。&lt;/p&gt;
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;&lt;p&gt;笔者比较懒, 翻译了一大半懒得翻译了, 因为在翻译的过程中越发觉得&lt;strong&gt;学习自动化测试的人不需要翻译的文章, 仅仅需要看原文就可以了&lt;/strong&gt;。但是既然自己开始了翻译的行为就不能半途而废吧, 因此笔者把这篇文章拆分出来上和下, 核心的自动化测试使用和基础的脚本教程就放在了上篇, 下篇待计划哈~&lt;/p&gt;
 &lt;p&gt;自动化测试可以通过录制测试行为将测试的工作&lt;strong&gt;从简单重复的机械劳动中释放出来&lt;/strong&gt;, 但是对于复杂的测试行为还是存在很大争议的。复杂的测试的网络环境决定了测试开发需要编写大量的条件语句还满足测试需要，使用成本过大。另外笔者发现该自动化脚本的可访问元素还是需要提前在代码阶段写入, 还是具有一定的嵌入型(当然, 您可以选择不使用访问元素标签的特性)。&lt;/p&gt;
@@ -211,6 +211,7 @@
 &lt;li&gt;Instruments: Xcode默认基础的工具集, 因为翻译为工具集太过通用, 因此不知道怎么翻译, 就不做翻译了, 但是文章中将&lt;code&gt;The Automation Instrument&lt;/code&gt;翻译为&lt;code&gt;自动化工具&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Element: 如果大家对JavaScript熟悉的话, 应该对元素的概念还是比较了解的&lt;/li&gt;
 &lt;li&gt;Screen: 我是想翻译成屏幕的, 但是怎么读都变扭。。还是算了&lt;/li&gt;
+&lt;li&gt;NSPredicate: 不知道怎么翻译。。谓语表达式?&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h4 id=&quot;参考文献&quot;&gt;参考文献&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;UI Testing in iOS&lt;/a&gt;&lt;/li&gt;
