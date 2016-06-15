@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-06-15T12:55:14.000Z</updated>
+  <updated>2016-06-15T13:02:44.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <title>矢量图在iOS中的应用细节</title>
     <link href="http://startry.com/2016/06/15/vector-apply-to-iOS-Project/"/>
     <id>http://startry.com/2016/06/15/vector-apply-to-iOS-Project/</id>
-    <published>2016-06-15T12:55:14.000Z</published>
-    <updated>2016-06-15T12:55:14.000Z</updated>
+    <published>2016-06-15T13:02:44.000Z</published>
+    <updated>2016-06-15T13:02:44.000Z</updated>
     
     <content type="html">&lt;p&gt;对于矢量图的调研, 最开始是始于对其占用iOS App的空间的好奇。笔者好奇一个问题: &lt;strong&gt;利用矢量图能不能帮助iOS App减少整体空间?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;iOS其实在很早的时候就已经支持矢量图的应用(XCode 6时代开始支持), 只不过因为大部分开发者沿用了以前@1x、@2x、@3x格式图的习惯, 并没有一个地方专门普及使用矢量图。当然, 还有另外一个原因就是iOS对复杂的矢量图支持的不是很好。&lt;/p&gt;
