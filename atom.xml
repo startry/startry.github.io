@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-05-06T03:37:10.000Z</updated>
+  <updated>2016-06-15T12:55:14.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -14,6 +14,79 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>矢量图在iOS中的应用细节</title>
+    <link href="http://startry.com/2016/06/15/vector-apply-to-iOS-Project/"/>
+    <id>http://startry.com/2016/06/15/vector-apply-to-iOS-Project/</id>
+    <published>2016-06-15T12:55:14.000Z</published>
+    <updated>2016-06-15T12:55:14.000Z</updated>
+    
+    <content type="html">&lt;p&gt;对于矢量图的调研, 最开始是始于对其占用iOS App的空间的好奇。笔者好奇一个问题: &lt;strong&gt;利用矢量图能不能帮助iOS App减少整体空间?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;iOS其实在很早的时候就已经支持矢量图的应用(XCode 6时代开始支持), 只不过因为大部分开发者沿用了以前@1x、@2x、@3x格式图的习惯, 并没有一个地方专门普及使用矢量图。当然, 还有另外一个原因就是iOS对复杂的矢量图支持的不是很好。&lt;/p&gt;
+&lt;p&gt;本文并没有特别深入的技术点, 仅仅只是笔者做的几个实验的总结和矢量图基础使用的教程普及~&lt;/p&gt;
+&lt;h3 id=&quot;矢量图和iOS&quot;&gt;矢量图和iOS&lt;/h3&gt;&lt;p&gt;关于矢量图在iOS中的使用早在15年2月就有一篇博文介绍了它的使用 - &lt;a href=&quot;https://www.zhihu.com/question/23180955&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS使用矢量图的总结&lt;/a&gt;。笔者按照它的用法操作了一遍, 基本大同小异~ 针对该文章没有涉及到的一些细节, 笔者进行一定程度的补充。&lt;/p&gt;
+&lt;h4 id=&quot;iOS中矢量图的使用方法&quot;&gt;iOS中矢量图的使用方法&lt;/h4&gt;&lt;p&gt;笔者为了做一下简单的矢量图实验, 使用&lt;a href=&quot;http://www.sketchapp.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Sketch&lt;/a&gt;随意拖了一个星星出来并导出一个&lt;a href=&quot;http://blog.startry.com/img/star_test.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PDF&lt;/a&gt;。(实际上UI绘制矢量图的工具有很多很多, 这里不赘述。如果读者懒得自己去导出, 可以直接挪用)&lt;/p&gt;
+&lt;p&gt;XCode支持矢量图一定要放置在xcasset文件中才能够生效, 操作步骤如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;拖拽提前制作的PDF进入&lt;code&gt;XXX.xcassets&lt;/code&gt;中。&lt;/li&gt;
+&lt;li&gt;选择&lt;code&gt;Image Set&lt;/code&gt;下的参数选项&lt;code&gt;Scale Factors&lt;/code&gt;为&lt;code&gt;Single Vector&lt;/code&gt;或&lt;code&gt;Vector With Overrides&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;如果图形不在框框中, 拖入框框中(XCode某些版本不能自动对号入座)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_vector_xcasset_demo.png&quot; alt=&quot;iOS矢量图使用&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Vector With Overrides&lt;/code&gt;是&lt;code&gt;Single Vector&lt;/code&gt;的增强, 可以在放置完矢量图之后继续放置@1x、@2x和@3x的png格式的图片。放置的png会优先覆盖矢量图, 未放置对应倍率图片的设备才会使用矢量图对应生成的图片。&lt;/p&gt;
+&lt;h4 id=&quot;矢量图在iOS中的应用原理&quot;&gt;矢量图在iOS中的应用原理&lt;/h4&gt;&lt;p&gt;&lt;strong&gt;iOS对矢量图的支持其实只是一种方便开发者的选择, 本质上在XCode编译的阶段矢量图会自动生成对应Target的@1x，@2x和@3x的png格式图像。在iOS实际运行中使用的图片实际上已经是png格式的图片了~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_vector_build_illustrator.png&quot; alt=&quot;iOS下矢量图工作原理&quot;&gt;&lt;/p&gt;
+&lt;p&gt;通俗的理解 - 放置在xcassets里的矢量图会自动根据设备编译成对应尺寸的图片, 如果是&lt;code&gt;Generic iOS Device&lt;/code&gt;则会自动生成全尺寸的同名图片。 &lt;/p&gt;
+&lt;p&gt;PS: &lt;strong&gt;自动生成的@1x图会和矢量图的原始尺寸保持一致。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;下图为利用&lt;a href=&quot;https://github.com/alexzielenski/ThemeEngine&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ThemeEngine&lt;/a&gt;打开的基于&lt;code&gt;Generic iOS Device&lt;/code&gt;编译出来的Assets.car文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_vector_themeengine.png&quot; alt=&quot;ThemeEngine下car文件&quot;&gt;&lt;/p&gt;
+&lt;h3 id=&quot;矢量图能否减少空间&quot;&gt;矢量图能否减少空间&lt;/h3&gt;&lt;p&gt;回归到最初的问题, 到底使用矢量图能不能帮助iOS App减少空间呢? &lt;/p&gt;
+&lt;p&gt;笔者用简单粗暴的实验来对比说明, 步骤如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用pdf原始文件编译生成通用IPA&lt;/li&gt;
+&lt;li&gt;从生成的IPA文件中提取Asset.car文件&lt;/li&gt;
+&lt;li&gt;利用&lt;a href=&quot;https://github.com/devcxm/iOS-Images-Extractor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS Image Extractor&lt;/a&gt;提取Asset.car文件&lt;/li&gt;
+&lt;li&gt;将提取出来的@1x、@2x、@3x放置回工程, 并删除原始pdf中重新编译&lt;/li&gt;
+&lt;li&gt;对比步骤1生成的car文件和步骤4生成的car文件大小&lt;/li&gt;
+&lt;/ol&gt;
+&lt;table&gt;&lt;br&gt;  &lt;tr&gt;&lt;br&gt;    &lt;th&gt;步骤一编译car大小(仅PDF)&lt;/th&gt;&lt;br&gt;    &lt;th&gt;步骤四编译car大小(仅3张图)&lt;/th&gt;&lt;br&gt;    &lt;th&gt;测试PDF尺寸&lt;/th&gt;&lt;br&gt;  &lt;/tr&gt;&lt;br&gt;  &lt;tr&gt;&lt;br&gt;    &lt;td&gt;115KB&lt;/td&gt;&lt;br&gt;    &lt;td&gt;86KB&lt;/td&gt;&lt;br&gt;    &lt;td&gt;20KB&lt;/td&gt;&lt;br&gt;  &lt;/tr&gt;&lt;br&gt;&lt;/table&gt;
+
+
+&lt;p&gt;&lt;strong&gt;在iOS8.3以下, 相同压缩比例的条件下, 矢量图是无法帮助App减少空间。但是在iOS8.3以上, 利用xcassets可以避免多余的资源图片下载, 只下载对应的倍率的图片。因此, 严格意义下, 利用矢量图并不能帮助App节省空间。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;其实笔者使用的简单粗暴的方式在苹果新的瘦身机制下是不成立的, 因为编译生成的最终包不一定就是设备最终安装的包。引用官方文档&lt;a href=&quot;https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/AppThinning/AppThinning.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;App Thinning&lt;/a&gt;中&lt;a href=&quot;https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/AppThinning/AppThinning.html#//apple_ref/doc/uid/TP40012582-CH35-SW1&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Slicing&lt;/a&gt;章节中的一段话:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In Xcode, specify target devices and provide multiple resolutions of images in the asset catalog.&lt;br&gt;You must use the asset catalog in order for resources to be sliced.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;笔者未能完全参透这句话的意思, 只知道xcasset会根据不同的设备会有不同的解决方案, 但是不知道粒度会达到什么样的程度。笔者尝试过针对不同的模拟器编译, 只会生成对应的倍率图, 但是上传给App Store是通用格式的, 难道下载的过程中进行了一定的处理? 这个就需要一台越狱设备去验证了, 就靠各位读者大大了~&lt;/p&gt;
+&lt;p&gt;PS: 对iOS如何控制多余资源图片下载感兴趣的童鞋们, 可以找一台越狱设备, 将iOS 8.3以上的App给提取出来分析分析哈~ 记得分享哇~ \(^o^)/&lt;/p&gt;
+&lt;h4 id=&quot;题外探究之提取原理&quot;&gt;题外探究之提取原理&lt;/h4&gt;&lt;p&gt;笔者在对比大小的时候使用的&lt;a href=&quot;https://github.com/devcxm/iOS-Images-Extractor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS Image Extrator&lt;/a&gt;。 在使用过程中, 笔者对该工具的提取原理产生了那么一点点的好奇。笔者好奇xcasset的格式应该是封闭不开放的, 该工具是怎么从Asset.car中提取图片的, 难道该工具破解了Asset.car的格式?&lt;/p&gt;
+&lt;p&gt;既然iOS Image Extrator是开源的, 那么笔者就有必要去看一看究竟了~ iOS Image Extrator其实是基于开源库&lt;a href=&quot;https://github.com/Marxon13/iOS-Asset-Extractor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS Asset Extrator&lt;/a&gt;开发实现的, 核心提取的功能是在&lt;strong&gt;iOS Asset Extrator&lt;/strong&gt;库下提取的, 笔者通过阅读其源码, 找到两个核心方法&lt;a href=&quot;https://github.com/Marxon13/iOS-Asset-Extractor/blob/master/CARExtractor/CARExtractor/CARExporter.m#L33&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;exportToDirectory:&lt;/a&gt;和&lt;a href=&quot;https://github.com/Marxon13/iOS-Asset-Extractor/blob/master/CARExtractor/CARExtractor/CARExporter.m#L77&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;exportThemeRendition:&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;通过阅读这两个方法的源代码可以了解到这个库的基本实现。&lt;a href=&quot;https://github.com/Marxon13/iOS-Asset-Extractor/blob/master/CARExtractor/CARExtractor/CARExporter.m#L33&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;exportToDirectory:&lt;/a&gt;方法有该库核心的提取图片的所有逻辑代码。而&lt;a href=&quot;https://github.com/Marxon13/iOS-Asset-Extractor/blob/master/CARExtractor/CARExtractor/CARExporter.m#L77&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;exportThemeRendition:&lt;/a&gt;可以看出该库支持的所有格式, 并且通过苹果内置的各个格式的&lt;code&gt;Rendition&lt;/code&gt;类提取导出。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/Marxon13/iOS-Asset-Extractor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS Asset Extrator&lt;/a&gt;库本质上调用的是苹果的私有API。在该系列API中, &lt;code&gt;CUICommonAssetStorage&lt;/code&gt;负责存储Asset资源的关键key, &lt;code&gt;CUICatalog&lt;/code&gt;是承载了具体资源图片信息的登记目录。&lt;/p&gt;
+&lt;p&gt;&lt;font color=&quot;red&quot;&gt;回归主题, 开源库底层既然是苹果API, 那么就基本是一个黑盒子了。笔者既不能从暴露的API中分析出car的格式, 又不能判断iOS设备是否在执行中解压, 只好放弃&lt;/font&gt;~&lt;/p&gt;
+&lt;h3 id=&quot;总结&quot;&gt;总结&lt;/h3&gt;&lt;p&gt;矢量图严格意义上并不能帮助减少App的空间, 但是却使用起来非常的方便, 建议使用。iOS本质上并不支持矢量图, 但是在编译阶段会将矢量图转化成目标设备对应的尺寸图, 同时会利用xcassets的特性在iOS8.3以上设备下支持部分资源下载, 带到包瘦身的效果。每次都要让UI给多个尺寸的图, 肯定没有给一张方便吧? 当然, 前提是UI的童鞋是基于矢量图工具制作的图片的前提下~&lt;/p&gt;
+&lt;h4 id=&quot;参考文献&quot;&gt;参考文献&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.zhihu.com/question/23180955&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;知乎 - iOS对矢量图片的支持如何?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/lengshengren/article/details/43406905&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS使用矢量图的总结&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/AppThinning/AppThinning.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;App Thinning&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/alexzielenski/ThemeEngine&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ThemeEngine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/devcxm/iOS-Images-Extractor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS Image Extrator&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/Marxon13/iOS-Asset-Extractor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS Asset Extrator&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;对于矢量图的调研, 最开始是始于对其占用iOS App的空间的好奇。笔者好奇一个问题: &lt;strong&gt;利用矢量图能不能帮助iOS App减少整体空间?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;iOS其实在很早的时候就已经支持矢量图的应用(XCode 6时代开始支持), 只不过因为
+    
+    </summary>
+    
+    
+      <category term="iOS" scheme="http://startry.com/tags/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title>译 - iOS UI自动化测试(上)</title>

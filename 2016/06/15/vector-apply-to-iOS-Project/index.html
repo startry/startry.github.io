@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>矢量图在iOS中的应用细节 | Startry Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="对于矢量图的调研, 最开始是始于对其占用iOS App的空间的好奇。笔者好奇一个问题: 利用矢量图能不能帮助iOS App减少整体空间?
+iOS其实在很早的时候就已经支持矢量图的应用(XCode 6时代开始支持), 只不过因为大部分开发者沿用了以前@1x、@2x、@3x格式图的习惯, 并没有一个地方专门普及使用矢量图。当然, 还有另外一个原因就是iOS对复杂的矢量图支持的不是很好。
+本文并没有特别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="矢量图在iOS中的应用细节">
+<meta property="og:url" content="http://startry.com/2016/06/15/vector-apply-to-iOS-Project/index.html">
+<meta property="og:site_name" content="Startry Blog">
+<meta property="og:description" content="对于矢量图的调研, 最开始是始于对其占用iOS App的空间的好奇。笔者好奇一个问题: 利用矢量图能不能帮助iOS App减少整体空间?
+iOS其实在很早的时候就已经支持矢量图的应用(XCode 6时代开始支持), 只不过因为大部分开发者沿用了以前@1x、@2x、@3x格式图的习惯, 并没有一个地方专门普及使用矢量图。当然, 还有另外一个原因就是iOS对复杂的矢量图支持的不是很好。
+本文并没有特别">
+<meta property="og:image" content="http://blog.startry.com/img/blog_vector_xcasset_demo.png">
+<meta property="og:image" content="http://blog.startry.com/img/blog_vector_build_illustrator.png">
+<meta property="og:image" content="http://blog.startry.com/img/blog_vector_themeengine.png">
+<meta property="og:updated_time" content="2016-06-15T12:55:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="矢量图在iOS中的应用细节">
+<meta name="twitter:description" content="对于矢量图的调研, 最开始是始于对其占用iOS App的空间的好奇。笔者好奇一个问题: 利用矢量图能不能帮助iOS App减少整体空间?
+iOS其实在很早的时候就已经支持矢量图的应用(XCode 6时代开始支持), 只不过因为大部分开发者沿用了以前@1x、@2x、@3x格式图的习惯, 并没有一个地方专门普及使用矢量图。当然, 还有另外一个原因就是iOS对复杂的矢量图支持的不是很好。
+本文并没有特别">
+  
+    <link rel="alternative" href="/atom.xml" title="Startry Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Startry</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+					        
+								<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+					        
+								<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://github.com/startry">空荡荡的github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">混迹于各类互联网公司, 学习成长中, 边走边学~ 参与过某二手车公司创业, 也曾在某大型公司混的一花名&quot;玄书&quot;。现在重新学习成长中...</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Startry</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Startry</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+			        
+						<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-vector-apply-to-iOS-Project" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/15/vector-apply-to-iOS-Project/" class="article-date">
+  	<time datetime="2016-06-15T12:55:14.000Z" itemprop="datePublished">2016-06-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      矢量图在iOS中的应用细节
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>对于矢量图的调研, 最开始是始于对其占用iOS App的空间的好奇。笔者好奇一个问题: <strong>利用矢量图能不能帮助iOS App减少整体空间?</strong></p>
+<p>iOS其实在很早的时候就已经支持矢量图的应用(XCode 6时代开始支持), 只不过因为大部分开发者沿用了以前@1x、@2x、@3x格式图的习惯, 并没有一个地方专门普及使用矢量图。当然, 还有另外一个原因就是iOS对复杂的矢量图支持的不是很好。</p>
+<p>本文并没有特别深入的技术点, 仅仅只是笔者做的几个实验的总结和矢量图基础使用的教程普及~</p>
+<h3 id="矢量图和iOS">矢量图和iOS</h3><p>关于矢量图在iOS中的使用早在15年2月就有一篇博文介绍了它的使用 - <a href="https://www.zhihu.com/question/23180955" target="_blank" rel="external">iOS使用矢量图的总结</a>。笔者按照它的用法操作了一遍, 基本大同小异~ 针对该文章没有涉及到的一些细节, 笔者进行一定程度的补充。</p>
+<h4 id="iOS中矢量图的使用方法">iOS中矢量图的使用方法</h4><p>笔者为了做一下简单的矢量图实验, 使用<a href="http://www.sketchapp.com/" target="_blank" rel="external">Sketch</a>随意拖了一个星星出来并导出一个<a href="http://blog.startry.com/img/star_test.pdf" target="_blank" rel="external">PDF</a>。(实际上UI绘制矢量图的工具有很多很多, 这里不赘述。如果读者懒得自己去导出, 可以直接挪用)</p>
+<p>XCode支持矢量图一定要放置在xcasset文件中才能够生效, 操作步骤如下:</p>
+<ol>
+<li>拖拽提前制作的PDF进入<code>XXX.xcassets</code>中。</li>
+<li>选择<code>Image Set</code>下的参数选项<code>Scale Factors</code>为<code>Single Vector</code>或<code>Vector With Overrides</code></li>
+<li>如果图形不在框框中, 拖入框框中(XCode某些版本不能自动对号入座)</li>
+</ol>
+<p><img src="http://blog.startry.com/img/blog_vector_xcasset_demo.png" alt="iOS矢量图使用"></p>
+<p><code>Vector With Overrides</code>是<code>Single Vector</code>的增强, 可以在放置完矢量图之后继续放置@1x、@2x和@3x的png格式的图片。放置的png会优先覆盖矢量图, 未放置对应倍率图片的设备才会使用矢量图对应生成的图片。</p>
+<h4 id="矢量图在iOS中的应用原理">矢量图在iOS中的应用原理</h4><p><strong>iOS对矢量图的支持其实只是一种方便开发者的选择, 本质上在XCode编译的阶段矢量图会自动生成对应Target的@1x，@2x和@3x的png格式图像。在iOS实际运行中使用的图片实际上已经是png格式的图片了~</strong></p>
+<p><img src="http://blog.startry.com/img/blog_vector_build_illustrator.png" alt="iOS下矢量图工作原理"></p>
+<p>通俗的理解 - 放置在xcassets里的矢量图会自动根据设备编译成对应尺寸的图片, 如果是<code>Generic iOS Device</code>则会自动生成全尺寸的同名图片。 </p>
+<p>PS: <strong>自动生成的@1x图会和矢量图的原始尺寸保持一致。</strong></p>
+<p>下图为利用<a href="https://github.com/alexzielenski/ThemeEngine" target="_blank" rel="external">ThemeEngine</a>打开的基于<code>Generic iOS Device</code>编译出来的Assets.car文件</p>
+<p><img src="http://blog.startry.com/img/blog_vector_themeengine.png" alt="ThemeEngine下car文件"></p>
+<h3 id="矢量图能否减少空间">矢量图能否减少空间</h3><p>回归到最初的问题, 到底使用矢量图能不能帮助iOS App减少空间呢? </p>
+<p>笔者用简单粗暴的实验来对比说明, 步骤如下:</p>
+<ol>
+<li>使用pdf原始文件编译生成通用IPA</li>
+<li>从生成的IPA文件中提取Asset.car文件</li>
+<li>利用<a href="https://github.com/devcxm/iOS-Images-Extractor" target="_blank" rel="external">iOS Image Extractor</a>提取Asset.car文件</li>
+<li>将提取出来的@1x、@2x、@3x放置回工程, 并删除原始pdf中重新编译</li>
+<li>对比步骤1生成的car文件和步骤4生成的car文件大小</li>
+</ol>
+<table><br>  <tr><br>    <th>步骤一编译car大小(仅PDF)</th><br>    <th>步骤四编译car大小(仅3张图)</th><br>    <th>测试PDF尺寸</th><br>  </tr><br>  <tr><br>    <td>115KB</td><br>    <td>86KB</td><br>    <td>20KB</td><br>  </tr><br></table>
+
+
+<p><strong>在iOS8.3以下, 相同压缩比例的条件下, 矢量图是无法帮助App减少空间。但是在iOS8.3以上, 利用xcassets可以避免多余的资源图片下载, 只下载对应的倍率的图片。因此, 严格意义下, 利用矢量图并不能帮助App节省空间。</strong></p>
+<p>其实笔者使用的简单粗暴的方式在苹果新的瘦身机制下是不成立的, 因为编译生成的最终包不一定就是设备最终安装的包。引用官方文档<a href="https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/AppThinning/AppThinning.html" target="_blank" rel="external">App Thinning</a>中<a href="https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/AppThinning/AppThinning.html#//apple_ref/doc/uid/TP40012582-CH35-SW1" target="_blank" rel="external">Slicing</a>章节中的一段话:</p>
+<blockquote>
+<p>In Xcode, specify target devices and provide multiple resolutions of images in the asset catalog.<br>You must use the asset catalog in order for resources to be sliced.</p>
+</blockquote>
+<p>笔者未能完全参透这句话的意思, 只知道xcasset会根据不同的设备会有不同的解决方案, 但是不知道粒度会达到什么样的程度。笔者尝试过针对不同的模拟器编译, 只会生成对应的倍率图, 但是上传给App Store是通用格式的, 难道下载的过程中进行了一定的处理? 这个就需要一台越狱设备去验证了, 就靠各位读者大大了~</p>
+<p>PS: 对iOS如何控制多余资源图片下载感兴趣的童鞋们, 可以找一台越狱设备, 将iOS 8.3以上的App给提取出来分析分析哈~ 记得分享哇~ \(^o^)/</p>
+<h4 id="题外探究之提取原理">题外探究之提取原理</h4><p>笔者在对比大小的时候使用的<a href="https://github.com/devcxm/iOS-Images-Extractor" target="_blank" rel="external">iOS Image Extrator</a>。 在使用过程中, 笔者对该工具的提取原理产生了那么一点点的好奇。笔者好奇xcasset的格式应该是封闭不开放的, 该工具是怎么从Asset.car中提取图片的, 难道该工具破解了Asset.car的格式?</p>
+<p>既然iOS Image Extrator是开源的, 那么笔者就有必要去看一看究竟了~ iOS Image Extrator其实是基于开源库<a href="https://github.com/Marxon13/iOS-Asset-Extractor" target="_blank" rel="external">iOS Asset Extrator</a>开发实现的, 核心提取的功能是在<strong>iOS Asset Extrator</strong>库下提取的, 笔者通过阅读其源码, 找到两个核心方法<a href="https://github.com/Marxon13/iOS-Asset-Extractor/blob/master/CARExtractor/CARExtractor/CARExporter.m#L33" target="_blank" rel="external">exportToDirectory:</a>和<a href="https://github.com/Marxon13/iOS-Asset-Extractor/blob/master/CARExtractor/CARExtractor/CARExporter.m#L77" target="_blank" rel="external">exportThemeRendition:</a></p>
+<p>通过阅读这两个方法的源代码可以了解到这个库的基本实现。<a href="https://github.com/Marxon13/iOS-Asset-Extractor/blob/master/CARExtractor/CARExtractor/CARExporter.m#L33" target="_blank" rel="external">exportToDirectory:</a>方法有该库核心的提取图片的所有逻辑代码。而<a href="https://github.com/Marxon13/iOS-Asset-Extractor/blob/master/CARExtractor/CARExtractor/CARExporter.m#L77" target="_blank" rel="external">exportThemeRendition:</a>可以看出该库支持的所有格式, 并且通过苹果内置的各个格式的<code>Rendition</code>类提取导出。</p>
+<p><a href="https://github.com/Marxon13/iOS-Asset-Extractor" target="_blank" rel="external">iOS Asset Extrator</a>库本质上调用的是苹果的私有API。在该系列API中, <code>CUICommonAssetStorage</code>负责存储Asset资源的关键key, <code>CUICatalog</code>是承载了具体资源图片信息的登记目录。</p>
+<p><font color="red">回归主题, 开源库底层既然是苹果API, 那么就基本是一个黑盒子了。笔者既不能从暴露的API中分析出car的格式, 又不能判断iOS设备是否在执行中解压, 只好放弃</font>~</p>
+<h3 id="总结">总结</h3><p>矢量图严格意义上并不能帮助减少App的空间, 但是却使用起来非常的方便, 建议使用。iOS本质上并不支持矢量图, 但是在编译阶段会将矢量图转化成目标设备对应的尺寸图, 同时会利用xcassets的特性在iOS8.3以上设备下支持部分资源下载, 带到包瘦身的效果。每次都要让UI给多个尺寸的图, 肯定没有给一张方便吧? 当然, 前提是UI的童鞋是基于矢量图工具制作的图片的前提下~</p>
+<h4 id="参考文献">参考文献</h4><ol>
+<li><a href="https://www.zhihu.com/question/23180955" target="_blank" rel="external">知乎 - iOS对矢量图片的支持如何?</a></li>
+<li><a href="http://blog.csdn.net/lengshengren/article/details/43406905" target="_blank" rel="external">iOS使用矢量图的总结</a></li>
+<li><a href="https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/AppThinning/AppThinning.html" target="_blank" rel="external">App Thinning</a></li>
+<li><a href="https://github.com/alexzielenski/ThemeEngine" target="_blank" rel="external">ThemeEngine</a></li>
+<li><a href="https://github.com/devcxm/iOS-Images-Extractor" target="_blank" rel="external">iOS Image Extrator</a></li>
+<li><a href="https://github.com/Marxon13/iOS-Asset-Extractor" target="_blank" rel="external">iOS Asset Extrator</a></li>
+</ol>
+
+        
+      
+    </div>
+    
+  </div>
+
+  
+    <!-- 添加打赏逻辑 -->
+    <div class='dashang' style='text-align:center; height:50px;'>如果您觉得文章有用, 打赏一个呗~~ ( ⊙ o ⊙ )/</div>
+    <div class='dashang_alipay' style='text-align:center;'>
+      <form action="https://shenghuo.alipay.com/send/payment/fill.htm"
+    method="POST" target="_blank" accept-charset="GBK">
+        <input name="optEmail" type="hidden" value="148140274@qq.com" />
+        <input name="payAmount" type="hidden" value="1" />
+        <input id="title" name="title" type="hidden" value="来自Startry博文的打赏" />
+        <input name="memo" type="hidden" value="打赏以资鼓励~~ O(∩_∩)O" />
+        <input name="pay" type="image" value="转账"
+      src="https://img.alipay.com/sys/personalprod/style/mc/btn-index.png" />
+      </form>
+    </div>
+    <div style='text-align:center; margin-top: 20px;'>
+      <img src='/img/wechat_pay.png' style='width: 160px; height:160px; margin-right: 15px;'>
+      <img src='/img/alipay_pay.png' style='width: 160px; height:160px; margin-left: 15px;  '>
+    </div>
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/05/06/Automate_UI_Testing_in_iOS/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">译 - iOS UI自动化测试(上)</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="vector-apply-to-iOS-Project" data-title="矢量图在iOS中的应用细节" data-url="http://startry.com/2016/06/15/vector-apply-to-iOS-Project/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Startry
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+  <div style="display:none">
+    <span id="busuanzi_container_site_pv" style="display:hidden;">本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-67055063-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
