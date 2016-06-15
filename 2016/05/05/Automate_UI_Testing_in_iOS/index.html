@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>译 - iOS UI自动化测试(上) | Startry Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="原文: UI Testing in iOS
+译者笔录: 
+本文翻译自苹果官方文档 - UI Testing in iOS. UI Testing in iOS是Apple官方网站iOS Developer Library中的Instruments User Guide其中的一篇高级教程。
+Instruments User Guide中的文章对iOS的开发者用处都挺大的, 但是一直被初级和部分中级开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="译 - iOS UI自动化测试(上)">
+<meta property="og:url" content="http://startry.com/2016/05/06/Automate_UI_Testing_in_iOS/index.html">
+<meta property="og:site_name" content="Startry Blog">
+<meta property="og:description" content="原文: UI Testing in iOS
+译者笔录: 
+本文翻译自苹果官方文档 - UI Testing in iOS. UI Testing in iOS是Apple官方网站iOS Developer Library中的Instruments User Guide其中的一篇高级教程。
+Instruments User Guide中的文章对iOS的开发者用处都挺大的, 但是一直被初级和部分中级开">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_profilingtemplate_dialog_automationinstrumentselection_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_trace_document_automationinstrument_nodata_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_displaysettings_button_inline_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_display_settings_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_create_new_script_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_displaysettings_button_inline_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_record_select_script_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/inline_record_button_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_record_button_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/inline_stop_button_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_recorded_code_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/tvos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/tvos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/xcode_accessibility_label_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/tvos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_recipes_table_view_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_recipes_table_view_row_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_logElementTree_results_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/RecipesAppElementTreeScreen01.jpg">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_unit_conversion_screen_2x.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/RecipesAppElementTreeScreen02.jpg">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_navigation_bar_2x.png">
+<meta property="og:updated_time" content="2016-05-06T03:37:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="译 - iOS UI自动化测试(上)">
+<meta name="twitter:description" content="原文: UI Testing in iOS
+译者笔录: 
+本文翻译自苹果官方文档 - UI Testing in iOS. UI Testing in iOS是Apple官方网站iOS Developer Library中的Instruments User Guide其中的一篇高级教程。
+Instruments User Guide中的文章对iOS的开发者用处都挺大的, 但是一直被初级和部分中级开">
+  
+    <link rel="alternative" href="/atom.xml" title="Startry Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Startry</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+					        
+								<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+					        
+								<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://github.com/startry">空荡荡的github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">混迹于各类互联网公司, 学习成长中, 边走边学~ 参与过某二手车公司创业, 也曾在某大型公司混的一花名&quot;玄书&quot;。现在重新学习成长中...</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Startry</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Startry</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+			        
+						<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Automate_UI_Testing_in_iOS" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/06/Automate_UI_Testing_in_iOS/" class="article-date">
+  	<time datetime="2016-05-06T03:37:10.000Z" itemprop="datePublished">2016-05-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      译 - iOS UI自动化测试(上)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>原文: <a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html" target="_blank" rel="external">UI Testing in iOS</a></p>
+<p>译者笔录: </p>
+<p>本文翻译自苹果官方文档 - <a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html" target="_blank" rel="external">UI Testing in iOS</a>. <a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html" target="_blank" rel="external">UI Testing in iOS</a>是Apple官方网站<a href="https://developer.apple.com/library/ios/navigation/" target="_blank" rel="external">iOS Developer Library</a>中的<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/index.html#//apple_ref/doc/uid/TP40004652-CH3-SW1" target="_blank" rel="external">Instruments User Guide</a>其中的一篇高级教程。</p>
+<p>Instruments User Guide中的文章对iOS的开发者用处都挺大的, 但是一直被初级和部分中级开发者忽视, 如果有人能够发起Instrument User Guide的翻译项目, 应该能够将iOS官方开发工具迅速普及开来哈~</p>
+<p>本文属于本人随意选取的一篇文章, 因为译者所处环境的测试童鞋们有不少在研究自动化测试, 了解XCode自带的测试总是有益无害的。但是笔者在翻译的过程中, 发现这篇翻译未必对他们有帮助, 因为他们的英文水平都太高了。。。将本文翻译当做自我学习的过程也好~</p>
+<p>只所以将不一口气将文章全部翻译完是因为这篇文章是在是太长了, 我怕我的翻译计划直接泡汤坚持不下去, 因此第一次翻译给自己稍微降低点条件。</p>
+<p>笔者翻译时间于2016年5月5日, 鉴于官方文档会不断更新, 请大家参考翻译时间点。</p>
+<h2 id="UI_Testing_in_iOS">UI Testing in iOS</h2><blockquote>
+<p>重要</p>
+<p>Xcode7支持用户界面的录制和自动测试。在使用Instruments里的UI testing工具前, 您最好调研了解这个功能是否满足您的需求。想要了解更多关于Xcode用户界面测试的信息, 请查看<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/01-introduction.html#//apple_ref/doc/uid/TP40014132" target="_blank" rel="external">Testing with Xcode</a>.</p>
+</blockquote>
+<p>当UI的测试可以自动化的时候, 您就可以将核心员工和关键资源从这些工作中释放出来了。UI测试自动化可以在您的产品更新的时候最大化的提交生产效率, 减少人工失误和缩短开发时间。</p>
+<p>通过书写<strong>测试脚本</strong>, 你可以让自动化测试工具去自动化执行用户界面的测试。通过调用UI Automation API, 这些脚本可以在您的app外部运行, 并且支持模拟用户交互。通过JavaScript编程接口编写的行为会在您的app中执行指定的测试行为(无论模拟器还是真机)。测试脚本会将测试的log信息返回给主机电脑。您可以把自动化工具和其他的工具结合使用去执行一些复杂的测试, 例如跟踪内存泄露, 寻找性能问题的根源等等。。。</p>
+<p>本章节描述了怎么通过Instruments里的自动化模板去执行脚本。自动化分析模板包含了自动化工具, 该自动化工具可以在通过Instruments启动的iOS app执行脚本来模拟UI交互。这个自动化工具提供了许多强大的特性, 包含:</p>
+<ul>
+<li>内置的脚本编辑器可以直接编辑对应的脚本</li>
+<li>抓取(录制)用户行为用于自动化测试脚本</li>
+<li>通过Xcode project运行测试脚本</li>
+<li>强大的API特性, 包括了支持模拟定位改变和通过主机的Automation工具去执行任务</li>
+</ul>
+<p>当您完成本章节的学习后, 如果想要了解更多关于UI Automation的类的信息, 请访问<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Reference/UIAutomationRef/index.html#//apple_ref/doc/uid/TP40009771" target="_blank" rel="external">UI Automation JavaScript Reference for iOS</a>.</p>
+<blockquote>
+<p>注意</p>
+<p>自动化工具只能在通过Xcode编译的并且签名是development provisioning profile的App下有效。签名为distribution provisioning profile的App是不能被UI Automation编程接口控制的。另外, 因为这些脚本是独立于app运行的, 因此您执行测试的app版本信息可以和您通过distribution证书重新build的即将提交App Store的app版本信息完全一致。</p>
+</blockquote>
+<p><br></p>
+<blockquote>
+<p>重要 </p>
+<p>自动化行为可能会在自动锁屏的状态下失效。为了在执行测试脚本的时候确保没有自动锁屏, 请您将设备的自动锁屏设置为<code>从不</code>。</p>
+</blockquote>
+<p><br></p>
+<blockquote>
+<p>iOS8加强</p>
+<p>iOS8以后包含了一个自动化测试开关方便第三方的开发者使用, 该开关位于iOS设备的<code>设置</code>-&gt;<code>开发者</code>目录下, 名字为<code>Enable UI Automation</code>。 默认情况下, 模拟器环境下是开启的, 物理设备机是关闭状态的。(在执行UI自动化测试前需要打开这个开关)</p>
+</blockquote>
+<h3 id="编写,_导出和导入自动化测试脚本">编写, 导出和导入自动化测试脚本</h3><p>在Instruments里书写自己的测试脚本是非常容易的。自动化工具中内置的脚本编辑器就可以直接创建和编辑脚本。从现有的工程中导入也是一样容易的。</p>
+<h4 id="创建新的脚本">创建新的脚本</h4><ol>
+<li><p>在Instruments里通过自动化分析模板创建新的trace document。</p>
+<p> <img style="width:80%" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_profilingtemplate_dialog_automationinstrumentselection_2x.png"></p>
+<p> 新的trace document中包含了自动化测试工具</p>
+<p> <img style="width:80%" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_trace_document_automationinstrument_nodata_2x.png"></p>
+</li>
+<li><p>在Startegy窗口选中自动化工具后, 在inspector窗口点击Display设置(<img src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_displaysettings_button_inline_2x.png" style="height: 16px;">)按钮。</p>
+<p> <img style="width: 200px;" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_display_settings_2x.png"></p>
+</li>
+<li><p>在Script区域, 点击 Add &gt; Create.</p>
+<p> <img style="width: 200px;" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_create_new_script_2x.png"></p>
+</li>
+<li><p>选择您本地存储着的脚本文件并点击打开</p>
+</li>
+</ol>
+<h3 id="加载预存的自动化测试脚本">加载预存的自动化测试脚本</h3><p>你用JavaScript写的那些自动化测试可以通过UI Automation JavaScript Library去在你的app上向正常运行一样执行测试。只要你愿意, 你可以在你的trace document里创建很多这样子的测试脚本，但是你一次只能运行一个脚本。自动化的API提供了<code>#import</code>方法, 利用该方法您可以编写更小化的, 重用性抽离更高的测试脚本。举个例子: 您可以定义一个通用function在一个叫<code>TestUtilities.js</code>的文件中, 然后您可以通过<strong>下述代码</strong>将该通用function引入, 方便您的脚本使用。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#import "&lt;path-to-library-folder&gt;/TestUtilities.js"</span><br></pre></td></tr></table></figure>
+<p>你在脚本编辑器上做的修改都会随着trace document一同保存。在编辑器中创建的脚本, 都是作为trace document的一部分进行保存的。如果您想将脚本的改动保存到硬盘中可访问到文件, 您就必须得执行脚本的导出。请查看<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html#//apple_ref/doc/uid/TP40004652-CH78-SW701" target="_blank" rel="external">To export a script to a file on a disk</a></p>
+<h3 id="录制手动用户交互到自动化脚本">录制手动用户交互到自动化脚本</h3><p>通过录制您对iOS设备或者模拟器的测试行为操作, 可以简化脚本的开发工作。当您利用录制特性在设备上执行捕获行为的之后, 这些行为都会生产脚本表达式并结合到您的脚本中。</p>
+<p><em>录制手动用户交互行为</em></p>
+<ol>
+<li>新建或者打开一个包含自动化测试工具的trace document</li>
+<li>在inspector窗口点击Display(<img src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_displaysettings_button_inline_2x.png" style="height: 16px;">)设置按钮</li>
+<li><p>从Scripts区域选择您的目标脚本</p>
+<p> <img style="width: 200px;" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_record_select_script_2x.png"></p>
+<blockquote>
+<p>注意</p>
+<p>如果您的脚本不在列表中, 请新建一个(点击 Add &gt; Create)或者导入一个(点击 Add &gt; Import) </p>
+</blockquote>
+</li>
+<li><p>在脚本编辑器中定位游标, 录制行为会插入在该定位游标处</p>
+</li>
+<li><p>点击编辑器下方的录制按钮(<img src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/inline_record_button_2x.png" style="height: 16px;">)</p>
+<p> <img style="width: 80px;" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_record_button_2x.png"></p>
+<p> 如果处于正常捕获中, 目标应用程序会启动, 并且脚本的状态会不断的更新。</p>
+</li>
+<li><p>在iOS设备或者模拟器中执行想要录制的行为操作</p>
+<blockquote>
+<p>重要</p>
+<p>为了精确捕获行为, 请仔细地录制这些动作(不要太快)</p>
+</blockquote>
+</li>
+<li><p>点击编辑器下方的停止录制按钮(<img src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/inline_stop_button_2x.png" style="height: 16px;">)来结束录制</p>
+</li>
+</ol>
+<p><img src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_recorded_code_2x.png" style="width: 90%;"></p>
+<p>自动化工具会根据您的操作行为在您的脚本里自动生成表达式。有些表达式包含了可选语句项的符号。可以通过点击可选语句项符号右侧的箭头来查看另外一种语句(会有坐标等信息的语义)。双击可以将当前正在显示的语句作为语义代表, 平铺表达式(不可选择化)。</p>
+<p>PS: 上述描述官方文档没有提供对应的操作解释, 但是实际操作一下就会瞬间明白。单击箭头可以多个语句表达式选择, 例如<code>tap</code>和<code>tapWithOptions</code>。双击就把当前显示的语句最最终表达式。</p>
+<p>您可以通过勾择<code>Run on Record</code>在<code>Script Options</code>面板, 通过勾选该参数, 自动化工具会根据工具栏的录制按钮来自动的控制开始和结束你的脚本。</p>
+<p>在您执行自动化测试的过程中, 如果您的App闪退了或者进入后台了, 那么您的脚本将会被阻塞住; 当您的App会到最前面的时候, 脚本会继续执行。</p>
+<blockquote>
+<p>重要</p>
+<p>您必须手动关闭录制, 无论是通过停止录制按钮还是在运行结束的时候点击停止。执行脚本完成或者中断都不会自动停止录制.</p>
+</blockquote>
+<h3 id="访问和操作UI元素">访问和操作UI元素</h3><p>在UI自动化的可访问性机制下, 任意一个可控制的元素都是一个唯一的可标示的元素。在您对app中某个元素执行测试行为前, 您需要明确知道该元素在app中层级。此外, 如果你熟悉<a href="https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/index.html#//apple_ref/doc/uid/TP40006556" target="_blank" rel="external">iOS Human Interface Guidelines</a>, 会更加全面的理解本章节.</p>
+<p>为了更好的展现元素层级的概念, 本章节会引用iOS Dev Center中的示例iPhoneCoreDataRecipes中的Recipes iOS app(图26-1).</p>
+<p><em>图26-1 The Recipes app(Recipes screen):</em></p>
+<p><img style="width: 320px;" src="https://developer.apple.com/library/tvos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_2x.png"></p>
+<h4 id="UI元素的可访问性">UI元素的可访问性</h4><p>所有的可访问元素都是基于一个基类元素 - UIAElement, 并且每一个元素都可以包含任意个元素(0个或者多个)。</p>
+<p>您的脚本可以通过元素层级中的位置访问任一一个元素。此外, 您还可以通过Interface Builder去设置元素的可访问性(Accessibility)和唯一的名字。如图26-2所示。</p>
+<p>图26-2 在Interface Builder设置元素的可访问行:</p>
+<p><img src="https://developer.apple.com/library/tvos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/xcode_accessibility_label_2x.png" style="width: 240px;"></p>
+<p><strong>PS: 这里是译者补充, 通过Interface Builder可以设置的参数, 在代码中同样可以设置。</strong></p>
+<p>如果您对元素设置了名字, 那么UI Automation就可以利用名字去轻松的访问使用可访问标签了, 而且使用名字可以很大程度上简化测试脚本的开发和维护。 </p>
+<p>除了名字属性, 其实还有其他很有用的属性可以在您的脚本中使用:</p>
+<ul>
+<li>name. 可访问标签的名字.</li>
+<li>value. 当前元素里的值, 例如Text Field里的文本值.</li>
+<li>elements. 包含在该元素里的子元素集合, 例如在列表里的单元格(cells).</li>
+<li>parent. 子元素的父元素.</li>
+</ul>
+<blockquote>
+<p>重要</p>
+<p>可访问标签并不是专门为UI Automation设计的, 它是针对画外音(VoiceOver)以及其它辅助技术设计的。请您一定要基于最佳实践去定义可访问元素的名字。详情请参考<a href="https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/iPhoneAccessibility/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008785" target="_blank" rel="external">Accessibility Programming Guide for iOS</a>中的<a href="https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/iPhoneAccessibility/Making_Application_Accessible/Making_Application_Accessible.html#//apple_ref/doc/uid/TP40008785-CH102-SW20" target="_blank" rel="external">Guidelines for Creating Labels</a>.</p>
+</blockquote>
+<h4 id="理解UI元素层级">理解UI元素层级</h4><p>UIATarget类是元素层级最顶部的类。UIATarget代表是被测试系统的高层级用户界面元素(无论在真机还是模拟器)。假如您的app是在最前方窗口的app, 可以通过下述方式获取:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().frontMostApp();</span><br></pre></td></tr></table></figure>
+<p>可以通过下述方式获取app的主window:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().frontMostApp().mainWindow();</span><br></pre></td></tr></table></figure>
+<p>Recipes应用串口启动显示可以参考图 26-1.</p>
+<p>在食谱应用中, 食谱列表会显示在一个独立的View中, 这个独立的view放置在window里面。见图26-3</p>
+<p>图26-3 食谱列表视图:</p>
+<p><img style="width: 240px;" src="https://developer.apple.com/library/tvos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_recipes_table_view_2x.png"></p>
+<p>我们看到的视图其实是app里列表视图的第一个元素, 因此我们可以通过数组的第0个索引获取到它:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().frontMostApp().mainWindow().tableViews()[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+<p>在列表视图里, 每一个食谱其实都是一个独立的单元格(cell)。我们可以通过相似的方式指定到具体的每一个单元格。例如, 可以用第0个索引获取第一个单元格:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().frontMostApp().mainWindow().tableViews()[<span class="number">0</span>].cells()[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+<p>每一个独立的单元格(cell)元素都被设计成可以包含一个记录食谱的定制子元素。你可以通过元素名字来访问元素, 例如第一个单元格记录了<code>chocolate cake</code>食谱(在应用中设置元素name为<code>chocolate cake</code>):</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().frontMostApp().mainWindow().tableViews()[<span class="number">0</span>].cells()[<span class="number">0</span>].elements()[<span class="string">"Chocolate Cake"</span>];</span><br></pre></td></tr></table></figure>
+<p>图 26-4 食谱列表单元格</p>
+<p><img style="width: 240px;" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_recipes_table_view_row_2x.png"></p>
+<h4 id="显示元素层级">显示元素层级</h4><p>我们可以通过调用任意一个元素的<code>logElementTree</code>去打印该元素所有的子元素。下述代码阐述了怎么去列出(食谱应用)主screen下所有的元素。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// List element hierarchy for the Recipes screen</span></span><br><span class="line">UIALogger.logStart(<span class="string">"Logging element tree ..."</span>);</span><br><span class="line">UIATarget.localTarget().logElementTree();</span><br><span class="line">UIALogger.logPass();</span><br></pre></td></tr></table></figure>
+<p>自动化工具可以将命令的输出用日志的形式显示出来, 参考图26-5</p>
+<p>图 26-5 <code>logElementTree</code>方法的输出</p>
+<p><img style="width: 90%" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/instruments_automation_logElementTree_results_2x.png"></p>
+<p>大家注意了, 在这里元素的缩进方式示意了元素的层级依赖关系。这些层级可以从逻辑上抽离成图26-6的样子。</p>
+<p>图 26-6 元素层级 (食谱App元素层级)</p>
+<p><img style="width: 80%" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/RecipesAppElementTreeScreen01.jpg"></p>
+<p>尽管screen并不是iOS编程里的技术概念, 并且screen并没有显示的出现在层级中, 但是通过它可以很好的帮助大家理解层级的概念。接下来我们点击<code>Unit Conversion</code>这个Tab在顶部的Tab栏中, 效果图请见26-7.</p>
+<p>图 26-7 食谱App(Unit Conversion)</p>
+<p><img style="width: 320px;" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_unit_conversion_screen_2x.png"></p>
+<p>下述代码可以自动的点击Tab栏的<code>Unit Conversion</code>tab, 让App显示到关联视图, 并将关联screen的所有元素层级打印在log上:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// List element hierarchy for the Unit Conversion screen</span></span><br><span class="line"><span class="keyword">var</span> target = UIATarget.localTarget();</span><br><span class="line"><span class="keyword">var</span> appWindow = target.frontMostApp().mainWindow();</span><br><span class="line"><span class="keyword">var</span> element = target;</span><br><span class="line">appWindow.tabBar().buttons()[<span class="string">"Unit Conversion"</span>].tap();</span><br><span class="line">UIALogger.logStart(<span class="string">"Logging element tree …"</span>);</span><br><span class="line">element.logElementTree();</span><br><span class="line">UIALogger.logPass();</span><br></pre></td></tr></table></figure>
+<p>图26-8展示了结果日志对应的层级关系。和之前的例子一样, 也是通过调用目标元素的<code>logElementTree</code>来做到的, 区别在于当前的例子是Unit Conversion的screen。</p>
+<p>图26-8 元素层级(Unit Conversion screen)</p>
+<p><img style="width: 80%" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/RecipesAppElementTreeScreen02.jpg"></p>
+<h4 id="简化元素层级浏览">简化元素层级浏览</h4><p>前面的代码样本介绍了怎么用变量去呈现部分元素层级。本章节的技术可以让您的呈现脚本更加简短和简单。</p>
+<p>用下面这种方式去使用变量会更加灵活, 更具备抽象能力。下述例子展示了怎么使用变量(<code>destinationScreen</code>)去控制两个主屏幕的切换:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Switch screen (mode) based on value of variable</span></span><br><span class="line"><span class="keyword">var</span> target = UIATarget.localTarget();</span><br><span class="line"><span class="keyword">var</span> app = target.frontMostApp();</span><br><span class="line"><span class="keyword">var</span> tabBar = app.mainWindow().tabBar();</span><br><span class="line"><span class="keyword">var</span> destinationScreen = <span class="string">"Recipes"</span>;</span><br><span class="line"><span class="keyword">if</span> (tabBar.selectedButton().name() != destinationScreen) &#123;</span><br><span class="line">    tabBar.buttons()[destinationScreen].tap();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>细微的改变依旧不会影响这段代码工作, 例如有更多的Tab或者Tab用其它的名字。</p>
+<h4 id="执行用户界面的手势">执行用户界面的手势</h4><p>一旦您掌握了如何去访问想访问的元素的方法, 您就会觉得操作元素是相对比较简单和直接的。</p>
+<p>UI自动化API提供了很多方法用于支持大部分和UIKit相关的用户行为, 手势自然不会例外。想要了解更多关于UI自动化API提供的方法, 请访问<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Reference/UIAutomationRef/index.html#//apple_ref/doc/uid/TP40009771" target="_blank" rel="external">UI Automation JavaScript Reference for iOS</a>.</p>
+<p><strong>轻拍(Tap)</strong>. 一个简单的轻拍是最常用的触摸手势。例如实现点击菜谱App中导航栏右侧的(+)按钮。</p>
+<p>Figure 26-9 菜谱App导航栏</p>
+<p><img style="width: 240px;" src="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Art/ios_recipes_app_navigation_bar_2x.png"></p>
+<p>需要实现点击按钮的命令如下:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().frontMostApp().navigationBar().buttons()[<span class="string">"Add"</span>].tap();</span><br></pre></td></tr></table></figure>
+<p>假设UI元素的accessibility label属性已经被提前设置好了的前提下, 脚本命令就可以用“Add”这个名字去识别按钮了。</p>
+<p>为了满足测试复杂App的需求, 需要更多复杂的拍击事件。我们可以通过命令指令任意的iOS标准点击手势。例如, 我们可以通过指定坐标来点击屏幕的任意位置:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().tap(&#123;x:<span class="number">100</span>, y:<span class="number">200</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p>我们可以不需要关系在屏幕对应位置放置了什么东西, 上述命令就会在x和y坐标的指定位置执行拍击模拟行为。</p>
+<p>可以通过下述方式在同一个坐标位置实现双击:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().doubleTap(&#123;x:<span class="number">100</span>, y:<span class="number">200</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p>可以通过双手指拍击手势来测试缩放行为:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().twoFingerTap(&#123;x:<span class="number">100</span>, y:<span class="number">200</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p><strong>收聚手势(Pinching).</strong> 我们通常使用收聚的手势(Pinch)去缩放或者展开收拢屏幕中的某个东西。我们可以通过指定收聚手势的起始坐标、结束坐标和持续时间来开始收聚手势(Pinch)。通过指定手势的持续时间可以让我们更加灵活的控制收聚(Pinch)行为的速度。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().pinchOpenFromToForDuration(&#123;x:<span class="number">20</span>, y:<span class="number">200</span>&#125;, &#123;x:<span class="number">300</span>, y:<span class="number">200</span>&#125;, <span class="number">2</span>);</span><br><span class="line">UIATarget.localTarget().pinchCloseFromToForDuration(&#123;x:<span class="number">20</span>, y:<span class="number">200</span>&#125;, &#123;x:<span class="number">300</span>, y:<span class="number">200</span>&#125;, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>拖拽(Dragging)和快速滑动(Flicking).</strong> 我们可以通过<code>dragFromToForDuration</code>来实现列表的拖动, 实现方式和收聚手势类似, 也需要定义起始坐标、结束坐标和持续时间。示例代码如下:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().dragFromToForDuration(&#123;x:<span class="number">160</span>, y:<span class="number">200</span>&#125;, &#123;x:<span class="number">160</span>, y:<span class="number">400</span>&#125;, <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p>快速滑动手势和拖拽手势是非常类似的, 但是因为这个行为速度非常快, 时间周期短, 所以<em>不需要持续时间</em>的参数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().flickFromTo(&#123;x:<span class="number">160</span>, y:<span class="number">200</span>&#125;, &#123;x:<span class="number">160</span>, y:<span class="number">400</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p><strong>输入文本.</strong> 您的测试脚本很有可能会遇到需要测试文本正确性的场景。为了满足测试文本的场景, 自动化脚本命令支持输入文本到指定的文本输入框。下述示例怎么讲脚本定义的局部字符串变量赋值给测试例子屏幕中的第一个文本输入框:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> recipeName = <span class="string">"Unusually Long Name for a Recipe"</span>;</span><br><span class="line">UIATarget.localTarget().frontMostApp().mainWindow().textFields()[<span class="number">0</span>].setValue(recipeName);</span><br></pre></td></tr></table></figure>
+<p><strong>访问Tab.</strong> 为了在您的App中测试多个屏幕之间的跳转, 您很有可能需要去点击某一个tab 栏中的tab。点击Tab和点击Button的方式很类似, 您可以访问合适的tab bar, 指定tab bar中的需要点击的按钮(Button), 然后点击对应的按钮(Button)。示例代码如下:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> tabBar = UIATarget.localTarget().frontMostApp().mainWindow().tabBar();</span><br><span class="line"><span class="keyword">var</span> selectedTabName = tabBar.selectedButton().name();</span><br><span class="line"><span class="keyword">if</span> (selectedTabName == <span class="string">"Unit Conversion"</span>)  &#123;</span><br><span class="line">    tabBar.buttons()[<span class="string">"Unit Conversion"</span>].tap();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在示例脚本中, 我们用局部变量来声明存储对应的Tab Bar。然后我们通过访问该变量获取已选中的按钮的名字。最后通过比对选中按钮的名字(这个例子中名字是”Unit Conversion”)来决定是否要自动点击该tab。</p>
+<p>PS: 这里好奇怪啊, 这个例子有意义么? 译者觉得这个示例好无语。可能是译者翻译水平不到位, 建议大家去原文仔细参考该段代码以及对应解释。</p>
+<p><strong>滚动到某一个元素.</strong> 在很多App中, 滚动是占据了很大一部分的用户交互行为。UI自动化工具提供了多种方法用于实现滚动。</p>
+<p>基本的滚动方法允许我们滚动匀速到下一个元素的周边, 但是我们可以通过高级的滚动方法来支持更加灵活的滚动, 其中一种高级的方法名就叫<code>scrollToElementWithPredicate</code>。<code>scrollToElementWithPredicate</code>可以滚动到匹配您指定的NSPredicate的对应元素。下述例子展示了列表怎么滚动到名字为<code>Turtle Pie</code>元素这:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UIATarget.localTarget().frontMostApp().mainWindow().tableViews()[<span class="number">0</span>] \</span><br><span class="line">    .scrollToElementWithPredicate(<span class="string">"name beginswith 'Turtle Pie'"</span>);</span><br></pre></td></tr></table></figure>
+<p><code>scrollToElementWithPredicate</code>支持滚动到某一个名字不确定的元素(通过NSPredicate匹配)。</p>
+<p>在您的脚本中使用NSPredicate可以很大程度上提高脚本的可用性。更多关于NSPredicate, 请参考<a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789" target="_blank" rel="external">Predicate Programming Guide</a>.</p>
+<p>其他灵活有效的滚动方法还有<code>scrollToElementWithName</code>和<code>scrollToElementWithValueForKey</code>等方法。可以参考<a href="https://developer.apple.com/library/ios/documentation/ToolsLanguages/Reference/UIAScrollViewClassReference/index.html#//apple_ref/doc/uid/TP40009912" target="_blank" rel="external">UIAScrollView Class Reference</a> 获取更多信息。</p>
+<h2 id="总结">总结</h2><p>笔者比较懒, 翻译了一大半懒得翻译了, 因为在翻译的过程中越发觉得<strong>学习自动化测试的人不需要翻译的文章, 仅仅需要看原文就可以了</strong>。但是既然自己开始了翻译的行为就不能半途而废吧, 因此笔者把这篇文章拆分出来上和下, 核心的自动化测试使用和基础的脚本教程就放在了上篇, 下篇待计划哈~</p>
+<p>自动化测试可以通过录制测试行为将测试的工作<strong>从简单重复的机械劳动中释放出来</strong>, 但是对于复杂的测试行为还是存在很大争议的。复杂的测试的网络环境决定了测试开发需要编写大量的条件语句还满足测试需要，使用成本过大。另外笔者发现该自动化脚本的可访问元素还是需要提前在代码阶段写入, 还是具有一定的嵌入型(当然, 您可以选择不使用访问元素标签的特性)。</p>
+<p>笔者处于对本文的好奇了解进行了文章的翻译, 如果想要深入了解iOS自带的自动化测试, 还是请大家慢慢阅读原文呗~</p>
+<p>PS: 本人技术水平有限, 英文水平更有限, 因此如果有翻译错误或者不合理的地方, 请大家一定要帮忙指出哦~</p>
+<h4 id="注解">注解</h4><ol>
+<li>Trace Document: 本文不知道怎么翻译这个词, 翻译为跟踪文档读起来太拗口, 因此在本文就不做翻译。Instruments的基础描述工具, 所有的工具都是基于它运行的。</li>
+<li>Instruments: Xcode默认基础的工具集, 因为翻译为工具集太过通用, 因此不知道怎么翻译, 就不做翻译了, 但是文章中将<code>The Automation Instrument</code>翻译为<code>自动化工具</code></li>
+<li>Element: 如果大家对JavaScript熟悉的话, 应该对元素的概念还是比较了解的</li>
+<li>Screen: 我是想翻译成屏幕的, 但是怎么读都变扭。。还是算了</li>
+<li>NSPredicate: 不知道怎么翻译。。谓语表达式?</li>
+</ol>
+<h4 id="参考文献">参考文献</h4><ol>
+<li><a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html" target="_blank" rel="external">UI Testing in iOS</a></li>
+</ol>
+
+        
+      
+    </div>
+    
+  </div>
+
+  
+    <!-- 添加打赏逻辑 -->
+    <div class='dashang' style='text-align:center; height:50px;'>如果您觉得文章有用, 打赏一个呗~~ ( ⊙ o ⊙ )/</div>
+    <div class='dashang_alipay' style='text-align:center;'>
+      <form action="https://shenghuo.alipay.com/send/payment/fill.htm"
+    method="POST" target="_blank" accept-charset="GBK">
+        <input name="optEmail" type="hidden" value="148140274@qq.com" />
+        <input name="payAmount" type="hidden" value="1" />
+        <input id="title" name="title" type="hidden" value="来自Startry博文的打赏" />
+        <input name="memo" type="hidden" value="打赏以资鼓励~~ O(∩_∩)O" />
+        <input name="pay" type="image" value="转账"
+      src="https://img.alipay.com/sys/personalprod/style/mc/btn-index.png" />
+      </form>
+    </div>
+    <div style='text-align:center; margin-top: 20px;'>
+      <img src='/img/wechat_pay.png' style='width: 160px; height:160px; margin-right: 15px;'>
+      <img src='/img/alipay_pay.png' style='width: 160px; height:160px; margin-left: 15px;  '>
+    </div>
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/03/17/the-trap-of-image-resource/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">在Pod库中使用xcasset的拷贝陷阱</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Automate_UI_Testing_in_iOS" data-title="译 - iOS UI自动化测试(上)" data-url="http://startry.com/2016/05/06/Automate_UI_Testing_in_iOS/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Startry
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+  <div style="display:none">
+    <span id="busuanzi_container_site_pv" style="display:hidden;">本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-67055063-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
