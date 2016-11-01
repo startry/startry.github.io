@@ -122,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
+						<a href="/tags/Block/" style="font-size: 10px;">Block</a> <a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
 					</div>
 				</section>
 				
@@ -199,6 +199,72 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Weird-idea-for-block-detection" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/01/Weird-idea-for-block-detection/" class="article-date">
+  	<time datetime="2016-11-01T09:01:03.000Z" itemprop="datePublished">2016-11-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/01/Weird-idea-for-block-detection/">一个奇怪且无聊的检测Block的想法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身<strong>持有</strong>(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">self.myBlock = ^&#123;</span><br><span class="line">   [self doSomething];</span><br><span class="line"> &#125;;</span><br><span class="line">      +-----------+           +-----------+</span><br><span class="line">      |    self   |    <span class="keyword">ref</span>    |   <span class="type">Block</span>   |</span><br><span class="line"> ---&gt; |           | --------&gt; |           |</span><br><span class="line">      | retain <span class="number">2</span>  | &lt;-------- | retain <span class="number">1</span>  |</span><br><span class="line">      |           |    <span class="keyword">ref</span>    |           |</span><br><span class="line">      +-----------+           +-----------+</span><br></pre></td></tr></table></figure>
+<p>针对上述最常见的循环引用的场景, 在市面上最常用的几款循环引用检查工具都<strong>不能特别有效</strong>的检测出是否真正的产生了循环引用。笔者针对这种场景突然脑洞大开, 设想是否能够通过文本扫描的方式提前知道哪些block使用场景可能会产生潜在的循环引用问题。为了支持自己的大脑洞想法, 笔者尝试用python书写一个文本扫描器来提前预知潜在Self Retain Block循环引用风险的代码。哈哈, 至此, 一个无聊又奇怪的检测Block的小工具<a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">RiskBlockScanner</a>就诞生了。</p>
+
+          
+            <p class="article-more-link">
+              <a href="/2016/11/01/Weird-idea-for-block-detection/#more">more</a>
+            </p>
+          
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Block/">Block</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-vector-apply-to-iOS-Project" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -802,72 +868,6 @@
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Somthing-about-Podfile-lock" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/28/Somthing-about-Podfile-lock/" class="article-date">
-  	<time datetime="2015-10-28T07:09:00.000Z" itemprop="datePublished">2015-10-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/28/Somthing-about-Podfile-lock/">Podfile.lock背后的那点事</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        
-          <p>大部分的iOS开发者应该都曾使用过CocoaPods去管理工程的依赖, 但是你们有没有留意一个小小的文件<strong>Podfile.lock</strong>呢?</p>
-<p>通常我们需要使用CocoaPods去管理依赖, 都会执行一次<code>pod install</code>。 在<code>install</code>命令的执行过程中会改变被执行Project的配置项, 同时也会生产一个Podfile.lock文件。</p>
-<p>那么, 这个Podfile.lock的作用究竟就是干嘛的呢?</p>
-
-          
-            <p class="article-more-link">
-              <a href="/2015/10/28/Somthing-about-Podfile-lock/#more">more</a>
-            </p>
-          
-        
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CocoaPods/">CocoaPods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ruby/">Ruby</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
 	</div>
 
       

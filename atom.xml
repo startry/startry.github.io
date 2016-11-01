@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-06-15T13:02:44.000Z</updated>
+  <updated>2016-11-01T09:01:03.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -14,6 +14,68 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一个奇怪且无聊的检测Block的想法</title>
+    <link href="http://startry.com/2016/11/01/Weird-idea-for-block-detection/"/>
+    <id>http://startry.com/2016/11/01/Weird-idea-for-block-detection/</id>
+    <published>2016-11-01T09:01:03.000Z</published>
+    <updated>2016-11-01T09:01:03.000Z</updated>
+    
+    <content type="html">&lt;p&gt;在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身&lt;strong&gt;持有&lt;/strong&gt;(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。&lt;/p&gt;
+&lt;figure class=&quot;highlight nimrod&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;self.myBlock = ^&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   [self doSomething];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      +-----------+           +-----------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      |    self   |    &lt;span class=&quot;keyword&quot;&gt;ref&lt;/span&gt;    |   &lt;span class=&quot;type&quot;&gt;Block&lt;/span&gt;   |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; ---&amp;gt; |           | --------&amp;gt; |           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      | retain &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;  | &amp;lt;-------- | retain &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;  |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      |           |    &lt;span class=&quot;keyword&quot;&gt;ref&lt;/span&gt;    |           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      +-----------+           +-----------+&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;针对上述最常见的循环引用的场景, 在市面上最常用的几款循环引用检查工具都&lt;strong&gt;不能特别有效&lt;/strong&gt;的检测出是否真正的产生了循环引用。笔者针对这种场景突然脑洞大开, 设想是否能够通过文本扫描的方式提前知道哪些block使用场景可能会产生潜在的循环引用问题。为了支持自己的大脑洞想法, 笔者尝试用python书写一个文本扫描器来提前预知潜在Self Retain Block循环引用风险的代码。哈哈, 至此, 一个无聊又奇怪的检测Block的小工具&lt;a href=&quot;https://github.com/startry/RiskBlockScanner&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RiskBlockScanner&lt;/a&gt;就诞生了。&lt;/p&gt;
+&lt;h3 id=&quot;想法起源&quot;&gt;想法起源&lt;/h3&gt;&lt;p&gt;笔者这个奇怪的Block想法的起源是因为笔者在工作中参与过的几个大型iOS项目(大于30人协作开发)中都涉及到很多使用Block的场景, 而且经常会发现代码中有些潜在或者确定的Block引用风险, 并且这些引用的风险多数和&lt;code&gt;self&lt;/code&gt;指针和&lt;code&gt;Block&lt;/code&gt;的组合使用相关联。同时, XCode自带的Warning只能报出比较简单的循环引用警告, 并且通过XCode自带的静态分析有时候也难以发现循环引用的出处。&lt;/p&gt;
+&lt;p&gt;虽然这个奇怪的想法是突然萌生的, 但是刺激因素有如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;上百万行的代码量太多, 无法人肉检查&lt;/strong&gt;(最主要用途)&lt;/li&gt;
+&lt;li&gt;ReactiveCocoa使用中大量涉及Self Retain Cycle的场景&lt;/li&gt;
+&lt;li&gt;大型项目开发参差不齐&amp;amp;参与人数过多, 低级错误无法100%避免&lt;/li&gt;
+&lt;li&gt;循环引用排查困难&lt;/li&gt;
+&lt;li&gt;XCode自带循环引用排查功能不太完善&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;实现方案&quot;&gt;实现方案&lt;/h3&gt;&lt;p&gt;有奇怪的想法第一件事情当然是验证想法的可行性。在不追求性价比的前提下, 验证想法可行性最愚蠢也是最有效的方法就是把想法实现出来，那么&lt;a href=&quot;https://github.com/startry/RiskBlockScanner&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RiskBlockScanner&lt;/a&gt;就这么诞生了。&lt;/p&gt;
+&lt;p&gt;市面上大多数的Block循环检查基本都是要编译链接的&lt;strong&gt;(例如XCode自带的Anaylse)&lt;/strong&gt;, 有些甚至是在操作过程中分析内存是否释放&lt;strong&gt;(例如facebook开源的&lt;a href=&quot;https://github.com/facebook/FBRetainCycleDetector&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;FBRetainCycleDetector&lt;/a&gt;)&lt;/strong&gt;, 很少有检测工具针对编写代码过程中快速发现风险的方面进行设计。&lt;/p&gt;
+&lt;p&gt;我的这个奇怪的思想是通过正则表达式去匹配发现所有的Block使用起始行、该Block所在的方法起始&amp;amp;结束行。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/riskblockdetector_main_flow.png&quot; alt=&quot;RiskBlockScanner主思路图&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/riskblockdetect_arr_store.png&quot; alt=&quot;RiskBlockScanner数组存储图&quot;&gt;&lt;/p&gt;
+&lt;p&gt;上述两图包含了主要的逻辑思路:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;扫描目录提取代码文件(.m格式)&lt;/li&gt;
+&lt;li&gt;提取每一行代码行&lt;/li&gt;
+&lt;li&gt;根据每一行代码行去根据正则表达式匹配出方法起始行(func line)、block起始行(block line)、潜在多行block起始行(potential block line)、block结束行和weak执行行(weak line)&lt;/li&gt;
+&lt;li&gt;根据”}”和”;”组合判断和潜在多行block起始行过滤不是block的行, 保留真正block行&lt;/li&gt;
+&lt;li&gt;过滤固定匹配关键字的block行(例如masonry等常见不持有block的场景)&lt;/li&gt;
+&lt;li&gt;判断weak执行行(weak line)是否包含在方法起始行(func line)和block起始行(block line)之间&lt;/li&gt;
+&lt;li&gt;根据第7步的判断结果来决定是否该Block存在循环引用风险&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&quot;优化设想&quot;&gt;优化设想&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;通过不断的积累实验, 过滤更多的白名单方法&lt;/li&gt;
+&lt;li&gt;风险检测包含但不限于self的检测&lt;/li&gt;
+&lt;li&gt;开发一个XCode插件工具(看笔者是否够勤奋)&lt;/li&gt;
+&lt;li&gt;尝试支持检查Swift语法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;总结&quot;&gt;总结&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/startry/RiskBlockScanner&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RiskBlockScanner&lt;/a&gt;是一个检测简单的Block循环引用风险的灵感实现。鉴于该工具是基于文本扫描实现的, 并且没有检测Block是否被使用对象真正持有(不持有则不产生循环引用), 所以它并不能&lt;strong&gt;真正意义上&lt;/strong&gt;的检查出Block循环引用, 只能检查出所有潜在的风险点方便开发者排查定位。&lt;/p&gt;
+&lt;p&gt;该工具纯属笔者好奇实现, 可能有不少童鞋会觉得这个很无聊, 其实笔者觉得这个实际意义也不是特别大哈, 但是有总比没有好。至少该工具可以&lt;strong&gt;在开发者编写代码过程中快速分析定位block引用风险&lt;/strong&gt;的代码位置, 能够帮助开发者高效的定位Block使用风险。&lt;/p&gt;
+&lt;p&gt;PS: 笔者水平有限, 如果文章有错误之处, 请大家一定要指出, 防止误导大家哈~~ &lt;/p&gt;
+&lt;h4 id=&quot;参考文献&quot;&gt;参考文献&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.jianshu.com/p/b79bac09177e&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;避免Block的循环引用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.jianshu.com/p/2c7a7c53c91a&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;使用FBRetainCycleDetector检测引用循环&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身&lt;strong&gt;持有&lt;/strong&gt;(
+    
+    </summary>
+    
+    
+      <category term="Block" scheme="http://startry.com/tags/Block/"/>
+    
+      <category term="iOS" scheme="http://startry.com/tags/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title>矢量图在iOS中的应用细节</title>
