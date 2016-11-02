@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-11-02T12:15:53.000Z</updated>
+  <updated>2016-11-02T12:24:09.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <title>一个奇怪且无聊的检测Block的想法</title>
     <link href="http://startry.com/2016/11/02/Weird-idea-for-block-detection/"/>
     <id>http://startry.com/2016/11/02/Weird-idea-for-block-detection/</id>
-    <published>2016-11-02T12:15:53.000Z</published>
-    <updated>2016-11-02T12:15:53.000Z</updated>
+    <published>2016-11-02T12:24:09.000Z</published>
+    <updated>2016-11-02T12:24:09.000Z</updated>
     
     <content type="html">&lt;p&gt;在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身&lt;strong&gt;持有&lt;/strong&gt;(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。&lt;/p&gt;
 &lt;figure class=&quot;highlight nimrod&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;self.myBlock = ^&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   [self doSomething];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      +-----------+           +-----------+&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      |    self   |    &lt;span class=&quot;keyword&quot;&gt;ref&lt;/span&gt;    |   &lt;span class=&quot;type&quot;&gt;Block&lt;/span&gt;   |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; ---&amp;gt; |           | --------&amp;gt; |           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      | retain &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;  | &amp;lt;-------- | retain &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;  |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      |           |    &lt;span class=&quot;keyword&quot;&gt;ref&lt;/span&gt;    |           |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      +-----------+           +-----------+&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -50,7 +50,7 @@
 &lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_rbs_code_show.png&quot; alt=&quot;RiskBlockScanner简易演示&quot;&gt;&lt;/p&gt;
 &lt;p&gt;上图表述的步骤均是根据存储数据来维护的, 具体的逻辑实现因为比较简单本文就不赘述了。如果大家有感兴趣的话请自行访问&lt;a href=&quot;https://github.com/startry/RiskBlockScanner&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;地址进行代码阅读~&lt;/p&gt;
 &lt;p&gt;通过RiskBlockScanner可以扫描出大量的Block Self-Retain的风险代码行, 使用方法相对简单.(PS: 对代码量比较小或者不怎么使用Block的工程几乎没有作用) &lt;/p&gt;
-&lt;p&gt;下图为简单的使用示例:&lt;br&gt;&lt;img src=&quot;https://github.com/startry/RiskBlockScanner/blob/master/demo.png&quot; alt=&quot;RiskBlockScanner使用示例&quot;&gt;&lt;/p&gt;
+&lt;p&gt;下图为简单的使用示例:&lt;br&gt;&lt;img src=&quot;https://github.com/startry/RiskBlockScanner/blob/master/demo.png?raw=true&quot; alt=&quot;RiskBlockScanner使用示例&quot;&gt;&lt;/p&gt;
 &lt;h3 id=&quot;优化设想&quot;&gt;优化设想&lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;通过不断的积累实验, 过滤更多的白名单方法&lt;/li&gt;
 &lt;li&gt;风险检测包含但不限于self的检测&lt;/li&gt;

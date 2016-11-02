@@ -14,8 +14,8 @@
 <meta property="og:description" content="在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身持有(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。
 123456789self.myBlock = ^&amp;#">
 <meta property="og:image" content="http://blog.startry.com/img/blog_rbs_code_show.png">
-<meta property="og:image" content="https://github.com/startry/RiskBlockScanner/blob/master/demo.png">
-<meta property="og:updated_time" content="2016-11-02T12:15:53.000Z">
+<meta property="og:image" content="https://github.com/startry/RiskBlockScanner/blob/master/demo.png?raw=true">
+<meta property="og:updated_time" content="2016-11-02T12:24:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个奇怪且无聊的检测Block的想法">
 <meta name="twitter:description" content="在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身持有(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。
@@ -208,7 +208,7 @@
   
     <div class="article-meta">
       <a href="/2016/11/02/Weird-idea-for-block-detection/" class="article-date">
-  	<time datetime="2016-11-02T12:15:53.000Z" itemprop="datePublished">2016-11-02</time>
+  	<time datetime="2016-11-02T12:24:09.000Z" itemprop="datePublished">2016-11-02</time>
 </a>
     </div>
   
@@ -271,7 +271,7 @@
 <p><img src="http://blog.startry.com/img/blog_rbs_code_show.png" alt="RiskBlockScanner简易演示"></p>
 <p>上图表述的步骤均是根据存储数据来维护的, 具体的逻辑实现因为比较简单本文就不赘述了。如果大家有感兴趣的话请自行访问<a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">Github</a>地址进行代码阅读~</p>
 <p>通过RiskBlockScanner可以扫描出大量的Block Self-Retain的风险代码行, 使用方法相对简单.(PS: 对代码量比较小或者不怎么使用Block的工程几乎没有作用) </p>
-<p>下图为简单的使用示例:<br><img src="https://github.com/startry/RiskBlockScanner/blob/master/demo.png" alt="RiskBlockScanner使用示例"></p>
+<p>下图为简单的使用示例:<br><img src="https://github.com/startry/RiskBlockScanner/blob/master/demo.png?raw=true" alt="RiskBlockScanner使用示例"></p>
 <h3 id="优化设想">优化设想</h3><ul>
 <li>通过不断的积累实验, 过滤更多的白名单方法</li>
 <li>风险检测包含但不限于self的检测</li>
