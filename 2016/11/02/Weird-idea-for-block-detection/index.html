@@ -9,13 +9,13 @@
 123456789self.myBlock = ^&amp;#">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一个奇怪且无聊的检测Block的想法">
-<meta property="og:url" content="http://startry.com/2016/11/01/Weird-idea-for-block-detection/index.html">
+<meta property="og:url" content="http://startry.com/2016/11/02/Weird-idea-for-block-detection/index.html">
 <meta property="og:site_name" content="Startry Blog">
 <meta property="og:description" content="在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身持有(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。
 123456789self.myBlock = ^&amp;#">
-<meta property="og:image" content="http://blog.startry.com/img/riskblockdetector_main_flow.png">
-<meta property="og:image" content="http://blog.startry.com/img/riskblockdetect_arr_store.png">
-<meta property="og:updated_time" content="2016-11-01T09:01:03.000Z">
+<meta property="og:image" content="http://blog.startry.com/img/blog_rbs_code_show.png">
+<meta property="og:image" content="https://github.com/startry/RiskBlockScanner/blob/master/demo.png">
+<meta property="og:updated_time" content="2016-11-02T12:15:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个奇怪且无聊的检测Block的想法">
 <meta name="twitter:description" content="在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身持有(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。
@@ -207,8 +207,8 @@
       <div class="body-wrap"><article id="post-Weird-idea-for-block-detection" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/11/01/Weird-idea-for-block-detection/" class="article-date">
-  	<time datetime="2016-11-01T09:01:03.000Z" itemprop="datePublished">2016-11-01</time>
+      <a href="/2016/11/02/Weird-idea-for-block-detection/" class="article-date">
+  	<time datetime="2016-11-02T12:15:53.000Z" itemprop="datePublished">2016-11-02</time>
 </a>
     </div>
   
@@ -258,9 +258,7 @@
 <h3 id="实现方案">实现方案</h3><p>有奇怪的想法第一件事情当然是验证想法的可行性。在不追求性价比的前提下, 验证想法可行性最愚蠢也是最有效的方法就是把想法实现出来，那么<a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">RiskBlockScanner</a>就这么诞生了。</p>
 <p>市面上大多数的Block循环检查基本都是要编译链接的<strong>(例如XCode自带的Anaylse)</strong>, 有些甚至是在操作过程中分析内存是否释放<strong>(例如facebook开源的<a href="https://github.com/facebook/FBRetainCycleDetector" target="_blank" rel="external">FBRetainCycleDetector</a>)</strong>, 很少有检测工具针对编写代码过程中快速发现风险的方面进行设计。</p>
 <p>我的这个奇怪的思想是通过正则表达式去匹配发现所有的Block使用起始行、该Block所在的方法起始&amp;结束行。</p>
-<p><img src="http://blog.startry.com/img/riskblockdetector_main_flow.png" alt="RiskBlockScanner主思路图"></p>
-<p><img src="http://blog.startry.com/img/riskblockdetect_arr_store.png" alt="RiskBlockScanner数组存储图"></p>
-<p>上述两图包含了主要的逻辑思路:</p>
+<p><a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">RiskBlockScanner</a>的大致思路如下:</p>
 <ol>
 <li>扫描目录提取代码文件(.m格式)</li>
 <li>提取每一行代码行</li>
@@ -270,6 +268,10 @@
 <li>判断weak执行行(weak line)是否包含在方法起始行(func line)和block起始行(block line)之间</li>
 <li>根据第7步的判断结果来决定是否该Block存在循环引用风险</li>
 </ol>
+<p><img src="http://blog.startry.com/img/blog_rbs_code_show.png" alt="RiskBlockScanner简易演示"></p>
+<p>上图表述的步骤均是根据存储数据来维护的, 具体的逻辑实现因为比较简单本文就不赘述了。如果大家有感兴趣的话请自行访问<a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">Github</a>地址进行代码阅读~</p>
+<p>通过RiskBlockScanner可以扫描出大量的Block Self-Retain的风险代码行, 使用方法相对简单.(PS: 对代码量比较小或者不怎么使用Block的工程几乎没有作用) </p>
+<p>下图为简单的使用示例:<br><img src="https://github.com/startry/RiskBlockScanner/blob/master/demo.png" alt="RiskBlockScanner使用示例"></p>
 <h3 id="优化设想">优化设想</h3><ul>
 <li>通过不断的积累实验, 过滤更多的白名单方法</li>
 <li>风险检测包含但不限于self的检测</li>
@@ -342,7 +344,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Weird-idea-for-block-detection" data-title="一个奇怪且无聊的检测Block的想法" data-url="http://startry.com/2016/11/01/Weird-idea-for-block-detection/"></div>
+	<div class="ds-thread" data-thread-key="Weird-idea-for-block-detection" data-title="一个奇怪且无聊的检测Block的想法" data-url="http://startry.com/2016/11/02/Weird-idea-for-block-detection/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
