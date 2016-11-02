@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>一个奇怪且无聊的检测Block的想法 | Startry Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身持有(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。
+123456789self.myBlock = ^&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个奇怪且无聊的检测Block的想法">
+<meta property="og:url" content="http://startry.com/2016/11/02/Weird-idea-for-block-detection/index.html">
+<meta property="og:site_name" content="Startry Blog">
+<meta property="og:description" content="在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身持有(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。
+123456789self.myBlock = ^&amp;#">
+<meta property="og:image" content="http://blog.startry.com/img/blog_rbs_code_show.png">
+<meta property="og:image" content="https://github.com/startry/RiskBlockScanner/blob/master/demo.png">
+<meta property="og:updated_time" content="2016-11-02T12:15:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一个奇怪且无聊的检测Block的想法">
+<meta name="twitter:description" content="在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身持有(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。
+123456789self.myBlock = ^&amp;#">
+  
+    <link rel="alternative" href="/atom.xml" title="Startry Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Startry</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+					        
+								<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+					        
+								<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Block/" style="font-size: 10px;">Block</a> <a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://github.com/startry">空荡荡的github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">混迹于各类互联网公司, 学习成长中, 边走边学~ 参与过某二手车公司创业, 也曾在某大型公司混的一花名&quot;玄书&quot;。现在重新学习成长中...</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Startry</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/3454027?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Startry</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">随便乱写, 目前专攻iOS研发~</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/startry" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/chenxingstartry" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://blog.startry.com/atom.xml" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/startry" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:chenxingfl#gmail.com" title="mail">mail</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/xStartry" title="twitter">twitter</a>
+			        
+						<a class="stackoverflow" target="_blank" href="http://stackoverflow.com/users/5238614/startry" title="stackoverflow">stackoverflow</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Weird-idea-for-block-detection" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/02/Weird-idea-for-block-detection/" class="article-date">
+  	<time datetime="2016-11-02T12:15:53.000Z" itemprop="datePublished">2016-11-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一个奇怪且无聊的检测Block的想法
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Block/">Block</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>在大多数iOS应用开发过程中, 循环引用一直都是最常见的iOS开发问题之一。通常情况下, 最常见的循环引用问题就是在Block回调中的self指针的不当使用了。在这种最常见的场景中, 对象self本身使用的Block被self对象本身<strong>持有</strong>(临时变量block是不会形成循环引用的), 而在Block回调中又使用了self导致形成了一个循环引用。</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">self.myBlock = ^&#123;</span><br><span class="line">   [self doSomething];</span><br><span class="line"> &#125;;</span><br><span class="line">      +-----------+           +-----------+</span><br><span class="line">      |    self   |    <span class="keyword">ref</span>    |   <span class="type">Block</span>   |</span><br><span class="line"> ---&gt; |           | --------&gt; |           |</span><br><span class="line">      | retain <span class="number">2</span>  | &lt;-------- | retain <span class="number">1</span>  |</span><br><span class="line">      |           |    <span class="keyword">ref</span>    |           |</span><br><span class="line">      +-----------+           +-----------+</span><br></pre></td></tr></table></figure>
+<p>针对上述最常见的循环引用的场景, 在市面上最常用的几款循环引用检查工具都<strong>不能特别有效</strong>的检测出是否真正的产生了循环引用。笔者针对这种场景突然脑洞大开, 设想是否能够通过文本扫描的方式提前知道哪些block使用场景可能会产生潜在的循环引用问题。为了支持自己的大脑洞想法, 笔者尝试用python书写一个文本扫描器来提前预知潜在Self Retain Block循环引用风险的代码。哈哈, 至此, 一个无聊又奇怪的检测Block的小工具<a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">RiskBlockScanner</a>就诞生了。</p>
+<h3 id="想法起源">想法起源</h3><p>笔者这个奇怪的Block想法的起源是因为笔者在工作中参与过的几个大型iOS项目(大于30人协作开发)中都涉及到很多使用Block的场景, 而且经常会发现代码中有些潜在或者确定的Block引用风险, 并且这些引用的风险多数和<code>self</code>指针和<code>Block</code>的组合使用相关联。同时, XCode自带的Warning只能报出比较简单的循环引用警告, 并且通过XCode自带的静态分析有时候也难以发现循环引用的出处。</p>
+<p>虽然这个奇怪的想法是突然萌生的, 但是刺激因素有如下:</p>
+<ul>
+<li><strong>上百万行的代码量太多, 无法人肉检查</strong>(最主要用途)</li>
+<li>ReactiveCocoa使用中大量涉及Self Retain Cycle的场景</li>
+<li>大型项目开发参差不齐&amp;参与人数过多, 低级错误无法100%避免</li>
+<li>循环引用排查困难</li>
+<li>XCode自带循环引用排查功能不太完善</li>
+</ul>
+<h3 id="实现方案">实现方案</h3><p>有奇怪的想法第一件事情当然是验证想法的可行性。在不追求性价比的前提下, 验证想法可行性最愚蠢也是最有效的方法就是把想法实现出来，那么<a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">RiskBlockScanner</a>就这么诞生了。</p>
+<p>市面上大多数的Block循环检查基本都是要编译链接的<strong>(例如XCode自带的Anaylse)</strong>, 有些甚至是在操作过程中分析内存是否释放<strong>(例如facebook开源的<a href="https://github.com/facebook/FBRetainCycleDetector" target="_blank" rel="external">FBRetainCycleDetector</a>)</strong>, 很少有检测工具针对编写代码过程中快速发现风险的方面进行设计。</p>
+<p>我的这个奇怪的思想是通过正则表达式去匹配发现所有的Block使用起始行、该Block所在的方法起始&amp;结束行。</p>
+<p><a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">RiskBlockScanner</a>的大致思路如下:</p>
+<ol>
+<li>扫描目录提取代码文件(.m格式)</li>
+<li>提取每一行代码行</li>
+<li>根据每一行代码行去根据正则表达式匹配出方法起始行(func line)、block起始行(block line)、潜在多行block起始行(potential block line)、block结束行和weak执行行(weak line)</li>
+<li>根据”}”和”;”组合判断和潜在多行block起始行过滤不是block的行, 保留真正block行</li>
+<li>过滤固定匹配关键字的block行(例如masonry等常见不持有block的场景)</li>
+<li>判断weak执行行(weak line)是否包含在方法起始行(func line)和block起始行(block line)之间</li>
+<li>根据第7步的判断结果来决定是否该Block存在循环引用风险</li>
+</ol>
+<p><img src="http://blog.startry.com/img/blog_rbs_code_show.png" alt="RiskBlockScanner简易演示"></p>
+<p>上图表述的步骤均是根据存储数据来维护的, 具体的逻辑实现因为比较简单本文就不赘述了。如果大家有感兴趣的话请自行访问<a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">Github</a>地址进行代码阅读~</p>
+<p>通过RiskBlockScanner可以扫描出大量的Block Self-Retain的风险代码行, 使用方法相对简单.(PS: 对代码量比较小或者不怎么使用Block的工程几乎没有作用) </p>
+<p>下图为简单的使用示例:<br><img src="https://github.com/startry/RiskBlockScanner/blob/master/demo.png" alt="RiskBlockScanner使用示例"></p>
+<h3 id="优化设想">优化设想</h3><ul>
+<li>通过不断的积累实验, 过滤更多的白名单方法</li>
+<li>风险检测包含但不限于self的检测</li>
+<li>开发一个XCode插件工具(看笔者是否够勤奋)</li>
+<li>尝试支持检查Swift语法</li>
+</ul>
+<h3 id="总结">总结</h3><p><a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">RiskBlockScanner</a>是一个检测简单的Block循环引用风险的灵感实现。鉴于该工具是基于文本扫描实现的, 并且没有检测Block是否被使用对象真正持有(不持有则不产生循环引用), 所以它并不能<strong>真正意义上</strong>的检查出Block循环引用, 只能检查出所有潜在的风险点方便开发者排查定位。</p>
+<p>该工具纯属笔者好奇实现, 可能有不少童鞋会觉得这个很无聊, 其实笔者觉得这个实际意义也不是特别大哈, 但是有总比没有好。至少该工具可以<strong>在开发者编写代码过程中快速分析定位block引用风险</strong>的代码位置, 能够帮助开发者高效的定位Block使用风险。</p>
+<p>PS: 笔者水平有限, 如果文章有错误之处, 请大家一定要指出, 防止误导大家哈~~ </p>
+<h4 id="参考文献">参考文献</h4><ol>
+<li><a href="http://www.jianshu.com/p/b79bac09177e" target="_blank" rel="external">避免Block的循环引用</a></li>
+<li><a href="http://www.jianshu.com/p/2c7a7c53c91a" target="_blank" rel="external">使用FBRetainCycleDetector检测引用循环</a></li>
+</ol>
+
+        
+      
+    </div>
+    
+  </div>
+
+  
+    <!-- 添加打赏逻辑 -->
+    <div class='dashang' style='text-align:center; height:50px;'>如果您觉得文章有用, 打赏一个呗~~ ( ⊙ o ⊙ )/</div>
+    <div class='dashang_alipay' style='text-align:center;'>
+      <form action="https://shenghuo.alipay.com/send/payment/fill.htm"
+    method="POST" target="_blank" accept-charset="GBK">
+        <input name="optEmail" type="hidden" value="148140274@qq.com" />
+        <input name="payAmount" type="hidden" value="1" />
+        <input id="title" name="title" type="hidden" value="来自Startry博文的打赏" />
+        <input name="memo" type="hidden" value="打赏以资鼓励~~ O(∩_∩)O" />
+        <input name="pay" type="image" value="转账"
+      src="https://img.alipay.com/sys/personalprod/style/mc/btn-index.png" />
+      </form>
+    </div>
+    <div style='text-align:center; margin-top: 20px;'>
+      <img src='/img/wechat_pay.png' style='width: 160px; height:160px; margin-right: 15px;'>
+      <img src='/img/alipay_pay.png' style='width: 160px; height:160px; margin-left: 15px;  '>
+    </div>
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/06/15/vector-apply-to-iOS-Project/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">矢量图在iOS中的应用细节</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Weird-idea-for-block-detection" data-title="一个奇怪且无聊的检测Block的想法" data-url="http://startry.com/2016/11/02/Weird-idea-for-block-detection/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Startry
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+  <div style="display:none">
+    <span id="busuanzi_container_site_pv" style="display:hidden;">本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-67055063-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
