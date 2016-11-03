@@ -332,76 +332,6 @@
 
 
   
-    <article id="post-Automate_UI_Testing_in_iOS" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/05/06/Automate_UI_Testing_in_iOS/" class="article-date">
-  	<time datetime="2016-05-06T03:37:10.000Z" itemprop="datePublished">2016-05-06</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/06/Automate_UI_Testing_in_iOS/">译 - iOS UI自动化测试(上)</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        
-          <p>原文: <a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html" target="_blank" rel="external">UI Testing in iOS</a></p>
-<p>译者笔录: </p>
-<p>本文翻译自苹果官方文档 - <a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html" target="_blank" rel="external">UI Testing in iOS</a>. <a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UIAutomation.html" target="_blank" rel="external">UI Testing in iOS</a>是Apple官方网站<a href="https://developer.apple.com/library/ios/navigation/" target="_blank" rel="external">iOS Developer Library</a>中的<a href="https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/index.html#//apple_ref/doc/uid/TP40004652-CH3-SW1" target="_blank" rel="external">Instruments User Guide</a>其中的一篇高级教程。</p>
-<p>Instruments User Guide中的文章对iOS的开发者用处都挺大的, 但是一直被初级和部分中级开发者忽视, 如果有人能够发起Instrument User Guide的翻译项目, 应该能够将iOS官方开发工具迅速普及开来哈~</p>
-<p>本文属于本人随意选取的一篇文章, 因为译者所处环境的测试童鞋们有不少在研究自动化测试, 了解XCode自带的测试总是有益无害的。但是笔者在翻译的过程中, 发现这篇翻译未必对他们有帮助, 因为他们的英文水平都太高了。。。将本文翻译当做自我学习的过程也好~</p>
-<p>只所以将不一口气将文章全部翻译完是因为这篇文章是在是太长了, 我怕我的翻译计划直接泡汤坚持不下去, 因此第一次翻译给自己稍微降低点条件。</p>
-<p>笔者翻译时间于2016年5月5日, 鉴于官方文档会不断更新, 请大家参考翻译时间点。</p>
-
-          
-            <p class="article-more-link">
-              <a href="/2016/05/06/Automate_UI_Testing_in_iOS/#more">more</a>
-            </p>
-          
-        
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-
-  
-</article>
-
-
-
-
-
-
-
-  
     <article id="post-the-trap-of-image-resource" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -868,6 +798,72 @@
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-Somthing-about-Podfile-lock" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/28/Somthing-about-Podfile-lock/" class="article-date">
+  	<time datetime="2015-10-28T07:09:00.000Z" itemprop="datePublished">2015-10-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/28/Somthing-about-Podfile-lock/">Podfile.lock背后的那点事</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        
+          <p>大部分的iOS开发者应该都曾使用过CocoaPods去管理工程的依赖, 但是你们有没有留意一个小小的文件<strong>Podfile.lock</strong>呢?</p>
+<p>通常我们需要使用CocoaPods去管理依赖, 都会执行一次<code>pod install</code>。 在<code>install</code>命令的执行过程中会改变被执行Project的配置项, 同时也会生产一个Podfile.lock文件。</p>
+<p>那么, 这个Podfile.lock的作用究竟就是干嘛的呢?</p>
+
+          
+            <p class="article-more-link">
+              <a href="/2015/10/28/Somthing-about-Podfile-lock/#more">more</a>
+            </p>
+          
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CocoaPods/">CocoaPods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ruby/">Ruby</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
 	</div>
 
       
