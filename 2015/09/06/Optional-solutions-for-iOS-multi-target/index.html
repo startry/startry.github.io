@@ -243,8 +243,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
+
         
         
+          
+            <div id="toc" class="toc-article">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于多Target的应用实践"><span class="toc-text">基于多Target的应用实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#差异性较大的Target处理"><span class="toc-text">差异性较大的Target处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于多Target实现的好处"><span class="toc-text">基于多Target实现的好处</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于多Target遇到的坑"><span class="toc-text">基于多Target遇到的坑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重新思考"><span class="toc-text">重新思考</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#进一步优化"><span class="toc-text">进一步优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+</div>
+          
           <p>本篇文章主要针对iOS应用开发中, 针对需要创建许多相似的应用App提出一种新颖的解决方案。</p>
 <p>关于如何创建大量相似的App，<a href="http://weibo.com/tangqiaoboy" target="_blank" rel="external">iOS大神@唐巧</a>曾在他的博文<a href="http://blog.devtang.com/blog/2013/10/17/the-tech-detail-of-ape-client-1/" target="_blank" rel="external">《猿题库iOS客户端的技术细节（一）：使用多target来构建大量相似App》</a>提出了一种可行性非常高的解决方案。我本人也将该实现方案应用到了某二手车应用开发中, 通过创建多个target的方式创建了N个某某拍的应用。但是这种方案真的适用于所有场景么? 除了使用这种方案能否有其它的方式去解决这个问题呢?</p>
 <h3 id="基于多Target的应用实践">基于多Target的应用实践</h3><p>我刚开始接触到开发多个相似App应用的需求的时候, 也采用了多个target的解决方案。主要做了以下工作:</p>

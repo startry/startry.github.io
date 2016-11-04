@@ -243,8 +243,15 @@ iOS自动化构建官方有篇文章介绍Xcode持续集成, 是基于Xcode Serv
     
     <div class="article-entry" itemprop="articleBody">
       
+
         
         
+          
+            <div id="toc" class="toc-article">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么客户端需要自动化构建"><span class="toc-text">为什么客户端需要自动化构建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#硬件环境"><span class="toc-text">硬件环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Jenkins"><span class="toc-text">安装Jenkins</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置工作"><span class="toc-text">配置工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Jenkins插件配置"><span class="toc-text">Jenkins插件配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jenkins账户权限配置"><span class="toc-text">Jenkins账户权限配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目&脚本配置"><span class="toc-text">项目&脚本配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开始自动化之旅"><span class="toc-text">开始自动化之旅</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新建任务"><span class="toc-text">新建任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动发送邮件"><span class="toc-text">自动发送邮件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动化测试"><span class="toc-text">自动化测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动上传"><span class="toc-text">自动上传</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#参考文献:"><span class="toc-text">参考文献:</span></a></li></ol></li></ol></li></ol></li></ol>
+</div>
+          
           <p>本篇文章讲述了如何使用<a href="https://jenkins-ci.org/" target="_blank" rel="external">Jenkins</a>搭建iOS的自动化构建环境。</p>
 <p>iOS自动化构建<a href="https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/xcode_guide-continuous_integration/" target="_blank" rel="external">官方有篇文章介绍Xcode持续集成</a>, 是基于Xcode Server以及Xcode Bots去实现, 但是系统依赖和版本依赖过于严重, 并且需要在Xcode中配置Target的Shared属性, 耦合性太强, 因此不建议使用。</p>
 <h2 id="为什么客户端需要自动化构建">为什么客户端需要自动化构建</h2><p>个人觉得最主要的原因是需要<em>提高编码效率</em>, 其次是<em>方便测试与集成</em></p>

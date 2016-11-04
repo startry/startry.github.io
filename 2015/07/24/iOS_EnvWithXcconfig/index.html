@@ -241,8 +241,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
+
         
         
+          
+            <div id="toc" class="toc-article">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Debug宏应该在哪里定义?"><span class="toc-text">Debug宏应该在哪里定义?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态配置不同的网络开发环境"><span class="toc-text">动态配置不同的网络开发环境</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#xcconfig配置Build_Settings"><span class="toc-text">xcconfig配置Build Settings</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-C下配置的支持"><span class="toc-text">Object-C下配置的支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Swift下配置的支持"><span class="toc-text">Swift下配置的支持</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态修改配置文件"><span class="toc-text">动态修改配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#自动化脚本支持(便于自动化构建)"><span class="toc-text">自动化脚本支持(便于自动化构建)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cocoapods下支持"><span class="toc-text">Cocoapods下支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多项目环境下支持"><span class="toc-text">多项目环境下支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态切换配置"><span class="toc-text">动态切换配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#另外一种选择"><span class="toc-text">另外一种选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cocoapods-keys"><span class="toc-text">Cocoapods-keys</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a>
+</div>
+          
           <p>本篇文章主要讲述了如何使用<a href="https://developer.apple.com/library/ios/recipes/xcode_help-project_editor/Articles/BasingBuildConfigurationsonConfigurationFiles.html" target="_blank" rel="external">(Xcode配置文件xcconfig)</a>去动态配置开发或者生产网络环境, 以及在多项目和运行中如何切换环境。</p>
 <p>关于xcconfig文件, 目前在官方很难找到一篇专门的指南介绍, 但是国外有篇非官方指南<a href="http://pewpewthespells.com/blog/xcconfig_guide.html" target="_blank" rel="external">《The Unofficial Guide to xcconfig files》</a>详细的介绍了xcconfig。估计很多新入门的iOS开发对xcconfig文件都不是很熟悉, 但是大家可能都用过Cocoapods, 其实Cocoapods的项目配置管理很多都是依赖xcconfig文件去实现的。</p>
 <h3 id="Debug宏应该在哪里定义?">Debug宏应该在哪里定义?</h3><p>iOS系统本身就区分了Configurations选项让开发者去修改对应的开发环境配置, 但是因为很多开发者却又在同一个Configuration环境中自定义了开发环境配置的开发, 使得iOS系统本身的配置成为了摆设, <em>仅仅用于区分打包方式选项和证书配置</em>。</p>

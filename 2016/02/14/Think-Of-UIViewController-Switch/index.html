@@ -241,8 +241,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
+
         
         
+          
+            <div id="toc" class="toc-article">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用跳转方式"><span class="toc-text">常用跳转方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用跳转方式瓶颈"><span class="toc-text">常用跳转方式瓶颈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#URLScheme解决方案"><span class="toc-text">URLScheme解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#URLScheme些许问题"><span class="toc-text">URLScheme些许问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传值对象"><span class="toc-text">传值对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol></li></ol>
+</div>
+          
           <p>App应用程序开发, 界面跳转是基础中的基础, 几乎没有一个App是用不到界面跳转的, 那么怎么样去书写界面跳转代码才是比较合理的呢?</p>
 <p>大家可能在想跳转无非就2种方式, 能有什么内容? 其实并不是这样子的, 对于研发老手来说, 大型应用几乎都是利用URLScheme进行全方位的解决方案; 对于研发新手来说, 他们可能并没有遇到多路口界面跳转的瓶颈, 只会使用一些常用跳转, 并不会意识到界面跳转潜在的一些问题, 甚至无法严格区分Present和Push的操作区别~</p>
 <p>本文将针对界面跳转提出一些优化解决方案~</p>

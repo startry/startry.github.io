@@ -243,8 +243,15 @@ pod install和pod update应该大部分iOS以及OSX开发者最常用的两个�
     
     <div class="article-entry" itemprop="articleBody">
       
+
         
         
+          
+            <div id="toc" class="toc-article">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#初步窥探"><span class="toc-text">初步窥探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入窥探"><span class="toc-text">深入窥探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#背后那点事"><span class="toc-text">背后那点事</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#准备工作"><span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找依赖库"><span class="toc-text">查找依赖库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#下载依赖库"><span class="toc-text">下载依赖库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#决定依赖库的类型"><span class="toc-text">决定依赖库的类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证没有重名的framework"><span class="toc-text">验证没有重名的framework</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证静态库的传递依赖"><span class="toc-text">验证静态库的传递依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证framework的使用"><span class="toc-text">验证framework的使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成工程"><span class="toc-text">生成工程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#整合用户项目"><span class="toc-text">整合用户项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行install后的行为"><span class="toc-text">执行install后的行为</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol></li></ol></li></ol>
+</div>
+          
           <p>Cocoapods对于绝大部分的iOS开发者们应该不陌生吧~ 如果你不知道什么是CocoaPods, 请移步<a href="https://guides.cocoapods.org/" target="_blank" rel="external">CocoaPods的官方Guide</a>去学习使用指南哇~ </p>
 <p><code>pod install</code>和<code>pod update</code>应该大部分iOS以及OSX开发者最常用的两个命令了, 那么大家是否都知道<code>pod install</code>或<code>pod update</code>在执行中主要做了哪些事情呢? 我们来一起探究一下呗~</p>
 <h2 id="初步窥探">初步窥探</h2><p>通过CoocaPods的终端log输出, 我们也可以推测出<code>pod install</code>的大致行为, 如果需要更多的信息, 可以使用<code>--verbose</code>参数输出更多的信息, 被提炼后大致输出log如下:</p>

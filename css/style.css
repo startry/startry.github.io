@@ -2308,3 +2308,18 @@ pre .css ~ * .id {
   height: 100%;
   overflow: hidden;
 }
+.toc {
+  line-height: 1.3em;
+  font-size: 0.8em;
+  float: right;
+}
+.toc-article {
+  background: #eee;
+  margin: 1.6em 0 0 2em;
+  padding: 1em;
+  -webkit-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}

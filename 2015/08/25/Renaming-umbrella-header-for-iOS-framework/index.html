@@ -240,8 +240,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
+
         
         
+          
+            <div id="toc" class="toc-article">
+    <div class="toc-title">目录</div>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#规范的写法"><span class="toc-text">规范的写法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何重命名umbrella_header"><span class="toc-text">如何重命名umbrella header</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#指定Umbrella_Header入口在哪里呢?"><span class="toc-text">指定Umbrella Header入口在哪里呢?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#指定Modulemap文件"><span class="toc-text">指定Modulemap文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#题外话"><span class="toc-text">题外话</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+</div>
+          
           <p>在相对较大的互联网App研发中, framework静态库被广泛应用, 那么在研发framework的时候也产生好多的问题? 其实一个常见的问题的就是umbreall header文件的使用。</p>
 <p>大家是否有遇到过一个常见的错误使用umbrella header的场景: framework的文件明明被主工程引用了, 但是在编译的时候依旧抛出<font color="orange">Lexical or Preprocessor Issue - Umbrella header for module ‘xxx’ does not include header ‘xxx.h’</font>的警告。</p>
 <p><strong>那么问题来了, 什么是umbrella header? 什么又是umbrella framework呢?</strong></p>
