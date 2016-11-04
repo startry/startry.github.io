@@ -480,6 +480,9 @@ a {
   #container #footer .footer-right {
     float: initial;
   }
+  #container #toc {
+    display: none;
+  }
 }
 .header-author {
   text-align: center;
@@ -2308,13 +2311,21 @@ pre .css ~ * .id {
   height: 100%;
   overflow: hidden;
 }
-.toc {
+#toc {
+  display: block;
+  position: fixed;
   line-height: 1.3em;
   font-size: 0.8em;
-  float: right;
+  z-index: 200;
+  right: 40px;
+}
+#toc .toc-child {
+  margin-left: 0;
+  padding-left: 1.5em;
+  padding-top: 0;
 }
 .toc-article {
-  background: #eee;
+  background: rgba(248,248,248,0.8);
   margin: 1.6em 0 0 2em;
   padding: 1em;
   -webkit-border-radius: 4px;
