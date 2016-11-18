@@ -106,5 +106,10 @@ require([], function (){
 	if(yiliaConfig.open_in_new == true){
 		$(".article a[href]").attr("target", "_blank")
 	}
+
+	// 添加关闭菜单事件
+	$("#close_toc").click(function(){
+		$("#toc").hide();
+	});
 	
 });
