@@ -122,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Block/" style="font-size: 10px;">Block</a> <a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
+						<a href="/tags/Block/" style="font-size: 10px;">Block</a> <a href="/tags/CocoaPods/" style="font-size: 16.67px;">CocoaPods</a> <a href="/tags/Hamming-Distance/" style="font-size: 10px;">Hamming Distance</a> <a href="/tags/Jenkins/" style="font-size: 10px;">Jenkins</a> <a href="/tags/Ruby/" style="font-size: 13.33px;">Ruby</a> <a href="/tags/Screenshots/" style="font-size: 13.33px;">Screenshots</a> <a href="/tags/WKWebView/" style="font-size: 10px;">WKWebView</a> <a href="/tags/framework/" style="font-size: 13.33px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/ios/" style="font-size: 16.67px;">ios</a> <a href="/tags/simhash/" style="font-size: 10px;">simhash</a> <a href="/tags/umbrella-header/" style="font-size: 10px;">umbrella header</a> <a href="/tags/xcasset/" style="font-size: 10px;">xcasset</a> <a href="/tags/xcconfig/" style="font-size: 13.33px;">xcconfig</a> <a href="/tags/优化/" style="font-size: 10px;">优化</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
 					</div>
 				</section>
 				
@@ -199,6 +199,81 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-find-same-code-by-simhash-and-hamming-distance" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/14/find-same-code-by-simhash-and-hamming-distance/" class="article-date">
+  	<time datetime="2016-12-14T09:37:37.000Z" itemprop="datePublished">2016-12-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/14/find-same-code-by-simhash-and-hamming-distance/">通过全文相似度来寻找相同或相似的代码</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+        
+        
+          <p>最近笔者在职的公司在不断的做App的包瘦身工作, 身边的同事们也研究出了各种各样实用的工具来辅助加快包瘦身的进程。在这么一个大环境下, 笔者突然又冒出一个很无聊的工具想法</p>
+<blockquote>
+<p>通过文本匹配来寻找相似的方法函数</p>
+</blockquote>
+<p>笔者给这个小工具取了一个非常传神且牛逼的名字 - <a href="https://github.com/startry/SameCodeFinder" target="_blank" rel="external">SameCodeFinder</a></p>
+<p>和上一个查找Block的无聊的小工具<a href="https://github.com/startry/RiskBlockScanner" target="_blank" rel="external">RiskBlockScanner</a>类似, 这个工具笔者觉得也是一个应用面相对比较小的一个工具, 所以笔者自嘲无聊的小工具哈~</p>
+<p>笔者自认为这个是一个无聊的小工具, 但是还是坚持把它开发出来了, 因为笔者坚信:</p>
+<blockquote>
+<p>任何一个无聊小众的作品, 在合适的时机总是能够帮助到合适的人的! </p>
+</blockquote>
+<p>笔者开发这个小工具除了因为笔者相信这个工具肯定能够帮助到部分人群以外, 还有另外一个目的是督促自己不要停止学习的步伐哈~</p>
+
+          
+            <p class="article-more-link">
+              <a href="/2016/12/14/find-same-code-by-simhash-and-hamming-distance/#more">more</a>
+            </p>
+          
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hamming-Distance/">Hamming Distance</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/simhash/">simhash</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/优化/">优化</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-Weird-idea-for-block-detection" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -807,73 +882,6 @@
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Somthing-about-Podfile-lock" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/28/Somthing-about-Podfile-lock/" class="article-date">
-  	<time datetime="2015-10-28T07:09:00.000Z" itemprop="datePublished">2015-10-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/28/Somthing-about-Podfile-lock/">Podfile.lock背后的那点事</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-        
-        
-          <p>大部分的iOS开发者应该都曾使用过CocoaPods去管理工程的依赖, 但是你们有没有留意一个小小的文件<strong>Podfile.lock</strong>呢?</p>
-<p>通常我们需要使用CocoaPods去管理依赖, 都会执行一次<code>pod install</code>。 在<code>install</code>命令的执行过程中会改变被执行Project的配置项, 同时也会生产一个Podfile.lock文件。</p>
-<p>那么, 这个Podfile.lock的作用究竟就是干嘛的呢?</p>
-
-          
-            <p class="article-more-link">
-              <a href="/2015/10/28/Somthing-about-Podfile-lock/#more">more</a>
-            </p>
-          
-        
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CocoaPods/">CocoaPods</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ruby/">Ruby</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
 	</div>
 
       

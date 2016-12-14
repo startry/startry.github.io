@@ -4,6 +4,27 @@
 
     
   <url>
+    <loc>http://startry.com/2016/12/14/find-same-code-by-simhash-and-hamming-distance/</loc>
+    <lastmod>2016-12-14T09:37:37.000Z</lastmod>
+    <data>
+        <display>
+        <title>通过全文相似度来寻找相同或相似的代码</title>
+        <pubTime>2016-12-14T09:37:37.000Z</pubTime>
+        
+        <tag>Hamming Distance</tag>
+         
+        <tag>simhash</tag>
+         
+        <tag>优化</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://startry.com/2016/11/02/Weird-idea-for-block-detection/</loc>
     <lastmod>2016-11-02T12:24:09.000Z</lastmod>
     <data>

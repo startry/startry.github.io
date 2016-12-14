@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-11-02T12:24:09.000Z</updated>
+  <updated>2016-12-14T09:37:37.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -14,6 +14,117 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>通过全文相似度来寻找相同或相似的代码</title>
+    <link href="http://startry.com/2016/12/14/find-same-code-by-simhash-and-hamming-distance/"/>
+    <id>http://startry.com/2016/12/14/find-same-code-by-simhash-and-hamming-distance/</id>
+    <published>2016-12-14T09:37:37.000Z</published>
+    <updated>2016-12-14T09:37:37.000Z</updated>
+    
+    <content type="html">&lt;p&gt;最近笔者在职的公司在不断的做App的包瘦身工作, 身边的同事们也研究出了各种各样实用的工具来辅助加快包瘦身的进程。在这么一个大环境下, 笔者突然又冒出一个很无聊的工具想法&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过文本匹配来寻找相似的方法函数&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;笔者给这个小工具取了一个非常传神且牛逼的名字 - &lt;a href=&quot;https://github.com/startry/SameCodeFinder&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SameCodeFinder&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;和上一个查找Block的无聊的小工具&lt;a href=&quot;https://github.com/startry/RiskBlockScanner&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RiskBlockScanner&lt;/a&gt;类似, 这个工具笔者觉得也是一个应用面相对比较小的一个工具, 所以笔者自嘲无聊的小工具哈~&lt;/p&gt;
+&lt;p&gt;笔者自认为这个是一个无聊的小工具, 但是还是坚持把它开发出来了, 因为笔者坚信:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;任何一个无聊小众的作品, 在合适的时机总是能够帮助到合适的人的! &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;笔者开发这个小工具除了因为笔者相信这个工具肯定能够帮助到部分人群以外, 还有另外一个目的是督促自己不要停止学习的步伐哈~&lt;/p&gt;
+&lt;h2 id=&quot;起源-辅助研发自查&quot;&gt;起源-辅助研发自查&lt;/h2&gt;&lt;p&gt;查找相似代码想法的起源是因为笔者在在职的公司项目处于包瘦身的大环境下。在这个大环境下, 笔者身边的一名同事发明了基于&lt;a href=&quot;http://blog.163.com/iswing@126/blog/static/166700480201129102259978/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;otool&lt;/a&gt;和&lt;a href=&quot;http://blog.cnbang.net/tech/2296/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;linkmap&lt;/a&gt;分析查找无用方法的工具, 该工具在Github上有个类似的开源脚本项目&lt;a href=&quot;https://github.com/nst/objc_cover&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;objc_cover&lt;/a&gt;。与此同时, 笔者的另外一名同事发表了一种基于Clang来查找无用方法的&lt;a href=&quot;http://kangwang1988.github.io/tech/2016/11/01/find-unused-duplicate-code-of-your-app-using-clang-plugin.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;博文&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;受这两位同事的影响, 笔者就在想自己能搞什么和他们不一样点的工具么。因为笔者之前用文本扫描的方式搞了一个简易的&lt;a href=&quot;https://github.com/startry/RiskBlockScanner&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;快速Block检查脚本&lt;/a&gt;, 笔者就在想能不能通过类似的手段写一个类似的程序。笔者想借鉴&lt;strong&gt;《基于Clang来查找无用方法》&lt;/strong&gt;的思路进行扩展, 因为该文章里提出了一种&lt;strong&gt;将文本内容Hash后进行内容比较, 判断方法是否完全重合的思路&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;笔者基于该思路进行扩展, &lt;strong&gt;设想能不能不止比较“完全相同”的方法, 还能比较相似的方法&lt;/strong&gt;。顺着这个思路发现了Google的全文搜索相似度比较的一种算法&lt;a href=&quot;http://wwwconference.org/www2007/papers/paper215.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;simhash&lt;/a&gt;[7, 8]。&lt;/p&gt;
+&lt;h3 id=&quot;Simhash&quot;&gt;Simhash&lt;/h3&gt;&lt;p&gt;关于simhash的介绍引用博文&lt;a href=&quot;simhash算法原理及实现&quot;&gt;《simhash算法原理及实现》&lt;/a&gt; 里的介绍&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;simhash是google用来处理海量文本去重的算法。 google出品，你懂的。 simhash最牛逼的一点就是将一个文档，最后转换成一个64位的字节，暂且称之为特征字，然后判断重复只需要判断他们的特征字的距离是不是&amp;lt;n（根据经验这个n一般取值为3），就可以判断两个文档是否相似。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;上述引用其实有点不完全正确, simhash貌似并不是Google出品的, 第一作者的邮箱后缀明明是普林斯顿大学好不好~ 不过Google将其应用到了网络爬虫并发表了一篇文章哈~&lt;/p&gt;
+&lt;p&gt;PS: 想了解详情? 阅读Paper去… =。=&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;simhash算法原理及实现&quot;&gt;《simhash算法原理及实现》&lt;/a&gt; 针对simhash梳理了简易的原理介绍以及使用判断距离的汉明距离, 可以便于读者快速了解, 但是如果大家想要了解更深层次的实现, 可以去阅读原版paper&lt;a href=&quot;http://wwwconference.org/www2007/papers/paper215.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《Detecting Near-Duplicates For Web Crawling》&lt;/a&gt;和&lt;a href=&quot;http://www.cs.princeton.edu/courses/archive/spr04/cos598B/bib/CharikarEstim.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《Similarity estimation techniques from&lt;br&gt;rounding algorithms》&lt;/a&gt;。&lt;/p&gt;
+&lt;h4 id=&quot;原理简析&quot;&gt;原理简析&lt;/h4&gt;&lt;p&gt;simhash的生产步骤可以分为如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;提取目标文本的关键字feature和权重weight, 并成对存储&lt;ul&gt;
+&lt;li&gt;如果不知道怎么提取的同学, 可能需要稍微了解全文搜索相关的知识&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;将提取出来的关键字进行传统Hash, 输出二进制的值&lt;/li&gt;
+&lt;li&gt;将每一个关键字提取的Hash按位进行运算, 如果当前位是1, 则增加对应的权重; 如果当前位是0, 增减少当前对应的权重;&lt;/li&gt;
+&lt;li&gt;将最后得出来的hash值, 如果大于等于1, 则当做1处理; 负数和0当做0处理, 得出最终的二进制值&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;上述步骤可以简化为下图, 此图引用了&lt;a href=&quot;http://grunt1223.iteye.com/blog/964564&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;我的数学之美系列二 —— simhash与重复信息识别&lt;/a&gt;中的图&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_simhash_explaination.jpg&quot; alt=&quot;simhash原理示意&quot;&gt;&lt;/p&gt;
+&lt;h4 id=&quot;汉明距离&quot;&gt;汉明距离&lt;/h4&gt;&lt;p&gt;simhash是一种&lt;a href=&quot;https://en.wikipedia.org/wiki/Locality-sensitive_hashing&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;局部敏感Hash&lt;/a&gt;。因此可以利用&lt;a href=&quot;https://en.wikipedia.org/wiki/Hamming_distance&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;汉明距离&lt;/a&gt;去衡量simhash的相似度。&lt;/p&gt;
+&lt;p&gt;引入Wikipedia的汉明距离介绍:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In information theory, the Hamming distance between two strings of equal length is the number of positions at which the corresponding symbols are different.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;字面上意思好像就是两个字符串在不一样字符个数的数量, 在我们现在的应用场景就是统计1或者0的个数, 然后他们的个数差就是距离了。。。一般搜索引擎的历史经验默认是&lt;strong&gt;3&lt;/strong&gt; &lt;/p&gt;
+&lt;p&gt;PS: 别问我怎么知道的3的, 我也是从博客里看来的, 没有数据依据&lt;/p&gt;
+&lt;h2 id=&quot;寻找相似的代码&quot;&gt;寻找相似的代码&lt;/h2&gt;&lt;h3 id=&quot;寻找完全相似的文件&quot;&gt;寻找完全相似的文件&lt;/h3&gt;&lt;p&gt;针对上述理论, 只要是一个文档都可以计算出两者的汉明距离, 利用汉明距离来就可以衡量两个文档的相似度了。笔者在这里目前没有做太多的工作, 只不过过滤了文档的后缀, 让相当类型的文档进行相互的比较。&lt;/p&gt;
+&lt;p&gt;寻找相似的文件和寻找相似的代码文件, 其实本质上差距不大。代码文件有一些特性, 例如前面的声明和引用都有一列类似的地方, 如果在进行simhash计算处理前能够提前对代码文件进行预处理的话, 能够大幅度的提高整个代码文件相似度计算的精度。&lt;/p&gt;
+&lt;p&gt;PS: 鉴于思路的完善性和时间成本, 笔者还没有针对代码进行预处理&lt;/p&gt;
+&lt;h3 id=&quot;寻找雷同方法函数&quot;&gt;寻找雷同方法函数&lt;/h3&gt;&lt;p&gt;既然利用simhash以及汉明距离可以计算两个文档的相似度, 然自然可以缩小范围计算两个函数方法的相似度。那么问题的关键就在于&lt;strong&gt;怎么样才能提取到合适正确的方法函数内容&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;笔者目前使用的是&lt;strong&gt;文本扫描匹配&lt;/strong&gt;的方式, 但是笔者的同事有提出一种是基于clang插件来提取&lt;a href=&quot;https://www.objc.io/issues/6-build-tools/mach-o-executables/#preprocessing&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;编译器预处理&lt;/a&gt;之后的内容进行hash比较的可行思路。无奈鉴于实现成本和插件无法独立运行的方面考虑, 暂时采用的&lt;strong&gt;直接扫描匹配文本&lt;/strong&gt;的方式进行比较。&lt;/p&gt;
+&lt;p&gt;目前笔者采取的提取方法体方法是:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用正则匹配获取方法起始行&lt;/li&gt;
+&lt;li&gt;从起始行开始记录左右括号的格式, 并且将起始行开始的所有字符串记录&lt;/li&gt;
+&lt;li&gt;当左右括号的个数相互抵消的时候默认当做匹配整个方法, 保存整个字符串&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;鉴于方法匹配需要根据语法实现, 所以目前只能根据每个语言的语法特性进行截获, 目前&lt;a href=&quot;(https://github.com/startry/SameCodeFinder&quot;&gt;SameCodeFinder&lt;/a&gt;)仅支持Object-C和Java。&lt;/p&gt;
+&lt;p&gt;语法特性局限了脚本的可扩展性, 步骤一的正则需要和后缀匹配, 步骤二的左右括号在某些语言下不适用, 只能利用发现下一个方法起始行作为步骤三的结束步骤。&lt;/p&gt;
+&lt;p&gt;Java目前采用正则:&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;ur&quot;(public|private)(.*)\)\s?&amp;#123;&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;Object-C目前采用正则:&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;ur&quot;(\-|\+)\s?\(.*\).*(\:\s?\(.*\).*)?&amp;#123;?&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;排序&quot;&gt;排序&lt;/h3&gt;&lt;p&gt;无论是寻找雷同的文件还是寻找雷同的方法, 最后计算出的Hash结果都是N * N个的, 那么怎么展示计算的结果呢? 如果把所有的结果都展示出来, 那明显可阅读性太低。&lt;/p&gt;
+&lt;p&gt;目前采用的逻辑是:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;N * N 中第一个N只找出距离最小的第一个返回, 这样过滤结果只保留N个&lt;/li&gt;
+&lt;li&gt;将第一步过滤返回的N个结果按照从小到大的方式进行排序&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;此外，在执行排序的步骤1和步骤2之间, 都可以添加一个最大距离过滤, 默认不超过20, 可以大幅度减少步骤1和步骤2的计算排序过滤时间。&lt;/p&gt;
+&lt;h3 id=&quot;开源实现&quot;&gt;开源实现&lt;/h3&gt;&lt;p&gt;笔者基于上述思路以及现成的工具, 利用python脚本花了2天时间去高速实现了一个简易的python脚本, 并开源到了Github上。&lt;/p&gt;
+&lt;p&gt;访问地址: &lt;a href=&quot;https://github.com/startry/SameCodeFinder&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SameCodeFinder&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;目前开源的版本可能因为笔者使用不当或者开源python版本的&lt;a href=&quot;https://github.com/leonsim/simhash&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;simhash&lt;/a&gt;的计算&lt;strong&gt;太过耗时&lt;/strong&gt;, 因此在性能上存在一定的性能问题, 计算整个较大的工程需要花费不少的时间(计算一个大型工程是分钟级别的)。&lt;/p&gt;
+&lt;p&gt;笔者会在之后寻找突破方法来提高这方面的计算性能~ &lt;/p&gt;
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/startry/SameCodeFinder&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SameCodeFinder&lt;/a&gt;可以帮助大家寻找相似或者完全重叠的方法以及类, 极大程度上可以辅助大家寻找可以&lt;strong&gt;复用&lt;/strong&gt;的代码。SameCodeFinder的实现思路都是借用Google的全文相似度比较的现成实现, 并没有什么创新, 但是脚本化和针对语种设计的方法识别, 能够帮助大家节省不少直接利用simhash去实现的成本。&lt;/p&gt;
+&lt;p&gt;PS: 个人水平有限, 有错误之处请大家及时指出, 随时交流哈~&lt;/p&gt;
+&lt;h4 id=&quot;参考文献&quot;&gt;参考文献&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;http://kangwang1988.github.io/tech/2016/11/01/find-unused-duplicate-code-of-your-app-using-clang-plugin.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;CLANG技术分享系列四:IOS APP无用代码/重复代码分析&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://leons.im/posts/a-python-implementation-of-simhash-algorithm/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;A Python Implementation of Simhash Algorithm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.163.com/iswing@126/blog/static/166700480201129102259978/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;otool&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/u011581005/article/details/19711831&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Mac的反编译工具一：otool (objdump工具的OSX对应工具)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.cnbang.net/tech/2296/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;iOS APP可执行文件的组成&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://yanyiwu.com/work/2014/01/30/simhash-shi-xian-xiang-jie.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;simhash算法原理及实现&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;GS Manku, A Jain, A Das Sarma. Detecting Near-Duplicates For Web Crawling. International Conference on World Wide Web. International Conference on World Wide Web. 141-149. 2007.&lt;/li&gt;
+&lt;li&gt;M. Charikar. Similarity estimation techniques from&lt;br&gt;rounding algorithms. In Proc. 34th Annual Symposium&lt;br&gt;on Theory of Computing (STOC 2002), pages&lt;br&gt;380–388, 2002.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://grunt1223.iteye.com/blog/964564&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;我的数学之美系列二 —— simhash与重复信息识别&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Locality-sensitive_hashing&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Locality-sensitive hashing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Hamming_distance&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hamming_distance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.objc.io/issues/6-build-tools/mach-o-executables&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Mach-O Executables&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近笔者在职的公司在不断的做App的包瘦身工作, 身边的同事们也研究出了各种各样实用的工具来辅助加快包瘦身的进程。在这么一个大环境下, 笔者突然又冒出一个很无聊的工具想法&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过文本匹配来寻找相似的方法函数&lt;/p&gt;
+&lt;/blockquo
+    
+    </summary>
+    
+    
+      <category term="Hamming Distance" scheme="http://startry.com/tags/Hamming-Distance/"/>
+    
+      <category term="simhash" scheme="http://startry.com/tags/simhash/"/>
+    
+      <category term="优化" scheme="http://startry.com/tags/%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
   
   <entry>
     <title>一个奇怪且无聊的检测Block的想法</title>
