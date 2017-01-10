@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://startry.com/"/>
-  <updated>2016-12-14T09:37:37.000Z</updated>
+  <updated>2017-01-10T03:49:20.000Z</updated>
   <id>http://startry.com/</id>
   
   <author>
@@ -14,6 +14,83 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2016年&amp;猴年总结</title>
+    <link href="http://startry.com/2017/01/10/2016-conclusion/"/>
+    <id>http://startry.com/2017/01/10/2016-conclusion/</id>
+    <published>2017-01-10T03:49:20.000Z</published>
+    <updated>2017-01-10T03:49:20.000Z</updated>
+    
+    <content type="html">&lt;p&gt;距离去年写总结时间已经过去11个月，在这年关将至的时候，本人写一篇2016年的总结来鞭策督促自己。&lt;/p&gt;
+&lt;p&gt;和2015年的总结&lt;code&gt;知足常乐&lt;/code&gt;一致，找个成语形容呗~&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;开花结果&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;2016年依旧是本人的家庭年~ 人生的几大事件里其中两件发生在了这一年里。开花结果指的是家庭组建&amp;amp;女儿的诞生哇~&lt;/p&gt;
+&lt;h3 id=&quot;工作&quot;&gt;工作&lt;/h3&gt;&lt;p&gt;在2016年初，我给自己定了一个目标:”&lt;strong&gt;无论在公司的发展前景如何, 至少在公司深耕两年以上&lt;/strong&gt;“, 这个目标是为了&lt;strong&gt;克制自己浮躁的内心&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_17_hhzl.jpg&quot; alt=&quot;hhzl&quot;&gt;&lt;/p&gt;
+&lt;p&gt;2017年新目标&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;心如止水&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;17年的目标是对16年目标的一个扩展，不再强制约束自己在单位的工作最短期限，在没有达到职业生涯瓶颈之前，都需要保持&lt;strong&gt;心如止水&lt;/strong&gt;的状态，时刻约束提高自己(PS: 现在还远远没有达到瓶颈)。&lt;/p&gt;
+&lt;p&gt;定这个目标还有一个意义。在过去的几年里，个人的情绪释放还是过于随性，因此在新的一年里，我希望能适当的&lt;strong&gt;提高自己的情绪控制能力&lt;/strong&gt;，尽量减少因为自己的任性而伤害别人的次数。&lt;/p&gt;
+&lt;h3 id=&quot;家庭&quot;&gt;家庭&lt;/h3&gt;&lt;p&gt;2015年对本人来说是收获家庭的一年，而且有一颗未来的种子在不断的孕育长大，那2016年自然是开花结果的一年。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2016年，我和老婆为咱们的小家庭购置了一套小房子~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_17_lzwhc.jpg&quot; alt=&quot;liangzhu&quot;&gt;&lt;/p&gt;
+&lt;p&gt;因为本人收入水平非常的有限，因此在大杭州的郊区良渚文化村购置了一套小户型房产。&lt;/p&gt;
+&lt;p&gt;良渚文化村的周边景观还是很漂亮的，还是值得推荐~ 适合没钱的&amp;amp;隐居的，本人属于没钱的~ 因为住在这个村庄附近，如果没有一辆汽车，基本是“前不着店，后不着村”的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2016年，我亲爱的女儿降生了~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_17_tt.jpg&quot; alt=&quot;daughter&quot;&gt;&lt;/p&gt;
+&lt;p&gt;女儿的降生应该是2016年&lt;strong&gt;最最最重要&lt;/strong&gt;的一件事情了~ &lt;/p&gt;
+&lt;p&gt;2.0出来了，那1.0自然就变成过度版本了，生活的重心开始偏移到女儿的身上啦~&lt;/p&gt;
+&lt;h3 id=&quot;技术&amp;amp;软技能&quot;&gt;技术&amp;amp;软技能&lt;/h3&gt;&lt;p&gt;过去的一年仍然是本人技术深入的瓶颈年，基本在积累业务经验，没有真正意义上的技术深度进步。&lt;/p&gt;
+&lt;p&gt;技术广度则稍微学习使用了python语言, 处于幼儿班级别的程度。学习python语言也只是为了快速实现自己的2个无聊的小工具想法。&lt;/p&gt;
+&lt;p&gt;2016年度尝试在&lt;a href=&quot;https://stackoverflow.com/users/5238614/startry&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Stackoverflow&lt;/a&gt;回复一些基础性的iOS技术问题，并保持2015年的博客写作; &lt;/p&gt;
+&lt;p&gt;2016年开源三个库，几乎都没有什么影响力，需要再接再厉~&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/startry/SwViewCapture&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SwViewCapture&lt;/a&gt; - 一个支持截取全内容的截图库&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/startry/RiskBlockScanner&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RiskBlockScanner&lt;/a&gt; - Object-C潜在循环引用文本检查器&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/startry/SameCodeFinder&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;SameCodeFinder&lt;/a&gt; - 相似或相同代码查找器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在2016年度接触的一些书籍阅读中，知道了“&lt;strong&gt;软技能&lt;/strong&gt;”这个词。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;软技能就是激活人资的能力，即是调动别人的资源和知识的能力以及调动自己知识进行创造性思维的能力。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;个人觉得本人对”软件能”的提高目前存在严重的不足，需要在2017年逐渐重视起来~&lt;/p&gt;
+&lt;p&gt;PS: 软技能本人是从《软技能-代码之外的生存指南》看来的&lt;/p&gt;
+&lt;h3 id=&quot;2017&quot;&gt;2017&lt;/h3&gt;&lt;p&gt;回顾过去一年，自然需要展望一下未来。2017我给自己的&lt;strong&gt;原则&lt;/strong&gt;是&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;一段时间，只做一件事&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;2016年我想做的事情太多, 但是因为太零散, 没有实际的计划, 几乎都没有成功实施。2017年想要继续做2016年想做的事情, 那必须让自己坚持干完其中一件事情，一件事情一件事情来攻克。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://blog.startry.com/img/blog_17_wjl.jpg&quot; alt=&quot;daughter&quot;&gt;&lt;/p&gt;
+&lt;p&gt;16年间，我们的首富“王健林”先生有一句名言“&lt;em&gt;先定一个能达到的小目标&lt;/em&gt;”。 嗯，真正的小目标，不是一个亿哦~ 首富的小目标对我来说是完全不可能在一年可以实现的超级大目标。&lt;/p&gt;
+&lt;p&gt;回归主题，16年在工作&amp;amp;家庭生活中，最深受打击的是个人的英语水平。因为16年的一次美国行，让本人意识到自己的英语短板的弊端。所以，本人迫切希望进一步提高英语水平。&lt;/p&gt;
+&lt;p&gt;2017年我不想给自己定一个严格的工作目标，也不想给自己定一个技术提升目标，更不想定一个财富实现目标，我想定的是一个语言技能实现目标:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;提高自己的英语水平，获得TOEFL或TOEIC的良好成绩&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;英语能够帮助自己提高视野，便于交流，是一种对未来的投资。但是因为没有目标盲目的学习我担心自己就这样把一年给荒废了，因此需要用TOEFL或TOEIC的成绩作为辅助。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;PS: 本人是基层一线开发, 总结不具备广义参考意义的，勿转载&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;PS: 本篇文章非技术博客, 请勿转载&lt;/strong&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;距离去年写总结时间已经过去11个月，在这年关将至的时候，本人写一篇2016年的总结来鞭策督促自己。&lt;/p&gt;
+&lt;p&gt;和2015年的总结&lt;code&gt;知足常乐&lt;/code&gt;一致，找个成语形容呗~&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;开花结果&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+    
+      <category term="随笔" scheme="http://startry.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
   
   <entry>
     <title>通过全文相似度来寻找相同或相似的代码</title>
